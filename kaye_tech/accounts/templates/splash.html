@@ -1,23 +1,23 @@
-<style>
-    body {
-        font-family: system, -apple-system, '.SFNSText-Regular', 'SF UI Text', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
-        background-color: #ffffff;
-        text-align: center;
-        font-size: 10px;
-    }
-</style>
-
+{% load static %}
 
 <head>
-    <title>kaye_tech</title>
-</head><br><br>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'frontend/login.css' %}">
+
+    <title>Matt's Tech</title>
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'frontend/gap-analysis-favicon.png' %}" />
+</head>
 
 <body class="text-center">
     <form class="form-signin" action="/accounts/login/google-oauth2/" method="post">
         {% csrf_token %} {% if next %}
         <input type="hidden" name="next" value="{{ next }}" /> {% endif %}
+        <img src="{% static 'frontend/vue-logo.svg.png' %}" class="img-fluid p-3" alt="My Tech Tools">
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit" width="60" height="300">Sign in with
-            Google</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in with Google</button>
+
+        <p class="text-muted" style="padding-top: 10px">© Matthew Kaye 2020</p>
     </form>
 </body>
