@@ -1,4 +1,4 @@
-"""project_name URL Configuration
+"""kaye_tech URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -23,6 +23,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("backend.urls")),
     path("api/", include("accounts.urls_api")),
-    path("project_name/", IndexView.as_view()),
+    path("kaye_tech/", IndexView.as_view()),
     url(r"^$", IndexView.as_view()),
 ]

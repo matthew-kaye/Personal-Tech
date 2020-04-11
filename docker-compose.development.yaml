@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 
 services:
   django:
@@ -6,4 +6,4 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./project_name:/project_name
+      - ./kaye_tech:/kaye_tech

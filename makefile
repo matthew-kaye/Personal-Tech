@@ -34,16 +34,16 @@ db-backup:
 	bash db_backup_development.sh
 
 npm-install:
-	cd project_name/frontend; npm install
+	cd kaye_tech/frontend; npm install
 
 frontend-dev:
-	cd project_name/frontend; npm run dev
+	cd kaye_tech/frontend; npm run dev
 
 rollback-backend:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py migrate backend zero
 
 lint:
-	cd project_name/frontend; npm run format
+	cd kaye_tech/frontend; npm run format
 
 
 # PRODUCTION COMMANDS #

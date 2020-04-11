@@ -1,8 +1,12 @@
-version: "3.7"
+version: "3"
 
 services:
   db:
-    image: postgres
+    image: postgres:latest
+    restart: "no"
+    restart: always
+    restart: on-failure
+    restart: unless-stopped
   django:
     build:
       context: .

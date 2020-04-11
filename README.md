@@ -43,11 +43,11 @@ Run `make down`
 
 ## Server deployment
 
-The nginx config to be used in `/etc/nginx/sites-available` is available [here](deploy/nginx-static-sites-available.conf). Ensure that you rename this file to the sitename when actually deploying (project_name.doman_name).
+The nginx config to be used in `/etc/nginx/sites-available` is available [here](deploy/nginx-static-sites-available.conf). Ensure that you rename this file to the sitename when actually deploying (kaye_tech.doman_name).
 
 We use the Python library `Fabric` to allow for local users to deploy remotely to the PY3 server:
 1. Install fabric globally via `sudo pip install fabric`
-2. Export the environment variables mentioned in [Environment Variables](#project_name)
+2. Export the environment variables mentioned in [Environment Variables](#kaye_tech)
 3. Run `python3 deploy/deploy.py` (This will deploy the contents of `origin master`, not your local changes)
 
 Bear in mind that you'll still need to setup the configuration files mentioned above for the backend portions of the application to actually function.

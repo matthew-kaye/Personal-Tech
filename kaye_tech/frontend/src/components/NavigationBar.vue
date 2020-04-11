@@ -23,7 +23,7 @@
         <v-img class="ml-2" max-height="50" max-width="60" src="/static/frontend/vue-logo.svg.png" />
 
         <v-toolbar-title class="ma-3">
-          <b class="headline font-weight-bold">Project Name</b>
+          <b class="headline font-weight-bold">Kaye Tech</b>
         </v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
@@ -66,17 +66,17 @@ export default {
       navigationItems: [
         {
           label: "Home",
-          link: "/project_name",
+          link: "/kaye_tech",
           icon: "mdi-home"
         },
         {
           label: "Home2",
-          link: "/project_name",
+          link: "/kaye_tech",
           icon: "mdi-home"
         },
         {
           label: "Home3",
-          link: "/project_name",
+          link: "/kaye_tech",
           icon: "mdi-home"
         }
       ],

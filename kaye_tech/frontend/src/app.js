@@ -9,8 +9,8 @@ import Index from "./pages/Index.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", redirect: "/project_name" },
-  { path: "/project_name", name: "project_name", component: Index }
+  { path: "/", redirect: "/kaye_tech" },
+  { path: "/kaye_tech", name: "kaye_tech", component: Index }
 ];
 
 const router = new VueRouter({
