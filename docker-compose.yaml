@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres
+  django:
+    build:
+      context: .
+      dockerfile: dockerfiles/django.Dockerfile
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=${SOCIAL_AUTH_GOOGLE_OAUTH2_KEY}
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET}
+    restart: on-failure
+    depends_on:
+      - db

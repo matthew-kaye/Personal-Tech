@@ -1,0 +1,18 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = "*"
+django-webpack-loader = "*"
+djangorestframework = "*"
+social-auth-app-django = "*"
+pyyaml = "*"
+django-extensions = "*"
+uwsgi = "*"
+
+[requires]
+python_version = "3.7"

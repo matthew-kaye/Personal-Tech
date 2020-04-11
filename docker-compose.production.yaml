@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  django:
+    command: uwsgi --ini uwsgi.ini
+    environment:
+      - DJANGO_ENV=prod
+    volumes:
+      - ./socket:/socket
+      - ./project_name//backend/fixtures:/project_name/backend/fixtures
+    depends_on:
+      - nginx
+
+  nginx:
+    build:
+      args:
+        DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      context: .
+      dockerfile: dockerfiles/nginx.Dockerfile
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+    ports:
+      - 290196:80

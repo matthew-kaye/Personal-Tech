@@ -1,0 +1,23 @@
+<style>
+    body {
+        font-family: system, -apple-system, '.SFNSText-Regular', 'SF UI Text', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
+        background-color: #ffffff;
+        text-align: center;
+        font-size: 10px;
+    }
+</style>
+
+
+<head>
+    <title>project_name</title>
+</head><br><br>
+
+<body class="text-center">
+    <form class="form-signin" action="/accounts/login/google-oauth2/" method="post">
+        {% csrf_token %} {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" /> {% endif %}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit" width="60" height="300">Sign in with
+            Google</button>
+    </form>
+</body>

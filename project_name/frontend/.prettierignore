@@ -1,0 +1,5 @@
+package*
+webpack.config.js
+webpack-stats.json
+vue.config.js
+static/bundles/app.js
