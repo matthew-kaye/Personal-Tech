@@ -20,4 +20,4 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     ports:
-      - 290196:80
+      - 2901:80
