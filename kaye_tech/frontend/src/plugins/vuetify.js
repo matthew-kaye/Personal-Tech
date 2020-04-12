@@ -11,17 +11,17 @@ export default new Vuetify({
     dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
     themes: {
       light: {
-        // primary: "",
+        primary: colors.pink.darken4,
         // secondary: "",
         // accent: "",
-        // card: colors.grey.lighten5,
+        card: "",
         // background: ""
       },
       dark: {
-        // primary: "",
+        primary: colors.pink.darken4,
         // secondary: "",
         // accent: "",
-        // card: colors.grey.darken4,
+        card: colors.grey.darken4,
         // background: ""
       }
     }
