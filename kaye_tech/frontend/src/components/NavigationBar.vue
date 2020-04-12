@@ -71,13 +71,13 @@ export default {
         },
         {
           label: "Home2",
-          link: "/kaye_tech",
+          link: "/",
           icon: "mdi-home"
         },
         {
-          label: "Home3",
-          link: "/kaye_tech",
-          icon: "mdi-home"
+          label: "Jokes",
+          link: "/jokes",
+          icon: "mdi-emoticon"
         }
       ],
       logoutItem: [

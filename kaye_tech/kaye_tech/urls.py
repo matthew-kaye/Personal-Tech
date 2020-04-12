@@ -24,5 +24,6 @@ urlpatterns = [
     path("api/", include("backend.urls")),
     path("api/", include("accounts.urls_api")),
     path("kaye_tech/", IndexView.as_view()),
+    path("jokes/", IndexView.as_view()),
     url(r"^$", IndexView.as_view()),
 ]
