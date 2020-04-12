@@ -59,8 +59,8 @@ export default {
           .catch(error => console.log(error));
         jokeResponse.then(data => {
           if (data.total_jokes > 0) {
-            this.joke =
-              data.results[Math.floor(Math.random() * data.total_jokes)].joke;
+            var max = data.total_jokes > 20 ? 19 : data.total_jokes;
+            this.joke = data.results[Math.floor(Math.random() * max)].joke;
           } else {
             this.joke = "Apparently that's not a funny word";
           }
