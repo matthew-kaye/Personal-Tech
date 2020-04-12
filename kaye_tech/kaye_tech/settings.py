@@ -26,7 +26,11 @@ FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 if os.getenv("DJANGO_ENV") == "prod":
     DEBUG = False
-    ALLOWED_HOSTS = ["tech.mattalexkaye.com", "www.tech.mattalexkaye.com", "167.99.193.134"]
+    ALLOWED_HOSTS = [
+        "tech.mattalexkaye.com",
+        "www.tech.mattalexkaye.com",
+        "167.99.193.134",
+    ]
 else:
     DEBUG = True
     ALLOWED_HOSTS = ["*"]
@@ -46,7 +50,7 @@ INSTALLED_APPS = [
     "social_django",
     "backend",
     "accounts",
-    "kaye_tech"
+    "kaye_tech",
 ]
 
 MIDDLEWARE = [
@@ -157,4 +161,10 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
 SOCIAL_AUTH_URL_NAMESPACE = "social"
-SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ["googlemail.com", "gmail.com", "brainlabsdigital.com"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = [
+    "googlemail.com",
+    "gmail.com",
+    "brainlabsdigital.com",
+    "hotmail.com",
+    "hotmail.co.uk",
+]

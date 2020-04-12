@@ -23,7 +23,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("backend.urls")),
     path("api/", include("accounts.urls_api")),
-    path("kaye_tech/", IndexView.as_view()),
+    path("home/", IndexView.as_view()),
     path("jokes/", IndexView.as_view()),
+    path("tabletop/", IndexView.as_view()),
     url(r"^$", IndexView.as_view()),
 ]
