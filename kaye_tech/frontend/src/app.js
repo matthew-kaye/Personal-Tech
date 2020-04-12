@@ -6,13 +6,15 @@ import vuetify from "./plugins/vuetify";
 import App from "./App.vue";
 import Index from "./pages/Index.vue";
 import Joke from "./pages/Joke.vue";
+import Tabletop from "./pages/Tabletop.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", redirect: "/kaye_tech" },
-  { path: "/kaye_tech", name: "kaye_tech", component: Index },
+  { path: "/", redirect: "/home" },
+  { path: "/home", name: "home", component: Index },
   { path: "/jokes", name: "jokes", component: Joke },
+  { path: "/tabletop", name: "talbletop", component: Tabletop },
 ];
 
 const router = new VueRouter({

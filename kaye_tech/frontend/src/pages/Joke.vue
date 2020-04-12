@@ -1,7 +1,7 @@
 <template>
   <v-card class="ma-6">
     <v-card-title class="primary headline">
-      <span class="white--text">{{ "Joke search" }}</span>
+      <span class="white--text">Joke search</span>
     </v-card-title>
     <v-card-title>Search term</v-card-title>
     <v-card-text>
@@ -59,7 +59,7 @@ export default {
           .catch(error => console.log(error));
         jokeResponse.then(data => {
           if (data.total_jokes > 0) {
-            var max = data.total_jokes > 20 ? 19 : data.total_jokes;
+            var max = data.total_jokes > 20 ? 20 : data.total_jokes;
             this.joke = data.results[Math.floor(Math.random() * max)].joke;
           } else {
             this.joke = "Apparently that's not a funny word";

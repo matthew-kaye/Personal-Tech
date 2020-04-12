@@ -23,7 +23,7 @@
         <v-img class="ml-2" max-height="50" max-width="60" src="/static/frontend/vue-logo.svg.png" />
 
         <v-toolbar-title class="ma-3">
-          <b class="headline font-weight-bold">Kaye Tech</b>
+          <b class="headline font-weight-bold">Matt's Tech</b>
         </v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
@@ -66,13 +66,23 @@ export default {
       navigationItems: [
         {
           label: "Home",
-          link: "/kaye_tech",
+          link: "/home",
           icon: "mdi-home"
         },
         {
-          label: "Home2",
-          link: "/",
-          icon: "mdi-home"
+          label: "Blank",
+          link: "/home",
+          icon: "mdi-alarm-snooze"
+        },
+        {
+          label: "Empty",
+          link: "/home",
+          icon: "mdi-alpha-k-box"
+        },
+        {
+          label: "D&D",
+          link: "/tabletop",
+          icon: "mdi-dice-d20"
         },
         {
           label: "Jokes",
