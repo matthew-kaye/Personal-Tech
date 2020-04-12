@@ -52,7 +52,7 @@ export default {
       if (searchTerm.length > 0) {
         var jokeResponse = axios
           .get(this.baseUrl, {
-            params: { term: searchTerm.toString },
+            params: { term: searchTerm },
             headers: { Accept: "application/json" }
           })
           .then(response => response.data)
