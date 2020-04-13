@@ -40,14 +40,14 @@
           ></v-select>
         </v-col>
         <v-col cols="2" sm="2">
-          <v-switch v-model="advantage" class="ma-2" label="Advantage"></v-switch>
+          <v-switch v-model="character.advantage" class="ma-2" label="Advantage"></v-switch>
         </v-col>
         <v-col cols="2" sm="2">
-          <v-switch v-model="magic" class="ma-2" label="+1 Weapon"></v-switch>
+          <v-switch v-model="character.magic" class="ma-2" label="+1 Weapon"></v-switch>
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-title>Calculated Fields (not over-writeable)</v-card-title>
+    <v-card-title>Calculated Fields</v-card-title>
     <v-card-text>
       <v-row>
         <v-col cols="1" sm="1">
@@ -100,12 +100,13 @@ export default {
       character: {
         level: 1,
         class: "Fighter",
-        fightingStyle: "Duelling"
+        fightingStyle: "Duelling",
+        advantage: false,
+        magic: false
       },
       requiredField: [v => !!v],
       classes: ["Fighter"],
       fightingStyles: ["Duelling", "Two-Handed", "Two-Weapon", "Archery"],
-      advantage: false,
       attackDamage: 0,
       bonusAttackDamage: 0,
       averageAC: 14,
@@ -116,8 +117,7 @@ export default {
       numberOfAttacks: 1,
       extraDamage: 0,
       critChance: 0.05,
-      displayDice: "",
-      magic: false
+      displayDice: ""
     };
   },
   computed: {
@@ -135,14 +135,15 @@ export default {
       } else {
         var chanceToHit = 1 - (this.averageAC - 1 - toHit) / 20;
       }
-      chanceToHit = this.advantage
+      chanceToHit = this.character.advantage
         ? 1 - Math.pow(1 - chanceToHit, 2)
         : chanceToHit;
-      this.critChance = this.advantage
-        ? Math.pow(1 - this.critChance, 2)
+      var critChance = this.character.advantage
+        ? 1 - Math.pow(1 - this.critChance, 2)
         : this.critChance;
+      console.log(critChance);
       var critDamage =
-        this.numberOfAttacks * this.critChance * this.averageDamageDie;
+        this.numberOfAttacks * critChance * this.averageDamageDie;
       return (chanceToHit * averageDamage + critDamage).toFixed(1);
     }
   },
