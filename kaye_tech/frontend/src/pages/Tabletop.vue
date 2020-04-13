@@ -122,7 +122,9 @@ export default {
   },
   computed: {
     damage() {
-      this.attackBonus = this.magic ? this.attackStat + 1 : this.attackStat;
+      this.attackBonus = this.character.magic
+        ? this.attackStat + 1
+        : this.attackStat;
       if (this.character.fightingStyle == "Archery") {
         this.attackBonus = this.attackBonus + 2;
       }
@@ -141,7 +143,6 @@ export default {
       var critChance = this.character.advantage
         ? 1 - Math.pow(1 - this.critChance, 2)
         : this.critChance;
-      console.log(critChance);
       var critDamage =
         this.numberOfAttacks * critChance * this.averageDamageDie;
       return (chanceToHit * averageDamage + critDamage).toFixed(1);
@@ -193,9 +194,9 @@ export default {
           this.displayDice = "d6 + d6";
           break;
       }
-      this.attackDamage = this.magic
-        ? this.averageDamageDie + this.extraDamage + this.attackStat
-        : this.averageDamageDie + this.extraDamage + this.attackStat + 1;
+      this.attackDamage = this.character.magic
+        ? this.averageDamageDie + this.extraDamage + this.attackStat + 1
+        : this.averageDamageDie + this.extraDamage + this.attackStat;
     },
     calculateAverageAC() {
       return Math.ceil(this.character.level / 3) + 13;
