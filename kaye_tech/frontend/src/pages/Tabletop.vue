@@ -68,8 +68,8 @@
             :menu-props="{ transition: 'slide-y-transition' }"
           ></v-select>
         </v-col>
-        <v-col cols="2" sm="2">
-          <v-text-field v-model="displayDice" label="Attack Dice (base)" required></v-text-field>
+        <v-col cols="1" sm="1">
+          <v-text-field v-model="displayDice" label="Attack Dice" required></v-text-field>
         </v-col>
         <v-col cols="1" sm="1">
           <v-text-field v-model="averageAC" label="Est. AC" required></v-text-field>
@@ -100,13 +100,19 @@ export default {
       character: {
         level: 1,
         class: "Fighter",
-        fightingStyle: "Duelling",
+        fightingStyle: "Protection",
         advantage: false,
         magic: false
       },
       requiredField: [v => !!v],
       classes: ["Fighter"],
-      fightingStyles: ["Duelling", "Two-Handed", "Two-Weapon", "Archery"],
+      fightingStyles: [
+        "Duelling",
+        "Two-Handed",
+        "Two-Weapon",
+        "Archery",
+        "Protection"
+      ],
       attackDamage: 0,
       bonusAttackDamage: 0,
       averageAC: 14,
@@ -192,6 +198,10 @@ export default {
         case "Two-Weapon":
           this.averageDamageDie = 3.5;
           this.displayDice = "d6 + d6";
+          break;
+        case "Protection":
+          this.averageDamageDie = 4.5;
+          this.displayDice = "d8";
           break;
       }
       this.attackDamage = this.character.magic
