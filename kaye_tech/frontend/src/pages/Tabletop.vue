@@ -164,6 +164,7 @@ export default {
       numberOfAttacks: 1,
       extraDamage: 0,
       critChance: 0.05,
+      chanceToHit: 0,
       displayDice: ""
     };
   },
@@ -202,7 +203,10 @@ export default {
       return 0;
     },
     boomingBladeDamage() {
-      return this.damage + this.warMagicDamage + 4.5;
+      var moveDamage = this.warMagicDamage + 4.5;
+      return parseFloat(
+        (this.damage + this.chanceToHit * moveDamage).toFixed(1)
+      );
     },
     damage() {
       this.attackBonus = this.character.magic
@@ -212,22 +216,25 @@ export default {
         this.attackBonus = this.attackBonus + 2;
       }
       var toHit = this.proficiencyBonus + this.attackBonus;
-      var baseDamage = this.numberOfAttacks * this.attackDamage;
       if (this.averageAC <= toHit) {
-        var chanceToHit = 1;
+        this.chanceToHit = 1;
       } else {
-        var chanceToHit = Math.max(1 - (this.averageAC - 1 - toHit) / 20, 0.05);
+        this.chanceToHit = Math.max(
+          1 - (this.averageAC - 1 - toHit) / 20,
+          0.05
+        );
       }
-      chanceToHit = this.character.advantage
-        ? 1 - Math.pow(1 - chanceToHit, 2)
-        : chanceToHit;
+      this.chanceToHit = this.character.advantage
+        ? 1 - Math.pow(1 - this.chanceToHit, 2)
+        : this.chanceToHit;
       var critChance = this.character.advantage
         ? 1 - Math.pow(1 - this.critChance, 2)
         : this.critChance;
       var critDamage =
         this.numberOfAttacks * critChance * this.averageDamageDie;
       if (this.superiorityDieDamage > 0) {
-        var chanceOfAHit = 1 - Math.pow(1 - chanceToHit, this.numberOfAttacks);
+        var chanceOfAHit =
+          1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
         var chanceOfACrit =
           1 - Math.pow(1 - this.critChance, this.numberOfAttacks);
         var extraDamage =
@@ -235,13 +242,14 @@ export default {
           chanceOfACrit * this.superiorityDieDamage;
       } else if (this.warMagicDamage > 0) {
         var extraDamage =
-          chanceToHit * this.warMagicDamage +
+          this.chanceToHit * this.warMagicDamage +
           this.critChance * this.warMagicDamage;
       } else {
         var extraDamage = 0;
       }
+      var baseDamage = this.numberOfAttacks * this.attackDamage;
       return parseFloat(
-        (chanceToHit * baseDamage + critDamage + extraDamage).toFixed(1)
+        (this.chanceToHit * baseDamage + critDamage + extraDamage).toFixed(1)
       );
     }
   },
