@@ -21,7 +21,7 @@
           <v-select
             v-model="characterClass"
             :rules="requiredField"
-            :items="classes"
+            :items="classList"
             required
             attach
             label="Class"
@@ -32,7 +32,7 @@
           <v-select
             v-model="subclass"
             :rules="requiredField"
-            :items="subclasses"
+            :items="subclasses[characterClass]"
             required
             attach
             label="Sublass"
@@ -50,12 +50,6 @@
             :menu-props="{ transition: 'slide-y-transition' }"
           ></v-select>
         </v-col>
-        <v-col cols="2" sm="2">
-          <v-switch v-model="bonuses.advantage" class="ma-2" label="Advantage"></v-switch>
-        </v-col>
-        <v-col cols="2" sm="2">
-          <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
-        </v-col>
         <v-col cols="2" sm="2" v-if="subclass=='Battle Master'">
           <v-switch
             :disabled="characterLevel<3"
@@ -70,6 +64,22 @@
             v-model="bonuses.warMagic"
             class="ma-2"
             label="War Magic"
+          ></v-switch>
+        </v-col>
+        <v-col cols="2" sm="2" v-if="characterClass==classes.ranger">
+          <v-switch
+            :disabled="characterLevel<3"
+            v-model="bonuses.huntersMark"
+            class="ma-2"
+            label="Hunter's Mark"
+          ></v-switch>
+        </v-col>
+        <v-col cols="2" sm="2" v-if="subclass=='Hunter'">
+          <v-switch
+            :disabled="characterLevel<3"
+            v-model="bonuses.colossusSlayer"
+            class="ma-2"
+            label="Colossus Slayer"
           ></v-switch>
         </v-col>
       </v-row>
@@ -110,6 +120,12 @@
             :menu-props="{ transition: 'slide-y-transition' }"
           ></v-select>
         </v-col>
+        <v-col cols="2" sm="2">
+          <v-switch v-model="bonuses.advantage" class="ma-2" label="Advantage"></v-switch>
+        </v-col>
+        <v-col cols="2" sm="2">
+          <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
+        </v-col>
       </v-row>
     </v-card-text>
     <v-card-title>{{"Expected Damage: " + totalDamage }}</v-card-title>
@@ -125,6 +141,19 @@ export default {
   mounted() {},
   created() {
     this.calculateFields();
+    this.classes = {
+      fighter: "Fighter",
+      ranger: "Ranger"
+    };
+    for (var value in this.classes) {
+      this.classList.push(this.classes[value]);
+    }
+    this.subclasses[this.classes.fighter] = [
+      "Battle Master",
+      "Champion",
+      "Eldritch Knight"
+    ];
+    this.subclasses[this.classes.ranger] = ["Beast Master", "Hunter"];
     this.fightingStyles = {
       duelling: "Duelling",
       twoHanded: "Two-Handed",
@@ -147,11 +176,14 @@ export default {
         advantage: false,
         superiorityDie: false,
         magic: false,
-        warMagic: false
+        warMagic: false,
+        huntersMark: false,
+        colossusSlayer: false
       },
       requiredField: [v => !!v],
-      classes: ["Fighter"],
-      subclasses: ["Battle Master", "Champion", "Eldritch Knight"],
+      classes: {},
+      classList: [],
+      subclasses: {},
       fightingStyles: {},
       fightingStyleList: [],
       bonusAttackDamage: 0,
@@ -214,23 +246,26 @@ export default {
         : critChance;
     },
     abiltyDamage() {
+      var chanceOfAHit =
+        1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
+      var chanceOfACrit =
+        1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
+      var damageChance = this.chanceToHit + this.chanceToCrit;
       if (this.superiorityDieDamage > 0) {
-        var chanceOfAHit =
-          1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
-        var chanceOfACrit =
-          1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
-        return (
-          chanceOfAHit * this.superiorityDieDamage +
-          chanceOfACrit * this.superiorityDieDamage
-        );
+        return (chanceOfAHit + chanceOfACrit) * this.superiorityDieDamage;
       } else if (this.warMagicDamage > 0) {
-        return (
-          this.chanceToHit * this.warMagicDamage +
-          this.chanceToCrit * this.warMagicDamage
-        );
-      } else {
-        return 0;
+        return damageChance * this.warMagicDamage;
       }
+      if (this.characterClass == this.classes.ranger) {
+        var huntersMarkDamage = this.bonuses.huntersMark
+          ? 3.5 * this.numberOfAttacks * damageChance
+          : 0;
+        var colossusSlayerDamage = this.bonuses.colossusSlayer
+          ? 4.5 * (chanceOfAHit + chanceOfACrit)
+          : 0;
+        return huntersMarkDamage + colossusSlayerDamage;
+      }
+      return 0;
     },
     superiorityDieDamage() {
       if (this.subclass == "Battle Master" && this.bonuses.superiorityDie) {
@@ -286,7 +321,7 @@ export default {
     },
     calculateAttackStat() {
       var baseStat = Math.min(Math.floor(this.characterLevel / 4) + 3, 5);
-      if (this.characterClass == "Fighter") {
+      if (this.characterClass == this.classes.fighter) {
         this.attackStat = this.characterLevel > 5 ? 5 : baseStat;
       } else {
         this.attackStat = baseStat;
@@ -332,6 +367,12 @@ export default {
             this.numberOfAttacks = 1;
           }
           break;
+        case "Ranger":
+          if (this.characterLevel > 4) {
+            this.numberOfAttacks = 2;
+          } else {
+            this.numberOfAttacks = 1;
+          }
       }
       this.numberOfAttacks =
         this.fightingStyle == this.fightingStyles.twoWeapon
@@ -351,6 +392,7 @@ export default {
       handler() {
         this.calculateAttackStat();
         this.calculateNumberOfAttacks();
+        this.subclass = this.subclasses[this.characterClass][0];
       }
     },
     fightingStyle: {
