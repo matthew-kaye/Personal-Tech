@@ -61,7 +61,7 @@
         <v-col cols="2" sm="2" v-if="subclass=='Eldritch Knight'">
           <v-switch
             :disabled="characterLevel<7"
-            v-model="bonuses.warMagic"
+            v-model="abilities.warMagic"
             class="ma-2"
             label="War Magic"
           ></v-switch>
@@ -69,7 +69,7 @@
         <v-col cols="2" sm="2" v-if="characterClass==classes.ranger">
           <v-switch
             :disabled="characterLevel==1"
-            v-model="bonuses.huntersMark"
+            v-model="abilities.huntersMark"
             class="ma-2"
             label="Hunter's Mark"
           ></v-switch>
@@ -77,7 +77,7 @@
         <v-col cols="2" sm="2" v-if="subclass=='Hunter'">
           <v-switch
             :disabled="characterLevel<3"
-            v-model="bonuses.colossusSlayer"
+            v-model="abilities.colossusSlayer"
             class="ma-2"
             label="Colossus Slayer"
           ></v-switch>
@@ -130,7 +130,7 @@
     </v-card-text>
     <v-card-title>{{"Expected Damage: " + totalDamage }}</v-card-title>
     <v-card-title
-      v-if="bonuses.warMagic"
+      v-if="abilities.warMagic"
     >{{"Expected Damage (Enemy Moves): " + boomingBladeDamage }}</v-card-title>
   </v-card>
 </template>
@@ -175,7 +175,9 @@ export default {
       bonuses: {
         advantage: false,
         superiorityDie: false,
-        magic: false,
+        magic: false
+      },
+      abilities: {
         warMagic: false,
         huntersMark: false,
         colossusSlayer: false
@@ -197,12 +199,13 @@ export default {
   },
   computed: {
     totalDamage() {
+      console.log(this.numberOfAttacks);
       var baseDamage =
         this.numberOfAttacks * this.attackDamage * this.chanceToHit;
       var critDamage =
         this.numberOfAttacks * this.chanceToCrit * this.averageDamageDie;
       return parseFloat(
-        (baseDamage + critDamage + this.abiltyDamage).toFixed(1)
+        (baseDamage + critDamage + this.abilityDamage).toFixed(1)
       );
     },
     attackDamage() {
@@ -245,7 +248,7 @@ export default {
         ? 1 - Math.pow(1 - critChance, 2)
         : critChance;
     },
-    abiltyDamage() {
+    abilityDamage() {
       var chanceOfAHit =
         1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
       var chanceOfACrit =
@@ -257,16 +260,16 @@ export default {
         return damageChance * this.warMagicDamage;
       }
       this.bonuses.superiorityDie = false;
-      this.bonuses.warMagic = false;
-      this.bonuses.huntersMark =
-        this.characterLevel > 1 ? this.bonuses.huntersMark : false;
-      this.bonuses.colossusSlayer =
-        this.characterLevel > 2 ? this.bonuses.colossusSlayer : false;
+      this.abilities.warMagic = false;
+      this.abilities.huntersMark =
+        this.characterLevel > 1 ? this.abilities.huntersMark : false;
+      this.abilities.colossusSlayer =
+        this.characterLevel > 2 ? this.abilities.colossusSlayer : false;
       if (this.characterClass == this.classes.ranger) {
-        var huntersMarkDamage = this.bonuses.huntersMark
+        var huntersMarkDamage = this.abilities.huntersMark
           ? 3.5 * this.numberOfAttacks * damageChance
           : 0;
-        var colossusSlayerDamage = this.bonuses.colossusSlayer
+        var colossusSlayerDamage = this.abilities.colossusSlayer
           ? 4.5 * (chanceOfAHit + chanceOfACrit)
           : 0;
         return huntersMarkDamage + colossusSlayerDamage;
@@ -286,7 +289,7 @@ export default {
       return 0;
     },
     warMagicDamage() {
-      if (this.subclass == "Eldritch Knight" && this.bonuses.warMagic) {
+      if (this.subclass == "Eldritch Knight" && this.abilities.warMagic) {
         this.numberOfAttacks = 2;
         if (this.characterLevel > 16) {
           return 13.5;
@@ -404,6 +407,16 @@ export default {
       handler() {
         this.calculateAttackDice();
         this.calculateNumberOfAttacks();
+      }
+    },
+    abilities: {
+      deep: true,
+      handler() {
+        if (this.abilities.warMagic) {
+          this.numberOfAttacks = 2;
+        } else {
+          this.calculateNumberOfAttacks();
+        }
       }
     }
   }
