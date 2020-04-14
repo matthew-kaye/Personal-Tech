@@ -17,7 +17,7 @@
             :menu-props="{ transition: 'slide-y-transition' }"
           ></v-select>
         </v-col>
-        <v-col cols="1" sm="1">
+        <v-col cols="2" sm="2">
           <v-select
             v-model="characterClass"
             :rules="requiredField"
@@ -68,7 +68,7 @@
         </v-col>
         <v-col cols="2" sm="2" v-if="characterClass==classes.ranger">
           <v-switch
-            :disabled="characterLevel<3"
+            :disabled="characterLevel==1"
             v-model="bonuses.huntersMark"
             class="ma-2"
             label="Hunter's Mark"
@@ -256,6 +256,12 @@ export default {
       } else if (this.warMagicDamage > 0) {
         return damageChance * this.warMagicDamage;
       }
+      this.bonuses.superiorityDie = false;
+      this.bonuses.warMagic = false;
+      this.bonuses.huntersMark =
+        this.characterLevel > 1 ? this.bonuses.huntersMark : false;
+      this.bonuses.colossusSlayer =
+        this.characterLevel > 2 ? this.bonuses.colossusSlayer : false;
       if (this.characterClass == this.classes.ranger) {
         var huntersMarkDamage = this.bonuses.huntersMark
           ? 3.5 * this.numberOfAttacks * damageChance
@@ -277,7 +283,6 @@ export default {
           return 4.5;
         }
       }
-      this.bonuses.superiorityDie = false;
       return 0;
     },
     warMagicDamage() {
@@ -291,7 +296,6 @@ export default {
           return 4.5;
         }
       }
-      this.bonuses.warMagic = false;
       return 0;
     },
     boomingBladeDamage() {
