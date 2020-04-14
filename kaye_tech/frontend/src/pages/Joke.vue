@@ -35,6 +35,7 @@ import axios from "axios";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
+var MAX_JOKES_RETURNED_BY_SITE = 20;
 
 export default {
   components: {},
@@ -59,10 +60,13 @@ export default {
           .catch(error => console.log(error));
         jokeResponse.then(data => {
           if (data.total_jokes > 0) {
-            var max = data.total_jokes > 20 ? 20 : data.total_jokes;
+            var max =
+              data.total_jokes > MAX_JOKES_RETURNED_BY_SITE
+                ? MAX_JOKES_RETURNED_BY_SITE
+                : data.total_jokes;
             this.joke = data.results[Math.floor(Math.random() * max)].joke;
           } else {
-            this.joke = "Apparently that's not a funny word";
+            this.joke = `Apparently ${searchTerm} is not a funny word`;
           }
         });
       }
