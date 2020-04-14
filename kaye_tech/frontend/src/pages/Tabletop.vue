@@ -3,12 +3,12 @@
     <v-card-title class="primary headline">
       <span class="white--text">Expected Damage Calculator</span>
     </v-card-title>
-    <v-card-title>Required fields</v-card-title>
+    <v-card-title>Character Options</v-card-title>
     <v-card-text>
       <v-row>
         <v-col cols="1" sm="1">
           <v-select
-            v-model="character.level"
+            v-model="characterLevel"
             :rules="requiredField"
             :items="getNumberArray(1, 20)"
             required
@@ -19,7 +19,7 @@
         </v-col>
         <v-col cols="1" sm="1">
           <v-select
-            v-model="character.class"
+            v-model="characterClass"
             :rules="requiredField"
             :items="classes"
             required
@@ -30,7 +30,7 @@
         </v-col>
         <v-col cols="2" sm="2">
           <v-select
-            v-model="character.subclass"
+            v-model="subclass"
             :rules="requiredField"
             :items="subclasses"
             required
@@ -41,7 +41,7 @@
         </v-col>
         <v-col cols="2" sm="2">
           <v-select
-            v-model="character.fightingStyle"
+            v-model="fightingStyle"
             :rules="requiredField"
             :items="fightingStyleList"
             required
@@ -56,17 +56,17 @@
         <v-col cols="2" sm="2">
           <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
         </v-col>
-        <v-col cols="2" sm="2" v-if="character.subclass=='Battle Master'">
+        <v-col cols="2" sm="2" v-if="subclass=='Battle Master'">
           <v-switch
-            :disabled="character.level<3"
+            :disabled="characterLevel<3"
             v-model="bonuses.superiorityDie"
             class="ma-2"
             label="Superiority Dmg"
           ></v-switch>
         </v-col>
-        <v-col cols="2" sm="2" v-if="character.subclass=='Eldritch Knight'">
+        <v-col cols="2" sm="2" v-if="subclass=='Eldritch Knight'">
           <v-switch
-            :disabled="character.level<7"
+            :disabled="characterLevel<7"
             v-model="bonuses.warMagic"
             class="ma-2"
             label="War Magic"
@@ -74,7 +74,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-title>Calculated Fields</v-card-title>
+    <v-card-title>Stats</v-card-title>
     <v-card-text>
       <v-row>
         <v-col cols="1" sm="1">
@@ -112,7 +112,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-title>{{"Expected Damage: " + damage }}</v-card-title>
+    <v-card-title>{{"Expected Damage: " + totalDamage }}</v-card-title>
     <v-card-title
       v-if="bonuses.warMagic"
     >{{"Expected Damage (Enemy Moves): " + boomingBladeDamage }}</v-card-title>
@@ -139,12 +139,10 @@ export default {
   },
   data() {
     return {
-      character: {
-        level: 1,
-        class: "Fighter",
-        subclass: "Battle Master",
-        fightingStyle: "Duelling"
-      },
+      characterLevel: 1,
+      characterClass: "Fighter",
+      subclass: "Battle Master",
+      fightingStyle: "Duelling",
       bonuses: {
         advantage: false,
         superiorityDie: false,
@@ -156,32 +154,37 @@ export default {
       subclasses: ["Battle Master", "Champion", "Eldritch Knight"],
       fightingStyles: {},
       fightingStyleList: [],
-      attackDamage: 0,
       bonusAttackDamage: 0,
       averageAC: 14,
       attackStat: 3,
       averageDamageDie: 6,
       proficiencyBonus: 2,
       numberOfAttacks: 1,
-      extraDamage: 0,
-      critChance: 0.05,
       displayDice: ""
     };
   },
   computed: {
-    damage() {
+    totalDamage() {
       var baseDamage =
         this.numberOfAttacks * this.attackDamage * this.chanceToHit;
       var critDamage =
         this.numberOfAttacks * this.chanceToCrit * this.averageDamageDie;
-      var extraDamage = this.calculateExtraDamage();
-      return parseFloat((baseDamage + critDamage + extraDamage).toFixed(1));
+      return parseFloat(
+        (baseDamage + critDamage + this.abiltyDamage).toFixed(1)
+      );
+    },
+    attackDamage() {
+      var extraDamage =
+        this.fightingStyle == this.fightingStyles.duelling ? 2 : 0;
+      return this.bonuses.magic
+        ? this.averageDamageDie + extraDamage + this.attackStat + 1
+        : this.averageDamageDie + extraDamage + this.attackStat;
     },
     attackBonus() {
       var attackBonus = this.bonuses.magic
         ? this.attackStat + 1
         : this.attackStat;
-      if (this.character.fightingStyle == this.fightingStyles.archery) {
+      if (this.fightingStyle == this.fightingStyles.archery) {
         attackBonus = attackBonus + 2;
       }
       return attackBonus;
@@ -198,29 +201,44 @@ export default {
         : chanceToHit;
     },
     chanceToCrit() {
-      if (this.character.subclass == "Champion") {
-        if (this.character.level > 14) {
-          var baseChance = 0.15;
-        } else if (this.character.level > 2) {
-          var baseChance = 0.1;
+      var critChance = 0.05;
+      if (this.subclass == "Champion") {
+        if (this.characterLevel > 14) {
+          critChance = 0.15;
+        } else if (this.characterLevel > 2) {
+          critChance = 0.1;
         }
-      } else {
-        var baseChance = 0.05;
       }
       return this.bonuses.advantage
-        ? 1 - Math.pow(1 - baseChance, 2)
-        : baseChance;
+        ? 1 - Math.pow(1 - critChance, 2)
+        : critChance;
+    },
+    abiltyDamage() {
+      if (this.superiorityDieDamage > 0) {
+        var chanceOfAHit =
+          1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
+        var chanceOfACrit =
+          1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
+        return (
+          chanceOfAHit * this.superiorityDieDamage +
+          chanceOfACrit * this.superiorityDieDamage
+        );
+      } else if (this.warMagicDamage > 0) {
+        return (
+          this.chanceToHit * this.warMagicDamage +
+          this.chanceToCrit * this.warMagicDamage
+        );
+      } else {
+        return 0;
+      }
     },
     superiorityDieDamage() {
-      if (
-        this.character.subclass == "Battle Master" &&
-        this.bonuses.superiorityDie
-      ) {
-        if (this.character.level > 17) {
+      if (this.subclass == "Battle Master" && this.bonuses.superiorityDie) {
+        if (this.characterLevel > 17) {
           return 6.5;
-        } else if (this.character.level > 9) {
+        } else if (this.characterLevel > 9) {
           return 5.5;
-        } else if (this.character.level > 2) {
+        } else if (this.characterLevel > 2) {
           return 4.5;
         }
       }
@@ -228,16 +246,13 @@ export default {
       return 0;
     },
     warMagicDamage() {
-      if (
-        this.character.subclass == "Eldritch Knight" &&
-        this.bonuses.warMagic
-      ) {
+      if (this.subclass == "Eldritch Knight" && this.bonuses.warMagic) {
         this.numberOfAttacks = 2;
-        if (this.character.level > 16) {
+        if (this.characterLevel > 16) {
           return 13.5;
-        } else if (this.character.level > 10) {
+        } else if (this.characterLevel > 10) {
           return 9;
-        } else if (this.character.level > 4) {
+        } else if (this.characterLevel > 4) {
           return 4.5;
         }
       }
@@ -247,7 +262,7 @@ export default {
     boomingBladeDamage() {
       var moveDamage = this.warMagicDamage + 4.5;
       return parseFloat(
-        (this.damage + this.chanceToHit * moveDamage).toFixed(1)
+        (this.totalDamage + this.chanceToHit * moveDamage).toFixed(1)
       );
     }
   },
@@ -267,22 +282,20 @@ export default {
       this.calculateNumberOfAttacks();
     },
     calculateProficiencyBonus() {
-      this.proficiencyBonus = Math.ceil(this.character.level / 4) + 1;
+      this.proficiencyBonus = Math.ceil(this.characterLevel / 4) + 1;
     },
     calculateAttackStat() {
-      var baseStat = Math.min(Math.floor(this.character.level / 4) + 3, 5);
-      if (this.character.class == "Fighter") {
-        this.attackStat = this.character.level > 5 ? 5 : baseStat;
+      var baseStat = Math.min(Math.floor(this.characterLevel / 4) + 3, 5);
+      if (this.characterClass == "Fighter") {
+        this.attackStat = this.characterLevel > 5 ? 5 : baseStat;
       } else {
         this.attackStat = baseStat;
       }
     },
     calculateAttackDice() {
-      this.extraDamage = 0;
-      switch (this.character.fightingStyle) {
+      switch (this.fightingStyle) {
         case this.fightingStyles.duelling:
           this.averageDamageDie = 4.5;
-          this.extraDamage = 2;
           this.displayDice = "d8 + 2";
           break;
         case this.fightingStyles.twoHanded:
@@ -295,74 +308,56 @@ export default {
           break;
         case this.fightingStyles.twoWeapon:
           this.averageDamageDie = 3.5;
-          this.displayDice = "d6 + d6";
+          this.displayDice = "d6";
           break;
         case this.fightingStyles.protection:
           this.averageDamageDie = 4.5;
           this.displayDice = "d8";
           break;
       }
-      this.attackDamage = this.bonuses.magic
-        ? this.averageDamageDie + this.extraDamage + this.attackStat + 1
-        : this.averageDamageDie + this.extraDamage + this.attackStat;
     },
     calculateAverageAC() {
-      this.averageAC = Math.ceil(this.character.level / 3) + 13;
+      this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
     },
     calculateNumberOfAttacks() {
-      var bonusAttacks =
-        this.character.fightingStyle == this.fightingStyles.twoWeapon ? 1 : 0;
-      switch (this.character.class) {
+      switch (this.characterClass) {
         case "Fighter":
-          if (this.character.level == 20) {
-            this.numberOfAttacks = 4 + bonusAttacks;
-          } else if (this.character.level > 10) {
-            this.numberOfAttacks = 3 + bonusAttacks;
-          } else if (this.character.level > 4) {
-            this.numberOfAttacks = 2 + bonusAttacks;
+          if (this.characterLevel == 20) {
+            this.numberOfAttacks = 4;
+          } else if (this.characterLevel > 10) {
+            this.numberOfAttacks = 3;
+          } else if (this.characterLevel > 4) {
+            this.numberOfAttacks = 2;
           } else {
-            this.numberOfAttacks = 1 + bonusAttacks;
+            this.numberOfAttacks = 1;
           }
           break;
       }
-    },
-    calculateExtraDamage() {
-      if (this.superiorityDieDamage > 0) {
-        var chanceOfAHit =
-          1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
-        var chanceOfACrit =
-          1 - Math.pow(1 - this.critChance, this.numberOfAttacks);
-        return (
-          chanceOfAHit * this.superiorityDieDamage +
-          chanceOfACrit * this.superiorityDieDamage
-        );
-      } else if (this.warMagicDamage > 0) {
-        return (
-          this.chanceToHit * this.warMagicDamage +
-          this.critChance * this.warMagicDamage
-        );
-      } else {
-        return 0;
-      }
+      this.numberOfAttacks =
+        this.fightingStyle == this.fightingStyles.twoWeapon
+          ? this.numberOfAttacks + 1
+          : this.numberOfAttacks;
     }
   },
   watch: {
-    character: {
+    characterLevel: {
       deep: true,
       handler() {
         this.calculateFields();
       }
     },
-    level: {
+    characterClass: {
       deep: true,
       handler() {
-        this.calculateFields();
+        this.calculateAttackStat();
+        this.calculateNumberOfAttacks();
       }
     },
-    bonuses: {
+    fightingStyle: {
       deep: true,
       handler() {
-        this.calculateFields();
+        this.calculateAttackDice();
+        this.calculateNumberOfAttacks();
       }
     }
   }
