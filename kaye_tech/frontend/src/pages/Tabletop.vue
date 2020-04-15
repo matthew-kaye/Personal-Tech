@@ -408,9 +408,9 @@ export default {
       switch (this.characterClass) {
         case "Fighter":
           if (this.characterLevel == 20) {
-            this.numberOfAttacks = 4;
+            this.numberOfAttacks = this.abilities.warMagic ? 2 : 4;
           } else if (this.characterLevel > 10) {
-            this.numberOfAttacks = 3;
+            this.numberOfAttacks = this.abilities.warMagic ? 2 : 3;
           } else if (this.characterLevel > 4) {
             this.numberOfAttacks = 2;
           } else {
@@ -419,7 +419,7 @@ export default {
           break;
         case "Ranger":
           if (this.characterLevel > 4) {
-            this.numberOfAttacks = 2;
+            this.numberOfAttacks = this.abilities.wolfAttack ? 1 : 2;
           } else {
             this.numberOfAttacks = 1;
           }
@@ -479,13 +479,7 @@ export default {
     abilities: {
       deep: true,
       handler() {
-        if (this.abilities.warMagic) {
-          this.numberOfAttacks = 2;
-        } else if (this.abilities.wolfAttack) {
-          this.numberOfAttacks = this.characterLevel > 4 ? 1 : 0;
-        } else {
-          this.calculateNumberOfAttacks();
-        }
+        this.calculateNumberOfAttacks();
       }
     }
   }
