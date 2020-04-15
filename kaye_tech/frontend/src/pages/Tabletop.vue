@@ -82,6 +82,14 @@
             label="Colossus Slayer"
           ></v-switch>
         </v-col>
+        <v-col cols="2" sm="2" v-if="subclass=='Beast Master'">
+          <v-switch
+            :disabled="characterLevel<3"
+            v-model="abilities.wolfAttack"
+            class="ma-2"
+            label="Wolf"
+          ></v-switch>
+        </v-col>
       </v-row>
     </v-card-text>
     <v-card-title>Stats</v-card-title>
@@ -114,7 +122,7 @@
         <v-col cols="1" sm="1">
           <v-select
             v-model="numberOfAttacks"
-            :items="getNumberArray(1,4)"
+            :items="getNumberArray(1,5)"
             attach
             label="Attacks"
             :menu-props="{ transition: 'slide-y-transition' }"
@@ -155,11 +163,20 @@ export default {
     ];
     this.subclasses[this.classes.ranger] = ["Beast Master", "Hunter"];
     this.fightingStyles = {
+      archery: "Archery",
+      defence: "Defence (Greatsword)",
       duelling: "Duelling",
       twoHanded: "Two-Handed",
       twoWeapon: "Two-Weapon",
-      archery: "Archery",
       protection: "Protection"
+    };
+    this.weapons = {
+      longbow: 4.5,
+      longsword: 4.5,
+      greatsword: 7,
+      greataxe: 6.5,
+      heavyCrossbow: 5.5,
+      handaxe: 3.5
     };
     for (var value in this.fightingStyles) {
       this.fightingStyleList.push(this.fightingStyles[value]);
@@ -180,7 +197,8 @@ export default {
       abilities: {
         warMagic: false,
         huntersMark: false,
-        colossusSlayer: false
+        colossusSlayer: false,
+        wolfAttack: false
       },
       requiredField: [v => !!v],
       classes: {},
@@ -194,12 +212,17 @@ export default {
       averageDamageDie: 6,
       proficiencyBonus: 2,
       numberOfAttacks: 1,
-      displayDice: ""
+      displayDice: "",
+      weapons: [],
+      wolf: {
+        bonusToHit: 4,
+        averageDamageDie: 5,
+        damagePerHit: 7
+      }
     };
   },
   computed: {
     totalDamage() {
-      console.log(this.numberOfAttacks);
       var baseDamage =
         this.numberOfAttacks * this.attackDamage * this.chanceToHit;
       var critDamage =
@@ -211,9 +234,12 @@ export default {
     attackDamage() {
       var extraDamage =
         this.fightingStyle == this.fightingStyles.duelling ? 2 : 0;
-      return this.bonuses.magic
+      var attackDamage = this.bonuses.magic
         ? this.averageDamageDie + extraDamage + this.attackStat + 1
         : this.averageDamageDie + extraDamage + this.attackStat;
+      return this.abilities.wolfAttack
+        ? 7 + this.proficiencyBonus
+        : attackDamage;
     },
     attackBonus() {
       var attackBonus = this.bonuses.magic
@@ -226,14 +252,7 @@ export default {
     },
     chanceToHit() {
       var toHit = this.proficiencyBonus + this.attackBonus;
-      if (this.averageAC <= toHit) {
-        var chanceToHit = 1;
-      } else {
-        var chanceToHit = Math.max(1 - (this.averageAC - 1 - toHit) / 20, 0.05);
-      }
-      return this.bonuses.advantage
-        ? 1 - Math.pow(1 - chanceToHit, 2)
-        : chanceToHit;
+      return this.getChanceToHitFromBonusToHit(toHit);
     },
     chanceToCrit() {
       var critChance = 0.05;
@@ -261,10 +280,6 @@ export default {
       }
       this.bonuses.superiorityDie = false;
       this.abilities.warMagic = false;
-      this.abilities.huntersMark =
-        this.characterLevel > 1 ? this.abilities.huntersMark : false;
-      this.abilities.colossusSlayer =
-        this.characterLevel > 2 ? this.abilities.colossusSlayer : false;
       if (this.characterClass == this.classes.ranger) {
         var huntersMarkDamage = this.abilities.huntersMark
           ? 3.5 * this.numberOfAttacks * damageChance
@@ -272,7 +287,7 @@ export default {
         var colossusSlayerDamage = this.abilities.colossusSlayer
           ? 4.5 * (chanceOfAHit + chanceOfACrit)
           : 0;
-        return huntersMarkDamage + colossusSlayerDamage;
+        return huntersMarkDamage + colossusSlayerDamage + this.wolfDamage;
       }
       return 0;
     },
@@ -290,15 +305,40 @@ export default {
     },
     warMagicDamage() {
       if (this.subclass == "Eldritch Knight" && this.abilities.warMagic) {
-        this.numberOfAttacks = 2;
         if (this.characterLevel > 16) {
           return 13.5;
         } else if (this.characterLevel > 10) {
           return 9;
-        } else if (this.characterLevel > 4) {
+        } else if (this.characterLevel > 6) {
           return 4.5;
         }
       }
+      return 0;
+    },
+    wolfDamage() {
+      if (this.abilities.wolfAttack) {
+        var companionBonusToHit = this.wolf.bonusToHit + this.proficiencyBonus;
+        var wolfBiteDamage = this.wolf.damagePerHit + this.proficiencyBonus;
+        var wolfChanceToHit = this.getChanceToHitFromBonusToHit(
+          companionBonusToHit
+        );
+        return (
+          this.wolfAttacks *
+          (wolfChanceToHit * wolfBiteDamage +
+            this.chanceToCrit * this.wolf.averageDamageDie)
+        );
+      }
+      return 0;
+    },
+    wolfAttacks() {
+      if (this.subclass == "Beast Master" && this.abilities.wolfAttack) {
+        if (this.characterLevel > 10) {
+          return 2;
+        } else if (this.characterLevel > 2) {
+          return 1;
+        }
+      }
+      this.abilities.wolfAttack = false;
       return 0;
     },
     boomingBladeDamage() {
@@ -337,25 +377,28 @@ export default {
     calculateAttackDice() {
       switch (this.fightingStyle) {
         case this.fightingStyles.duelling:
-          this.averageDamageDie = 4.5;
+          this.averageDamageDie = this.weapons.longsword;
           this.displayDice = "d8 + 2";
           break;
         case this.fightingStyles.twoHanded:
-          this.averageDamageDie = 4.5 + 3.5;
+          this.averageDamageDie = this.weapons.greatsword + 4 / 3;
           this.displayDice = "2d6";
           break;
         case this.fightingStyles.archery:
-          this.averageDamageDie = 4.5;
+          this.averageDamageDie = this.weapons.longbow;
           this.displayDice = "d8";
           break;
         case this.fightingStyles.twoWeapon:
-          this.averageDamageDie = 3.5;
+          this.averageDamageDie = this.weapons.handaxe;
           this.displayDice = "d6";
           break;
         case this.fightingStyles.protection:
-          this.averageDamageDie = 4.5;
+          this.averageDamageDie = this.weapons.longsword;
           this.displayDice = "d8";
           break;
+        case this.fightingStyles.defence:
+          this.averageDamageDie = this.weapons.greatsword;
+          this.displayDice = "2d6";
       }
     },
     calculateAverageAC() {
@@ -385,6 +428,28 @@ export default {
         this.fightingStyle == this.fightingStyles.twoWeapon
           ? this.numberOfAttacks + 1
           : this.numberOfAttacks;
+    },
+    disableImpossibleAbilities() {
+      this.abilities.huntersMark =
+        this.characterLevel > 1 ? this.abilities.huntersMark : false;
+      this.abilities.colossusSlayer =
+        this.characterLevel > 2 && this.subclass == "Hunter"
+          ? this.abilities.colossusSlayer
+          : false;
+      this.abilities.wolfAttack =
+        this.characterLevel > 2 && this.subclass == "Beast Master"
+          ? this.abilities.wolfAttack
+          : false;
+    },
+    getChanceToHitFromBonusToHit(bonusToHit) {
+      var chanceToHit = Math.max(
+        1 - (this.averageAC - 1 - bonusToHit) / 20,
+        0.05
+      );
+      chanceToHit = Math.min(chanceToHit, 0.95);
+      return this.bonuses.advantage
+        ? 1 - Math.pow(1 - chanceToHit, 2)
+        : chanceToHit;
     }
   },
   watch: {
@@ -392,6 +457,7 @@ export default {
       deep: true,
       handler() {
         this.calculateFields();
+        this.disableImpossibleAbilities();
       }
     },
     characterClass: {
@@ -399,6 +465,7 @@ export default {
       handler() {
         this.calculateAttackStat();
         this.calculateNumberOfAttacks();
+        this.disableImpossibleAbilities();
         this.subclass = this.subclasses[this.characterClass][0];
       }
     },
@@ -414,6 +481,8 @@ export default {
       handler() {
         if (this.abilities.warMagic) {
           this.numberOfAttacks = 2;
+        } else if (this.abilities.wolfAttack) {
+          this.numberOfAttacks = this.characterLevel > 4 ? 1 : 0;
         } else {
           this.calculateNumberOfAttacks();
         }
