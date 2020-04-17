@@ -479,6 +479,9 @@ export default {
           : this.numberOfAttacks;
     },
     disableImpossibleAbilities() {
+      this.bonuses.magic = this.abilities.shadowBlade
+        ? false
+        : this.abilities.magic;
       this.abilities.huntersMark =
         this.characterLevel > 1 ? this.abilities.huntersMark : false;
       this.abilities.colossusSlayer =
@@ -549,6 +552,7 @@ export default {
     abilities: {
       deep: true,
       handler() {
+        this.disableImpossibleAbilities();
         this.calculateNumberOfAttacks();
         this.chooseWeaponFromStyle();
       }
