@@ -66,6 +66,18 @@
             label="War Magic"
           ></v-switch>
         </v-col>
+        <v-col
+          cols="2"
+          sm="2"
+          v-if="subclass=='Eldritch Knight' && ![fightingStyles.archery, fightingStyles.twoWeapon].includes(fightingStyle)"
+        >
+          <v-switch
+            :disabled="characterLevel<7"
+            v-model="abilities.shadowBlade"
+            class="ma-2"
+            label="Shadow Blade"
+          ></v-switch>
+        </v-col>
         <v-col cols="2" sm="2" v-if="characterClass==classes.ranger">
           <v-switch
             :disabled="characterLevel==1"
@@ -189,7 +201,8 @@ export default {
       greatsword: { damage: 7, dice: "2d6" },
       greataxe: { damage: 6.5, dice: "d12" },
       heavyCrossbow: { damage: 5.5, dice: "d10" },
-      handaxe: { damage: 3.5, dice: "d6" }
+      handaxe: { damage: 3.5, dice: "d6" },
+      shadowBlade: { damage: 9, dice: "2d8" }
     };
     for (var value in this.fightingStyles) {
       this.fightingStyleList.push(this.fightingStyles[value]);
@@ -214,7 +227,8 @@ export default {
         wolfAttack: false,
         sharpshooter: false,
         greatWeaponMaster: false,
-        dualWielder: false
+        dualWielder: false,
+        shadowBlade: false
       },
       requiredField: [v => !!v],
       classes: {},
@@ -294,7 +308,10 @@ export default {
       }
     },
     averageDamageDie() {
-      if (this.fightingStyle == this.fightingStyles.twoHanded) {
+      if (
+        this.fightingStyle == this.fightingStyles.twoHanded &&
+        this.weapon == this.weapons.greatsword
+      ) {
         return this.weapon.damage + 4 / 3;
       } else {
         return this.weapon.damage;
@@ -429,6 +446,9 @@ export default {
         case this.fightingStyles.defence:
           this.weapon = this.weapons.greatsword;
       }
+      this.weapon = this.abilities.shadowBlade
+        ? this.weapons.shadowBlade
+        : this.weapon;
     },
     calculateAverageAC() {
       this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
@@ -480,6 +500,14 @@ export default {
       this.abilities.dualWielder =
         this.fightingStyle == this.fightingStyles.twoWeapon
           ? this.abilities.dualWielder
+          : false;
+      this.abilities.shadowBlade =
+        this.subclass == "Eldritch Knight" &&
+        this.characterLevel > 6 &&
+        ![this.fightingStyles.archery, this.fightingStyles.twoWeapon].includes(
+          this.fightingStyle
+        )
+          ? this.abilities.shadowBlade
           : false;
     },
     getChanceToHitFromBonusToHit(bonusToHit) {
