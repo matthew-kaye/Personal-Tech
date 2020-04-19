@@ -69,7 +69,7 @@
         <v-col
           cols="2"
           sm="2"
-          v-if="subclass=='Eldritch Knight' && ![fightingStyles.archery, fightingStyles.twoWeapon].includes(fightingStyle)"
+          v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery"
         >
           <v-switch
             :disabled="characterLevel<7"
@@ -236,13 +236,13 @@ export default {
       subclasses: {},
       fightingStyles: {},
       fightingStyleList: [],
-      bonusAttackDamage: 0,
       averageAC: 14,
       attackStat: 3,
       proficiencyBonus: 2,
       numberOfAttacks: 1,
       weapons: [],
       weapon: {},
+      bonusWeapon: {},
       wolf: {
         bonusToHit: 4,
         averageDamageDie: 5,
@@ -256,26 +256,36 @@ export default {
         this.numberOfAttacks * this.attackDamage * this.chanceToHit;
       var critDamage =
         this.numberOfAttacks * this.chanceToCrit * this.averageDamageDie;
-      return parseFloat(
-        (baseDamage + critDamage + this.abilityDamage).toFixed(1)
-      );
+      var extraDamage = this.abilityDamage + this.bonusAttackDamage;
+      return parseFloat(baseDamage + critDamage + extraDamage).toFixed(1);
     },
     attackDamage() {
       var extraDamage =
         this.fightingStyle == this.fightingStyles.duelling ? 2 : 0;
-      var attackDamage = this.bonuses.magic
-        ? this.averageDamageDie + extraDamage + this.attackStat + 1
-        : this.averageDamageDie + extraDamage + this.attackStat;
+      var magicBonus =
+        !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
+      var attackDamage =
+        this.averageDamageDie + extraDamage + this.attackStat + magicBonus;
       var attackDamage =
         this.abilities.sharpshooter || this.abilities.greatWeaponMaster
           ? attackDamage + 10
           : attackDamage;
       return attackDamage;
     },
+    bonusAttackDamage() {
+      var magicBonus = this.bonuses.magic ? 1 : 0;
+      var toHit = this.proficiencyBonus + this.attackBonus + magicBonus;
+      var chanceToHit = this.getChanceToHitFromBonusToHit(toHit);
+      return this.fightingStyle == this.fightingStyles.twoWeapon
+        ? (this.bonusWeapon.damage + this.attackStat + magicBonus) *
+            chanceToHit +
+            this.chanceToCrit * this.bonusWeapon.damage
+        : 0;
+    },
     attackBonus() {
-      var attackBonus = this.bonuses.magic
-        ? this.attackStat + 1
-        : this.attackStat;
+      var magicBonus =
+        !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
+      var attackBonus = this.attackStat + magicBonus;
       if (this.fightingStyle == this.fightingStyles.archery) {
         attackBonus = this.abilities.sharpshooter
           ? attackBonus - 3
@@ -439,6 +449,7 @@ export default {
           this.weapon = this.abilities.dualWielder
             ? this.weapons.longsword
             : this.weapons.handaxe;
+          this.bonusWeapon = this.weapon;
           break;
         case this.fightingStyles.protection:
           this.weapon = this.weapons.longsword;
@@ -473,15 +484,8 @@ export default {
             this.numberOfAttacks = 1;
           }
       }
-      this.numberOfAttacks =
-        this.fightingStyle == this.fightingStyles.twoWeapon
-          ? this.numberOfAttacks + 1
-          : this.numberOfAttacks;
     },
     disableImpossibleAbilities() {
-      this.bonuses.magic = this.abilities.shadowBlade
-        ? false
-        : this.abilities.magic;
       this.abilities.huntersMark =
         this.characterLevel > 1 ? this.abilities.huntersMark : false;
       this.abilities.colossusSlayer =
@@ -507,9 +511,7 @@ export default {
       this.abilities.shadowBlade =
         this.subclass == "Eldritch Knight" &&
         this.characterLevel > 6 &&
-        ![this.fightingStyles.archery, this.fightingStyles.twoWeapon].includes(
-          this.fightingStyle
-        )
+        this.fightingStyle != this.fightingStyles.archery
           ? this.abilities.shadowBlade
           : false;
     },
