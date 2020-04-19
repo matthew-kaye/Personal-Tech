@@ -262,10 +262,8 @@ export default {
     attackDamage() {
       var extraDamage =
         this.fightingStyle == this.fightingStyles.duelling ? 2 : 0;
-      var magicBonus =
-        !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
       var attackDamage =
-        this.averageDamageDie + extraDamage + this.attackStat + magicBonus;
+        this.averageDamageDie + extraDamage + this.attackStat + this.magicBonus;
       var attackDamage =
         this.abilities.sharpshooter || this.abilities.greatWeaponMaster
           ? attackDamage + 10
@@ -283,9 +281,7 @@ export default {
         : 0;
     },
     attackBonus() {
-      var magicBonus =
-        !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
-      var attackBonus = this.attackStat + magicBonus;
+      var attackBonus = this.attackStat + this.magicBonus;
       if (this.fightingStyle == this.fightingStyles.archery) {
         attackBonus = this.abilities.sharpshooter
           ? attackBonus - 3
@@ -293,22 +289,31 @@ export default {
       }
       return this.abilities.greatWeaponMaster ? attackBonus - 5 : attackBonus;
     },
+    magicBonus() {
+      return !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
+    },
     chanceToHit() {
       var toHit = this.proficiencyBonus + this.attackBonus;
       return this.getChanceToHitFromBonusToHit(toHit);
     },
+    chanceOfAHit() {
+      return 1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
+    },
     chanceToCrit() {
       var critChance = 0.05;
       if (this.subclass == "Champion") {
-        if (this.characterLevel > 14) {
+        if (this.characterLevel >= 15) {
           critChance = 0.15;
-        } else if (this.characterLevel > 2) {
+        } else if (this.characterLevel >= 3) {
           critChance = 0.1;
         }
       }
       return this.bonuses.advantage
         ? 1 - Math.pow(1 - critChance, 2)
         : critChance;
+    },
+    chanceOfACrit() {
+      return 1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
     },
     displayDice() {
       if (this.fightingStyle == this.fightingStyles.duelling) {
@@ -328,13 +333,11 @@ export default {
       }
     },
     abilityDamage() {
-      var chanceOfAHit =
-        1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
-      var chanceOfACrit =
-        1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
       var damageChance = this.chanceToHit + this.chanceToCrit;
       if (this.superiorityDieDamage > 0) {
-        return (chanceOfAHit + chanceOfACrit) * this.superiorityDieDamage;
+        return (
+          (this.chanceOfAHit + this.chanceOfACrit) * this.superiorityDieDamage
+        );
       } else if (this.warMagicDamage > 0) {
         return damageChance * this.warMagicDamage;
       }
@@ -345,7 +348,7 @@ export default {
           ? 3.5 * this.numberOfAttacks * damageChance
           : 0;
         var colossusSlayerDamage = this.abilities.colossusSlayer
-          ? 4.5 * (chanceOfAHit + chanceOfACrit)
+          ? 4.5 * (this.chanceOfAHit + this.chanceOfACrit)
           : 0;
         return huntersMarkDamage + colossusSlayerDamage + this.wolfDamage;
       }
@@ -353,11 +356,11 @@ export default {
     },
     superiorityDieDamage() {
       if (this.subclass == "Battle Master" && this.bonuses.superiorityDie) {
-        if (this.characterLevel > 17) {
+        if (this.characterLevel >= 18) {
           return 6.5;
-        } else if (this.characterLevel > 9) {
+        } else if (this.characterLevel >= 10) {
           return 5.5;
-        } else if (this.characterLevel > 2) {
+        } else if (this.characterLevel >= 3) {
           return 4.5;
         }
       }
@@ -365,11 +368,11 @@ export default {
     },
     warMagicDamage() {
       if (this.subclass == "Eldritch Knight" && this.abilities.warMagic) {
-        if (this.characterLevel > 16) {
+        if (this.characterLevel >= 17) {
           return 13.5;
-        } else if (this.characterLevel > 10) {
+        } else if (this.characterLevel >= 11) {
           return 9;
-        } else if (this.characterLevel > 6) {
+        } else if (this.characterLevel >= 7) {
           return 4.5;
         }
       }
@@ -392,9 +395,9 @@ export default {
     },
     wolfAttacks() {
       if (this.subclass == "Beast Master" && this.abilities.wolfAttack) {
-        if (this.characterLevel > 10) {
+        if (this.characterLevel >= 11) {
           return 2;
-        } else if (this.characterLevel > 2) {
+        } else if (this.characterLevel >= 3) {
           return 1;
         }
       }
@@ -429,7 +432,7 @@ export default {
     calculateAttackStat() {
       var baseStat = Math.min(Math.floor(this.characterLevel / 4) + 3, 5);
       if (this.characterClass == this.classes.fighter) {
-        this.attackStat = this.characterLevel > 5 ? 5 : baseStat;
+        this.attackStat = this.characterLevel >= 6 ? 5 : baseStat;
       } else {
         this.attackStat = baseStat;
       }
@@ -443,7 +446,10 @@ export default {
           this.weapon = this.weapons.greatsword;
           break;
         case this.fightingStyles.archery:
-          this.weapon = this.weapons.longbow;
+          this.weapon =
+            this.characterLevel >= 5
+              ? this.weapons.longbow
+              : this.weapons.heavyCrossbow;
           break;
         case this.fightingStyles.twoWeapon:
           this.weapon = this.abilities.dualWielder
