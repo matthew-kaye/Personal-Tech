@@ -66,6 +66,9 @@
             label="War Magic"
           ></v-switch>
         </v-col>
+        <v-col cols="2" sm="2" v-if="fightingStyle==fightingStyles.archery">
+          <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
+        </v-col>
         <v-col
           cols="2"
           sm="2"
@@ -125,8 +128,16 @@
             :menu-props="{ transition: 'slide-y-transition' }"
           ></v-select>
         </v-col>
-        <v-col cols="1" sm="1">
-          <v-text-field v-model="displayDice" label="Attack Dice" required></v-text-field>
+        <v-col cols="2" sm="2">
+          <v-select
+            v-model="weapon"
+            :items="weaponList"
+            item-text="name"
+            attach
+            label="Weapons"
+            return-object
+            :menu-props="{ transition: 'slide-y-transition' }"
+          ></v-select>
         </v-col>
         <v-col cols="1" sm="1">
           <v-text-field v-model="averageAC" label="Enemy AC" required></v-text-field>
@@ -195,18 +206,32 @@ export default {
       twoWeapon: "Two-Weapon",
       protection: "Protection"
     };
-    this.weapons = {
-      longbow: { damage: 4.5, dice: "d8" },
-      longsword: { damage: 4.5, dice: "d8" },
-      greatsword: { damage: 7, dice: "2d6" },
-      greataxe: { damage: 6.5, dice: "d12" },
-      heavyCrossbow: { damage: 5.5, dice: "d10" },
-      handaxe: { damage: 3.5, dice: "d6" },
-      shadowBlade: { damage: 9, dice: "2d8" }
-    };
     for (var value in this.fightingStyles) {
       this.fightingStyleList.push(this.fightingStyles[value]);
     }
+    this.weapons = {
+      longbow: { damage: 4.5, name: "Longbow", ranged: true, heavy: true },
+      longsword: { damage: 4.5, name: "Longsword", versatile: true },
+      greatsword: { damage: 7, name: "Greatsword", heavy: true },
+      greataxe: { damage: 6.5, name: "Greataxe", heavy: true },
+      heavyCrossbow: {
+        damage: 5.5,
+        name: "Heavy Crossbow",
+        ranged: true,
+        loading: true,
+        heavy: true
+      },
+      handaxe: {
+        damage: 3.5,
+        name: "Handaxe",
+        ranged: true,
+        light: true
+      }
+    };
+    for (var value in this.weapons) {
+      this.weaponList.push(this.weapons[value]);
+    }
+    this.weapons.shadowBlade = { damage: 9, name: "Shadow Blade", light: true };
     this.calculateFields();
   },
   data() {
@@ -226,6 +251,7 @@ export default {
         colossusSlayer: false,
         wolfAttack: false,
         sharpshooter: false,
+        crossbowExpert: false,
         greatWeaponMaster: false,
         dualWielder: false,
         shadowBlade: false
@@ -240,7 +266,8 @@ export default {
       attackStat: 3,
       proficiencyBonus: 2,
       numberOfAttacks: 1,
-      weapons: [],
+      weapons: {},
+      weaponList: [],
       weapon: {},
       bonusWeapon: {},
       wolf: {
@@ -261,9 +288,12 @@ export default {
     },
     attackDamage() {
       var extraDamage =
-        this.fightingStyle == this.fightingStyles.duelling ? 2 : 0;
+        this.fightingStyle == this.fightingStyles.duelling && !this.weapon.heavy
+          ? 2
+          : 0;
       var attackDamage =
         this.averageDamageDie + extraDamage + this.attackStat + this.magicBonus;
+
       var attackDamage =
         this.abilities.sharpshooter || this.abilities.greatWeaponMaster
           ? attackDamage + 10
@@ -271,23 +301,40 @@ export default {
       return attackDamage;
     },
     bonusAttackDamage() {
-      var magicBonus = this.bonuses.magic ? 1 : 0;
-      var toHit = this.proficiencyBonus + this.attackBonus + magicBonus;
-      var chanceToHit = this.getChanceToHitFromBonusToHit(toHit);
-      return this.fightingStyle == this.fightingStyles.twoWeapon
-        ? (this.bonusWeapon.damage + this.attackStat + magicBonus) *
+      if (this.allowedToDualWield) {
+        var magicBonus = this.bonuses.magic ? 1 : 0;
+        var toHit = this.proficiencyBonus + this.attackBonus + magicBonus;
+        var chanceToHit = this.getChanceToHitFromBonusToHit(toHit);
+        return (
+          (this.bonusWeapon.damage + this.attackStat + magicBonus) *
             chanceToHit +
-            this.chanceToCrit * this.bonusWeapon.damage
-        : 0;
+          this.chanceToCrit * this.bonusWeapon.damage
+        );
+      }
+      return 0;
+    },
+    allowedToDualWield() {
+      if (this.fightingStyle == this.fightingStyles.twoWeapon) {
+        return this.abilities.dualWielder
+          ? !this.weapon.heavy
+          : this.weapon.light;
+      }
+      return false;
     },
     attackBonus() {
       var attackBonus = this.attackStat + this.magicBonus;
-      if (this.fightingStyle == this.fightingStyles.archery) {
+      if (
+        this.fightingStyle == this.fightingStyles.archery &&
+        this.weapon.ranged
+      ) {
         attackBonus = this.abilities.sharpshooter
           ? attackBonus - 3
           : attackBonus + 2;
       }
-      return this.abilities.greatWeaponMaster ? attackBonus - 5 : attackBonus;
+      return this.abilities.greatWeaponMaster &&
+        (this.weapon.heavy || this.weapon.versatile)
+        ? attackBonus - 5
+        : attackBonus;
     },
     magicBonus() {
       return !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
@@ -315,22 +362,14 @@ export default {
     chanceOfACrit() {
       return 1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
     },
-    displayDice() {
-      if (this.fightingStyle == this.fightingStyles.duelling) {
-        return "d8 + 2";
-      } else {
-        return this.weapon.dice;
-      }
-    },
     averageDamageDie() {
       if (
         this.fightingStyle == this.fightingStyles.twoHanded &&
-        this.weapon == this.weapons.greatsword
+        (this.weapon.heavy || this.weapon.versatile)
       ) {
-        return this.weapon.damage + 4 / 3;
-      } else {
-        return this.weapon.damage;
+        return this.calculateGreatWeaponFightingBonus();
       }
+      return this.weapon.damage;
     },
     abilityDamage() {
       var damageChance = this.chanceToHit + this.chanceToCrit;
@@ -447,9 +486,9 @@ export default {
           break;
         case this.fightingStyles.archery:
           this.weapon =
-            this.characterLevel >= 5
-              ? this.weapons.longbow
-              : this.weapons.heavyCrossbow;
+            this.characterLevel < 5 || this.abilities.crossbowExpert
+              ? this.weapons.heavyCrossbow
+              : this.weapons.longbow;
           break;
         case this.fightingStyles.twoWeapon:
           this.weapon = this.abilities.dualWielder
@@ -490,8 +529,15 @@ export default {
             this.numberOfAttacks = 1;
           }
       }
+      if (this.weapon.loading && !this.abilities.crossbowExpert) {
+        this.numberOfAttacks = 1;
+      }
     },
     disableImpossibleAbilities() {
+      if (this.fightingStyle != this.fightingStyles.archery) {
+        this.abilities.sharpshooter = false;
+        this.abilities.crossbowExpert = false;
+      }
       this.abilities.huntersMark =
         this.characterLevel > 1 ? this.abilities.huntersMark : false;
       this.abilities.colossusSlayer =
@@ -501,10 +547,6 @@ export default {
       this.abilities.wolfAttack =
         this.characterLevel > 2 && this.subclass == "Beast Master"
           ? this.abilities.wolfAttack
-          : false;
-      this.abilities.sharpshooter =
-        this.fightingStyle == this.fightingStyles.archery
-          ? this.abilities.sharpshooter
           : false;
       this.abilities.greatWeaponMaster =
         this.fightingStyle == this.fightingStyles.twoWeapon
@@ -530,6 +572,19 @@ export default {
       return this.bonuses.advantage
         ? 1 - Math.pow(1 - chanceToHit, 2)
         : chanceToHit;
+    },
+    calculateGreatWeaponFightingBonus() {
+      if (this.weapon == this.weapons.greatsword) {
+        return this.weapon.damage + 4 / 3;
+      }
+      var weaponDamage = this.weapon.versatile
+        ? this.weapon.damage + 1
+        : this.weapon.damage;
+      var diceMax = weaponDamage * 2 - 1;
+      var rerollChance = 2 / diceMax;
+      return (
+        rerollChance * weaponDamage + (1 - rerollChance) * (weaponDamage + 1)
+      );
     }
   },
   watch: {
@@ -547,6 +602,12 @@ export default {
         this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
         this.subclass = this.subclasses[this.characterClass][0];
+      }
+    },
+    weapon: {
+      deep: true,
+      handler() {
+        this.calculateNumberOfAttacks();
       }
     },
     fightingStyle: {
