@@ -200,7 +200,7 @@ export default {
     this.subclasses[this.classes.ranger] = ["Beast Master", "Hunter"];
     this.fightingStyles = {
       archery: "Archery",
-      defence: "Defence (Greatsword)",
+      defence: "Defence",
       duelling: "Duelling",
       twoHanded: "Two-Handed",
       twoWeapon: "Two-Weapon",
@@ -293,12 +293,9 @@ export default {
           : 0;
       var attackDamage =
         this.averageDamageDie + extraDamage + this.attackStat + this.magicBonus;
-
-      var attackDamage =
-        this.abilities.sharpshooter || this.abilities.greatWeaponMaster
-          ? attackDamage + 10
-          : attackDamage;
-      return attackDamage;
+      return this.abilities.sharpshooter || this.abilities.greatWeaponMaster
+        ? attackDamage + 10
+        : attackDamage;
     },
     bonusAttackDamage() {
       if (this.allowedToDualWield) {
@@ -367,7 +364,7 @@ export default {
         this.fightingStyle == this.fightingStyles.twoHanded &&
         (this.weapon.heavy || this.weapon.versatile)
       ) {
-        return this.calculateGreatWeaponFightingBonus();
+        return this.greatWeaponFightingBonus;
       }
       return this.weapon.damage;
     },
@@ -447,6 +444,19 @@ export default {
       var moveDamage = this.warMagicDamage + 4.5;
       return parseFloat(
         (this.totalDamage + this.chanceToHit * moveDamage).toFixed(1)
+      );
+    },
+    greatWeaponFightingBonus() {
+      if (this.weapon == this.weapons.greatsword) {
+        return this.weapon.damage + 4 / 3;
+      }
+      var weaponDamage = this.weapon.versatile
+        ? this.weapon.damage + 1
+        : this.weapon.damage;
+      var diceMax = weaponDamage * 2 - 1;
+      var rerollChance = 2 / diceMax;
+      return (
+        rerollChance * weaponDamage + (1 - rerollChance) * (weaponDamage + 1)
       );
     }
   },
@@ -549,7 +559,7 @@ export default {
           ? this.abilities.wolfAttack
           : false;
       this.abilities.greatWeaponMaster =
-        this.fightingStyle == this.fightingStyles.twoWeapon
+        this.weapon.heavy || this.weapon.versatile
           ? this.abilities.greatWeaponMaster
           : false;
       this.abilities.dualWielder =
@@ -572,19 +582,6 @@ export default {
       return this.bonuses.advantage
         ? 1 - Math.pow(1 - chanceToHit, 2)
         : chanceToHit;
-    },
-    calculateGreatWeaponFightingBonus() {
-      if (this.weapon == this.weapons.greatsword) {
-        return this.weapon.damage + 4 / 3;
-      }
-      var weaponDamage = this.weapon.versatile
-        ? this.weapon.damage + 1
-        : this.weapon.damage;
-      var diceMax = weaponDamage * 2 - 1;
-      var rerollChance = 2 / diceMax;
-      return (
-        rerollChance * weaponDamage + (1 - rerollChance) * (weaponDamage + 1)
-      );
     }
   },
   watch: {
