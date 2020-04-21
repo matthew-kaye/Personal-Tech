@@ -50,60 +50,17 @@
             :menu-props="{ transition: 'slide-y-transition' }"
           ></v-select>
         </v-col>
-        <v-col cols="2" sm="2" v-if="subclass=='Battle Master'">
-          <v-switch
-            :disabled="characterLevel<3"
-            v-model="bonuses.superiorityDie"
-            class="ma-2"
-            label="Superiority Dmg"
-          ></v-switch>
+        <v-col cols="2" sm="2" v-if="!abilities.warMagic" class="ml-12">
+          <v-card elevation="10">
+            <v-card-title class="primary headline">{{"Damage: " + totalDamage }}</v-card-title>
+          </v-card>
         </v-col>
-        <v-col cols="2" sm="2" v-if="subclass=='Eldritch Knight'">
-          <v-switch
-            :disabled="characterLevel<7"
-            v-model="abilities.warMagic"
-            class="ma-2"
-            label="War Magic"
-          ></v-switch>
-        </v-col>
-        <v-col cols="2" sm="2" v-if="fightingStyle==fightingStyles.archery">
-          <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
-        </v-col>
-        <v-col
-          cols="2"
-          sm="2"
-          v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery"
-        >
-          <v-switch
-            :disabled="characterLevel<7"
-            v-model="abilities.shadowBlade"
-            class="ma-2"
-            label="Shadow Blade"
-          ></v-switch>
-        </v-col>
-        <v-col cols="2" sm="2" v-if="characterClass==classes.ranger">
-          <v-switch
-            :disabled="characterLevel==1"
-            v-model="abilities.huntersMark"
-            class="ma-2"
-            label="Hunter's Mark"
-          ></v-switch>
-        </v-col>
-        <v-col cols="2" sm="2" v-if="subclass=='Hunter'">
-          <v-switch
-            :disabled="characterLevel<3"
-            v-model="abilities.colossusSlayer"
-            class="ma-2"
-            label="Colossus Slayer"
-          ></v-switch>
-        </v-col>
-        <v-col cols="1" sm="1" v-if="subclass=='Beast Master'">
-          <v-switch
-            :disabled="characterLevel<3"
-            v-model="abilities.wolfAttack"
-            class="ma-2"
-            label="Wolf"
-          ></v-switch>
+        <v-col cols="4" sm="4" v-if="abilities.warMagic" class="ml-12">
+          <v-card elevation="10">
+            <v-card-title
+              class="primary headline"
+            >{{`Damage (moves): ${totalDamage} (${boomingBladeDamage}) `}}</v-card-title>
+          </v-card>
         </v-col>
       </v-row>
     </v-card-text>
@@ -157,6 +114,66 @@
         <v-col cols="2" sm="2">
           <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
         </v-col>
+      </v-row>
+    </v-card-text>
+    <v-card-title>Feats/Abilities</v-card-title>
+    <v-card-text>
+      <v-row>
+        <v-col cols="2" sm="2" v-if="subclass=='Battle Master'">
+          <v-switch
+            :disabled="characterLevel<3"
+            v-model="bonuses.superiorityDie"
+            class="ma-2"
+            label="Superiority Dmg"
+          ></v-switch>
+        </v-col>
+        <v-col cols="2" sm="2" v-if="subclass=='Eldritch Knight'">
+          <v-switch
+            :disabled="characterLevel<7"
+            v-model="abilities.warMagic"
+            class="ma-2"
+            label="War Magic"
+          ></v-switch>
+        </v-col>
+        <v-col
+          cols="2"
+          sm="2"
+          v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery"
+        >
+          <v-switch
+            :disabled="characterLevel<7"
+            v-model="abilities.shadowBlade"
+            class="ma-2"
+            label="Shadow Blade"
+          ></v-switch>
+        </v-col>
+        <v-col cols="2" sm="2" v-if="characterClass==classes.ranger">
+          <v-switch
+            :disabled="characterLevel==1"
+            v-model="abilities.huntersMark"
+            class="ma-2"
+            label="Hunter's Mark"
+          ></v-switch>
+        </v-col>
+        <v-col cols="2" sm="2" v-if="subclass=='Hunter'">
+          <v-switch
+            :disabled="characterLevel<3"
+            v-model="abilities.colossusSlayer"
+            class="ma-2"
+            label="Colossus Slayer"
+          ></v-switch>
+        </v-col>
+        <v-col cols="1" sm="1" v-if="subclass=='Beast Master'">
+          <v-switch
+            :disabled="characterLevel<3"
+            v-model="abilities.wolfAttack"
+            class="ma-2"
+            label="Wolf"
+          ></v-switch>
+        </v-col>
+        <v-col cols="2" sm="2" v-if="fightingStyle==fightingStyles.archery">
+          <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
+        </v-col>
         <v-col cols="2" sm="2" v-if="fightingStyle==fightingStyles.archery">
           <v-switch v-model="abilities.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
         </v-col>
@@ -172,10 +189,6 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-title>{{"Expected Damage: " + totalDamage }}</v-card-title>
-    <v-card-title
-      v-if="abilities.warMagic"
-    >{{"Expected Damage (Enemy Moves): " + boomingBladeDamage }}</v-card-title>
   </v-card>
 </template>
 
@@ -442,9 +455,10 @@ export default {
     },
     boomingBladeDamage() {
       var moveDamage = this.warMagicDamage + 4.5;
-      return parseFloat(
-        (this.totalDamage + this.chanceToHit * moveDamage).toFixed(1)
-      );
+      return (
+        parseFloat(this.totalDamage) +
+        this.chanceToHit * moveDamage
+      ).toFixed(1);
     },
     greatWeaponFightingBonus() {
       if (this.weapon == this.weapons.greatsword) {
