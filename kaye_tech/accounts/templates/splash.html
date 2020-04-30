@@ -7,14 +7,14 @@
 
     <title>Matt's Tech</title>
 
-    <link rel="shortcut icon" type="image/png" href="{% static 'frontend/vue-logo.svg.png' %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'frontend/k-logo.jpg' %}" />
 </head>
 
 <body class="text-center">
     <form class="form-signin" action="/accounts/login/google-oauth2/" method="post">
         {% csrf_token %} {% if next %}
         <input type="hidden" name="next" value="{{ next }}" /> {% endif %}
-        <img src="{% static 'frontend/vue-logo.svg.png' %}" class="img-fluid p-3" alt="My Tech Tools">
+        <img src="{% static 'frontend/k-logo.jpg' %}" class="img-fluid p-3" alt="My Tech Tools">
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in with Google</button>
 
