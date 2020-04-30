@@ -65,8 +65,8 @@ export default {
       drawer: false,
       navigationItems: [
         {
-          label: "Home",
-          link: "/home",
+          label: "News",
+          link: "/news",
           icon: "mdi-home"
         },
         {

@@ -7,14 +7,17 @@ import App from "./App.vue";
 import Index from "./pages/Index.vue";
 import Joke from "./pages/Joke.vue";
 import Tabletop from "./pages/Tabletop.vue";
+import News from "./pages/News.vue";
+
 
 Vue.use(VueRouter);
 
 const routes = [
   { path: "/", redirect: "/home" },
+  { path: "/news", name: "news", component: News },
   { path: "/home", name: "home", component: Index },
   { path: "/jokes", name: "jokes", component: Joke },
-  { path: "/tabletop", name: "talbletop", component: Tabletop },
+  { path: "/tabletop", name: "tabletop", component: Tabletop },
 ];
 
 const router = new VueRouter({
