@@ -13,16 +13,16 @@ export default new Vuetify({
       light: {
         primary: colors.pink.darken4,
         // secondary: "",
-        // accent: "",
-        card: "",
-        // background: ""
+        // accent: "#429EDD",,
+        card: "#FFFFFF",
+        // background: "#FFFFFF"
       },
       dark: {
         primary: colors.pink.darken4,
         // secondary: "",
-        // accent: "",
+        // accent: "#429EDD"",
         card: colors.grey.darken4,
-        // background: ""
+        // background: "#303030"
       }
     }
   }

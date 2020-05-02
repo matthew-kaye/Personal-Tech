@@ -70,9 +70,10 @@ export default {
           icon: "mdi-home"
         },
         {
-          label: "Blank",
-          link: "/home",
-          icon: "mdi-alarm-snooze"
+          label: "Books",
+          link: "/books",
+          icon: "mdi-book-open-page-variant"
+          // icon: "mdi-bookshelf"
         },
         {
           label: "Empty",

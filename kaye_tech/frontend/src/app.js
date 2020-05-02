@@ -8,12 +8,14 @@ import Index from "./pages/Index.vue";
 import Joke from "./pages/Joke.vue";
 import Tabletop from "./pages/Tabletop.vue";
 import News from "./pages/News.vue";
+import Books from "./pages/Books.vue";
 
 
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", redirect: "/home" },
+  { path: "/", redirect: "/news" },
+  { path: "/books", name: "books", component: Books },
   { path: "/news", name: "news", component: News },
   { path: "/home", name: "home", component: Index },
   { path: "/jokes", name: "jokes", component: Joke },

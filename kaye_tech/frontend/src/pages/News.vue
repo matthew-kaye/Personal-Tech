@@ -9,7 +9,7 @@
         <v-col cols="6" sm="6">
           <v-text-field
             v-model="searchTerm"
-            @keypress.enter="fetchArticle(searchTerm)"
+            @keypress.enter="fetchArticle()"
             hint="The news search term"
             required
           ></v-text-field>
@@ -19,7 +19,7 @@
             :disabled="searchTerm.length == 0"
             class="mb-2 mr-2"
             color="primary"
-            @click="fetchArticle(searchTerm)"
+            @click="fetchArticle()"
           >{{ "Search" }}</v-btn>
         </v-col>
       </v-row>
@@ -55,26 +55,26 @@ export default {
   data() {
     return {
       baseUrl: "https://content.guardianapis.com/search",
-      api_key: "24e1ad31-618f-4937-acb3-9f414756ce88",
+      guardianApiKey: "24e1ad31-618f-4937-acb3-9f414756ce88",
       searchTerm: "",
       articles: []
     };
   },
   computed: {},
   methods: {
-    fetchArticle(searchTerm) {
-      if (searchTerm.length > 0) {
-        var newsResponse = axios
+    fetchArticle() {
+      if (this.searchTerm.length > 0) {
+        var response = axios
           .get(this.baseUrl, {
             params: {
-              q: searchTerm,
-              "api-key": this.api_key
+              q: this.searchTerm,
+              "api-key": this.guardianApiKey
             },
             headers: { Accept: "application/json" }
           })
           .then(response => response.data)
           .catch(error => console.log(error));
-        newsResponse.then(data => {
+        response.then(data => {
           this.articles = data.response.results;
         });
       }
