@@ -6,7 +6,7 @@
     <v-card class="ma-4" color="card">
       <v-data-table :headers="headers" :items="books">
         <template v-slot:item="row">
-          <tr v-bind:style="{ cursor: 'pointer' }">
+          <tr v-bind:style="{ cursor: 'pointer' }" @click="viewBook(row.item)">
             <td>
               <p>{{ row.item.rank }}</p>
             </td>
@@ -27,22 +27,18 @@
   </v-card>
 </template>
 <script>
-import axios from "axios";
-
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
+import BookApi from "@/apis/BookApi";
+const bookApi = new BookApi();
 
 export default {
   components: {},
   created() {
-    this.fetchBooks();
+    bookApi.fetchBooks().then(data => {
+      this.books = data.results.books;
+    });
   },
   data() {
     return {
-      listUrl:
-        "https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json",
-      reviewUrl: "https://api.nytimes.com/svc/books/v3/reviews.json",
-      nytApiKey: "XF7JacilFFCdHR6kKTSESVYB220aKanS",
       searchTerm: "",
       books: []
     };
@@ -52,42 +48,35 @@ export default {
       return [
         {
           text: "Rank",
+          value: "rank",
           width: 1
         },
         {
           text: "Title",
+          value: "title",
           width: 2
         },
         {
           text: "Author",
+          value: "author",
           width: 2
         },
         {
           text: "Weeks on list",
+          value: "weeks_on_list",
           width: 2
         }
       ];
     }
   },
   methods: {
-    fetchBooks() {
-      var response = axios
-        .get(this.listUrl, {
-          params: {
-            "api-key": this.nytApiKey
-          },
-          headers: { Accept: "application/json" }
-        })
-        .then(response => response.data)
-        .catch(error => console.log(error));
-      response.then(data => {
-        this.books = data.results.books;
-      });
-    },
     toTitleCase(string) {
       return string.replace(/\w\S*/g, function(text) {
         return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
       });
+    },
+    viewBook(item) {
+      this.$router.push("/book/" + item.rank);
     }
   }
 };

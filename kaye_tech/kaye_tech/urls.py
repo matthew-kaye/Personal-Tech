@@ -26,6 +26,7 @@ urlpatterns = [
     path("home/", IndexView.as_view()),
     path("news/", IndexView.as_view()),
     path("books/", IndexView.as_view()),
+    url(r"^book/?[0-9]*$", IndexView.as_view()),
     path("jokes/", IndexView.as_view()),
     path("tabletop/", IndexView.as_view()),
     url(r"^$", IndexView.as_view()),
