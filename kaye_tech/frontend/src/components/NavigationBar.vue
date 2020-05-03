@@ -73,7 +73,6 @@ export default {
           label: "Books",
           link: "/books",
           icon: "mdi-book-open-page-variant"
-          // icon: "mdi-bookshelf"
         },
         {
           label: "Empty",

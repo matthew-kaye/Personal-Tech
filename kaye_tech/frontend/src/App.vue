@@ -10,7 +10,7 @@
       <v-card width="100%" class="text-right">
         <v-card-text>
           <a href="https://www.linkedin.com/in/matthew-kaye-20332016a/">
-            <span>
+            <span class="secondary--text">
               <strong>Matthew Kaye</strong>
               - {{ new Date().getFullYear() }}
             </span>

@@ -12,14 +12,14 @@ export default new Vuetify({
     themes: {
       light: {
         primary: colors.pink.darken4,
-        // secondary: "",
+        secondary: colors.shades.black,
         // accent: "#429EDD",,
-        card: "#FFFFFF",
-        // background: "#FFFFFF"
+        card: colors.shades.white,
+        background: colors.shades.white
       },
       dark: {
         primary: colors.pink.darken4,
-        // secondary: "",
+        secondary: colors.shades.white,
         // accent: "#429EDD"",
         card: colors.grey.darken4,
         // background: "#303030"
