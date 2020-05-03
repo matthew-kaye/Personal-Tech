@@ -3,38 +3,60 @@
     <v-card-title class="primary headline">
       <span class="white--text">News search</span>
     </v-card-title>
-    <v-card-title>Search term</v-card-title>
-    <v-card-text>
-      <v-row>
-        <v-col cols="4" sm="4">
-          <v-text-field
-            v-model="searchTerm"
-            @keypress.enter="fetchArticles()"
-            hint="The news search term"
-            required
-          ></v-text-field>
-        </v-col>
-        <v-col>
-          <v-select
-            v-model="section"
-            :items="sections"
-            item-text="webTitle"
-            item-value="id"
-            label="Section (Optional)"
-            attach
-            :menu-props="{ transition: 'slide-y-transition' }"
-          ></v-select>
-        </v-col>
-        <v-col>
-          <v-btn
-            :disabled="!searchTerm && !this.section"
-            class="mb-2 mr-2"
-            color="primary"
-            @click="fetchArticles()"
-          >{{ "Search" }}</v-btn>
-        </v-col>
-      </v-row>
-    </v-card-text>
+    <v-row align="center" justify="start" class="ma-2">
+      <v-card-title>Search Criteria:</v-card-title>
+      <v-col v-for="(searchTerm, i) in searchTerms" :key="searchTerm.text" class="shrink">
+        <v-chip
+          close
+          @click:close="searchTerms.splice(i, 1)"
+        >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
+      </v-col>
+    </v-row>
+    <v-row class="ml-2">
+      <v-col cols="3">
+        <v-text-field
+          v-model="searchTerm"
+          @keypress.enter="addSearch()"
+          hint="The news search term"
+          required
+        ></v-text-field>
+        <v-btn
+          :disabled="(!searchTerm) ||searchTerms.includes({text: searchTerm, type:'Keyword'})"
+          class="mb-2 mr-2"
+          color="primary"
+          @click="addSearch()"
+        >{{ "Add" }}</v-btn>
+      </v-col>
+      <v-col cols="3">
+        <v-select
+          v-model="section"
+          :items="sections"
+          item-text="webTitle"
+          item-value="id"
+          label="Section (Optional)"
+          attach
+          :menu-props="{ transition: 'slide-y-transition' }"
+        ></v-select>
+        <v-btn
+          :disabled="!section ||searchTerms.includes({text: section, type: 'Section'})"
+          class="mb-2 mr-2"
+          color="primary"
+          @click="addSection()"
+        >{{ "Add" }}</v-btn>
+      </v-col>
+      <v-col cols="1">
+        <v-select
+          v-model="pageSize"
+          :items="[10,25,50]"
+          attach
+          label="Results"
+          :menu-props="{ transition: 'slide-y-transition' }"
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
+      </v-col>
+    </v-row>
     <v-card color="card" v-if="articles.length>0" class="ma-4">
       <v-card-title class="headline">Results</v-card-title>
       <v-divider></v-divider>
@@ -42,10 +64,21 @@
         <template v-for="(item, index) in articles">
           <v-list-item :key="index">
             <v-list-item-content>
-              <v-list-item-title v-html="item.webTitle"></v-list-item-title>
-              <v-list-item-subtitle>
-                <a :href="item.webUrl">{{item.id}}</a>
-              </v-list-item-subtitle>
+              <v-row justify="start">
+                <v-col>
+                  <b>
+                    <v-list-item-title v-html="item.webTitle"></v-list-item-title>
+                  </b>
+                  <v-list-item-subtitle>
+                    <a :href="item.webUrl">{{item.id}}</a>
+                  </v-list-item-subtitle>
+                </v-col>
+                <v-col class="md-auto">
+                  <v-btn icon :href="item.webUrl">
+                    <v-icon color="primary" large>mdi-arrow-right-circle-outline</v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -68,6 +101,7 @@ export default {
       this.currentUser = data.username;
       console.log(this.currentUser);
     });
+    this.fetchArticles();
   },
   data() {
     return {
@@ -75,20 +109,62 @@ export default {
       sections: [{ webTitle: "" }],
       articles: [],
       currentUser: "",
-      section: null
+      section: null,
+      pageSize: 10,
+      searchTerms: [],
+      searchParameter: "",
+      keywordParams: [],
+      sectionParams: []
     };
   },
   computed: {},
   methods: {
     fetchArticles() {
+      if (this.searchTerm) {
+        this.addSearch();
+      }
+      if (this.section && this.section.webTitle != "None") {
+        this.addSection();
+      }
+      this.keywordParams = this.searchTerms
+        .filter(function(searchTerm) {
+          return searchTerm.type == "Keyword";
+        })
+        .map(a => a.text)
+        .join(" OR ");
+      this.sectionParams = this.searchTerms
+        .filter(function(searchTerm) {
+          return searchTerm.type == "Section";
+        })
+        .map(a => a.text)
+        .join(" OR ");
       var params = {
-        q: this.searchTerm,
-        section: this.section
+        q: this.keywordParams ? this.keywordParams : null,
+        section: this.sectionParams ? this.sectionParams : null,
+        "page-size": this.pageSize
       };
       newsApi.fetchArticles(params).then(data => {
         console.log(data);
         this.articles = data.response.results;
       });
+    },
+
+    addSearch() {
+      this.searchTerms.push({
+        text: this.searchTerm,
+        type: "Keyword"
+      });
+      this.searchTerm = "";
+    },
+
+    addSection() {
+      this.searchTerms.push({ text: this.section, type: "Section" });
+      this.section = "";
+    },
+
+    removeSearch(item) {
+      this.searchTerms.splice(this.searchTerms.indexOf(item), 1);
+      this.searchTerms = [...this.searchTerms];
     },
 
     fetchSections() {
