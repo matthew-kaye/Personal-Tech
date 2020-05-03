@@ -3,6 +3,8 @@ version: "3"
 services:
   db:
     image: postgres
+    volumes:
+        - postgres_volume
   django:
     build:
       context: .
@@ -14,3 +16,6 @@ services:
     restart: on-failure
     depends_on:
       - db
+
+volumes:
+  postgres_volume:

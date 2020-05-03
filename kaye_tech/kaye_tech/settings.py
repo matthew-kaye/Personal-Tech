@@ -29,7 +29,6 @@ if os.getenv("DJANGO_ENV") == "prod":
     ALLOWED_HOSTS = [
         "tech.mattalexkaye.com",
         "www.tech.mattalexkaye.com",
-        "167.99.193.134",
     ]
 else:
     DEBUG = True
