@@ -9,7 +9,7 @@
         <v-col cols="6" sm="6">
           <v-text-field
             v-model="searchTerm"
-            @keypress.enter="fetchArticle()"
+            @keypress.enter="fetchArticles()"
             hint="The news search term"
             required
           ></v-text-field>
@@ -19,7 +19,7 @@
             :disabled="searchTerm.length == 0"
             class="mb-2 mr-2"
             color="primary"
-            @click="fetchArticle()"
+            @click="fetchArticles()"
           >{{ "Search" }}</v-btn>
         </v-col>
       </v-row>
@@ -44,40 +44,42 @@
   </v-card>
 </template>
 <script>
-import axios from "axios";
+import AccountsApi from "@/apis/AccountsApi";
+import NewsApi from "@/apis/NewsApi";
 
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
+const accountsApi = new AccountsApi();
+const newsApi = new NewsApi();
 
 export default {
   components: {},
-  created() {},
+  created() {
+    accountsApi.getCurrentUser().then(data => {
+      this.currentUser = data.username;
+      console.log(this.currentUser);
+      this.fetchSections();
+    });
+  },
   data() {
     return {
-      baseUrl: "https://content.guardianapis.com/search",
-      guardianApiKey: "24e1ad31-618f-4937-acb3-9f414756ce88",
       searchTerm: "",
-      articles: []
+      articles: [],
+      currentUser: ""
     };
   },
   computed: {},
   methods: {
-    fetchArticle() {
+    fetchArticles() {
       if (this.searchTerm.length > 0) {
-        var response = axios
-          .get(this.baseUrl, {
-            params: {
-              q: this.searchTerm,
-              "api-key": this.guardianApiKey
-            },
-            headers: { Accept: "application/json" }
-          })
-          .then(response => response.data)
-          .catch(error => console.log(error));
-        response.then(data => {
+        newsApi.fetchArticles().then(data => {
           this.articles = data.response.results;
         });
       }
+    },
+
+    fetchSections() {
+      newsApi.fetchSections().then(data => {
+        console.log(data);
+      });
     }
   }
 };

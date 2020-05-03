@@ -9,10 +9,12 @@
     <v-footer padless>
       <v-card width="100%" class="text-right">
         <v-card-text>
-          <span>
-            <strong>Matthew Kaye</strong>
-            - {{ new Date().getFullYear() }}
-          </span>
+          <a href="https://www.linkedin.com/in/matthew-kaye-20332016a/">
+            <span>
+              <strong>Matthew Kaye</strong>
+              - {{ new Date().getFullYear() }}
+            </span>
+          </a>
         </v-card-text>
       </v-card>
     </v-footer>

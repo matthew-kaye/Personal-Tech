@@ -167,4 +167,5 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = [
     "brainlabsdigital.com",
     "hotmail.com",
     "hotmail.co.uk",
+    "mac.com",
 ]

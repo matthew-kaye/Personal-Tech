@@ -12,7 +12,7 @@
           :src="book.book_image"
         />
       </v-col>
-      <v-col>
+      <v-col md="auto">
         <v-card class="ma-4">
           <v-card-title class="primary headline">
             <span class="white--text">Description</span>

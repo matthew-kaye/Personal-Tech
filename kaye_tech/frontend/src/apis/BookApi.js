@@ -17,7 +17,7 @@ export default class BookApi {
         headers: { Accept: "application/json" }
       })
       .then((response) => response.data)
-      .catch();
+      .catch(error => console.log(error));
   }
 
   fetchReviews(isbn) {
@@ -30,7 +30,7 @@ export default class BookApi {
         headers: { Accept: "application/json" }
       })
       .then((response) => response.data)
-      .catch();
+      .catch(error => console.log(error));
   }
 
 }
