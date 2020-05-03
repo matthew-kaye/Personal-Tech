@@ -57,7 +57,6 @@
 <script>
 import AccountsApi from "@/apis/AccountsApi";
 import NewsApi from "@/apis/NewsApi";
-
 const accountsApi = new AccountsApi();
 const newsApi = new NewsApi();
 

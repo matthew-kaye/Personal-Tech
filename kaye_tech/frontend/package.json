@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@vue/cli-service-global": "^4.1.2",
-    "guardian-js": "^3.0.0",
     "moment": "^2.24.0",
     "vue-router": "^3.1.5",
     "vuetify": "^2.2.14"

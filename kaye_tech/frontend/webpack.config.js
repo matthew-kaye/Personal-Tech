@@ -15,33 +15,33 @@ module.exports = {
     },
     module: {
         rules: [{
-                test: /\.vue$/,
-                use: 'vue-loader'
-            },
-            {
-                test: /\.s(c|a)ss$/,
-                use: [
-                    'vue-style-loader',
-                    'css-loader',
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            implementation: require('sass'),
+            test: /\.vue$/,
+            use: 'vue-loader'
+        },
+        {
+            test: /\.s(c|a)ss$/,
+            use: [
+                'vue-style-loader',
+                'css-loader',
+                {
+                    loader: 'sass-loader',
+                    options: {
+                        implementation: require('sass'),
+                        fiber: require('fibers'),
+                    },
+                    options: {
+                        implementation: require('sass'),
+                        sassOptions: {
                             fiber: require('fibers'),
                         },
-                        options: {
-                            implementation: require('sass'),
-                            sassOptions: {
-                                fiber: require('fibers'),
-                            },
-                        },
                     },
-                ],
-            },
-            {
-                test: /\.css$/,
-                loader: 'style-loader!css-loader'
-            },
+                },
+            ],
+        },
+        {
+            test: /\.css$/,
+            loader: 'style-loader!css-loader'
+        },
         ]
     },
     plugins: [
