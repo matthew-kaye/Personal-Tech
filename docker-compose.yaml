@@ -4,9 +4,6 @@ services:
   db:
     image: postgres:latest
     restart: "no"
-    restart: always
-    restart: on-failure
-    restart: unless-stopped
   django:
     build:
       context: .
