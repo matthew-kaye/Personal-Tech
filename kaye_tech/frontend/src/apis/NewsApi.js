@@ -8,11 +8,11 @@ const sectionsUrl = "https://content.guardianapis.com/sections";
 const guardianApiKey = "24e1ad31-618f-4937-acb3-9f414756ce88";
 
 export default class NewsApi {
-    fetchArticles(searchTerm) {
+    fetchArticles(requestParams) {
         return axios
             .get(contentUrl, {
                 params: {
-                    q: searchTerm,
+                    ...requestParams,
                     "api-key": guardianApiKey
                 },
                 headers: { Accept: "application/json" }

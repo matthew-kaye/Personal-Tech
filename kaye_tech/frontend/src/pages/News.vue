@@ -6,7 +6,7 @@
     <v-card-title>Search term</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="6" sm="6">
+        <v-col cols="4" sm="4">
           <v-text-field
             v-model="searchTerm"
             @keypress.enter="fetchArticles()"
@@ -15,8 +15,19 @@
           ></v-text-field>
         </v-col>
         <v-col>
+          <v-select
+            v-model="section"
+            :items="sections"
+            item-text="webTitle"
+            item-value="id"
+            label="Section (Optional)"
+            attach
+            :menu-props="{ transition: 'slide-y-transition' }"
+          ></v-select>
+        </v-col>
+        <v-col>
           <v-btn
-            :disabled="searchTerm.length == 0"
+            :disabled="!searchTerm && !this.section"
             class="mb-2 mr-2"
             color="primary"
             @click="fetchArticles()"
@@ -53,32 +64,38 @@ const newsApi = new NewsApi();
 export default {
   components: {},
   created() {
+    this.fetchSections();
     accountsApi.getCurrentUser().then(data => {
       this.currentUser = data.username;
       console.log(this.currentUser);
-      this.fetchSections();
     });
   },
   data() {
     return {
-      searchTerm: "",
+      searchTerm: null,
+      sections: [{ webTitle: "" }],
       articles: [],
-      currentUser: ""
+      currentUser: "",
+      section: null
     };
   },
   computed: {},
   methods: {
     fetchArticles() {
-      if (this.searchTerm.length > 0) {
-        newsApi.fetchArticles().then(data => {
-          this.articles = data.response.results;
-        });
-      }
+      var params = {
+        q: this.searchTerm,
+        section: this.section
+      };
+      newsApi.fetchArticles(params).then(data => {
+        console.log(data);
+        this.articles = data.response.results;
+      });
     },
 
     fetchSections() {
       newsApi.fetchSections().then(data => {
-        console.log(data);
+        this.sections = data.response.results;
+        this.sections.push({ id: null, webTitle: "None" });
       });
     }
   }
