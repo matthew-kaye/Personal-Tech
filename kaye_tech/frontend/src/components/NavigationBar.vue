@@ -103,11 +103,7 @@ export default {
   },
   created() {
     accountsApi.getCurrentUser().then(data => {
-      console.log(data);
-      this.currentUser = data ? data : null;
-      if (this.currentUser === null) {
-        console.log("Not logged in");
-      }
+      this.currentUser = data;
     });
   },
   methods: {
