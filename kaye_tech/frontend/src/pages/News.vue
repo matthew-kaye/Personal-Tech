@@ -3,85 +3,102 @@
     <v-card-title class="primary headline">
       <span class="white--text">News search</span>
     </v-card-title>
-    <v-row align="center" justify="start" class="ma-2">
-      <v-card-title>Search Criteria:</v-card-title>
-      <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
-        <v-chip
-          close
-          @click:close="searchCriteria.splice(i, 1)"
-        >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
-      </v-col>
-    </v-row>
-    <v-row class="ml-2">
-      <v-col cols="3">
-        <v-text-field
-          v-model="searchTerm"
-          @keypress.enter="addSearch()"
-          hint="The news search term"
-          required
-        ></v-text-field>
-        <v-btn
-          :disabled="(!searchTerm) || keywords.includes(searchTerm)"
-          class="mb-2 mr-2"
-          color="primary"
-          @click="addSearch()"
-        >{{ "Add" }}</v-btn>
-      </v-col>
-      <v-col cols="3">
-        <v-select
-          v-model="section"
-          :items="guardianSections"
-          item-text="webTitle"
-          item-value="id"
-          label="Section (Optional)"
-          attach
-          :menu-props="{ transition: 'slide-y-transition' }"
-        ></v-select>
-        <v-btn
-          :disabled="(!section) || sections.includes(section)"
-          class="mb-2 mr-2"
-          color="primary"
-          @click="addSection()"
-        >{{ "Add" }}</v-btn>
-      </v-col>
-      <v-col cols="1">
-        <v-select
-          v-model="pageSize"
-          :items="[10,25,50]"
-          attach
-          label="Results"
-          :menu-props="{ transition: 'slide-y-transition' }"
-        ></v-select>
-      </v-col>
+    <v-row class="ma-2">
       <v-col>
-        <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
+        <v-row align="center" justify="start">
+          <v-card-title class="ml-4">Search Criteria:</v-card-title>
+          <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
+            <v-chip
+              close
+              @click:close="searchCriteria.splice(i, 1)"
+            >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
+          </v-col>
+        </v-row>
+        <v-row class="ml-2">
+          <v-col cols="3">
+            <v-text-field
+              v-model="searchTerm"
+              @keypress.enter="addSearch()"
+              label="Keywords"
+              required
+            ></v-text-field>
+            <v-btn
+              :disabled="(!searchTerm) || keywords.includes(searchTerm)"
+              class="mb-2 mr-2"
+              color="primary"
+              @click="addSearch()"
+            >{{ "Add" }}</v-btn>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="section"
+              :items="guardianSections"
+              item-text="webTitle"
+              item-value="id"
+              label="Section Filters"
+              attach
+              :menu-props="{ transition: 'slide-y-transition' }"
+            ></v-select>
+            <v-btn
+              :disabled="(!section) || sections.includes(section)"
+              class="mb-2 mr-2"
+              color="primary"
+              @click="addSection()"
+            >{{ "Add" }}</v-btn>
+          </v-col>
+          <v-col cols="1">
+            <v-select
+              v-model="pageSize"
+              :items="[10,25,50]"
+              attach
+              label="Results"
+              :menu-props="{ transition: 'slide-y-transition' }"
+            ></v-select>
+          </v-col>
+          <v-col>
+            <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
+          </v-col>
+        </v-row>
+        <v-card color="card" v-if="articles.length>0" class="ma-4">
+          <v-card-title class="headline">Results</v-card-title>
+          <v-divider></v-divider>
+          <v-list>
+            <template v-for="(item, index) in articles">
+              <v-list-item :key="index">
+                <v-list-item-content>
+                  <v-row justify="start">
+                    <v-col md="auto">
+                      <v-list-item-title v-html="item.webTitle"></v-list-item-title>
+                      <v-list-item-subtitle>
+                        <a :href="item.webUrl">{{item.id}}</a>
+                      </v-list-item-subtitle>
+                    </v-col>
+                    <v-col md="auto">
+                      <v-btn icon :href="item.webUrl">
+                        <v-icon color="primary" large>mdi-arrow-right-circle-outline</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-card>
+      </v-col>
+      <v-col class="ma-4" cols="3">
+        <div
+          class="hastagify_embed"
+          data-width="400"
+          data-mode="popular"
+          data-popular-type="last-week"
+          data-popular-lang="en"
+        >
+          <div>
+            <a href="http://hashtagify.me/popular"></a>
+          </div>
+        </div>
       </v-col>
     </v-row>
-    <v-card color="card" v-if="articles.length>0" class="ma-4">
-      <v-card-title class="headline">Results</v-card-title>
-      <v-divider></v-divider>
-      <v-list>
-        <template v-for="(item, index) in articles">
-          <v-list-item :key="index">
-            <v-list-item-content>
-              <v-row justify="start">
-                <v-col md="auto">
-                  <v-list-item-title v-html="item.webTitle"></v-list-item-title>
-                  <v-list-item-subtitle>
-                    <a :href="item.webUrl">{{item.id}}</a>
-                  </v-list-item-subtitle>
-                </v-col>
-                <v-col md="auto">
-                  <v-btn icon :href="item.webUrl">
-                    <v-icon color="primary" large>mdi-arrow-right-circle-outline</v-icon>
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-card>
     <br />
   </v-card>
 </template>
