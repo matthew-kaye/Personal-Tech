@@ -3,9 +3,9 @@
     <v-card-title class="primary headline">
       <span class="white--text">News search</span>
     </v-card-title>
-    <v-row class="ma-2">
+    <v-row justify="start">
       <v-col>
-        <v-row align="center" justify="start">
+        <v-row align="center" justify="start" md="auto">
           <v-card-title class="ml-4">Search Criteria:</v-card-title>
           <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
             <v-chip
@@ -14,7 +14,7 @@
             >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
           </v-col>
         </v-row>
-        <v-row class="ml-2">
+        <v-row class="ml-2" md="auto">
           <v-col cols="3">
             <v-text-field
               v-model="searchTerm"
@@ -59,19 +59,20 @@
             <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
           </v-col>
         </v-row>
-        <v-card color="card" v-if="articles.length>0" class="ma-4">
+        <v-card color="card" v-if="articles.length>0" class="ma-4" width="100%">
           <v-card-title class="headline">Results</v-card-title>
           <v-divider></v-divider>
           <v-list>
             <template v-for="(item, index) in articles">
               <v-list-item :key="index">
                 <v-list-item-content>
-                  <v-row justify="start">
+                  <v-row>
                     <v-col md="auto">
-                      <v-list-item-title v-html="item.webTitle"></v-list-item-title>
-                      <v-list-item-subtitle>
+                      {{item.webTitle}}
+                      <br />
+                      <v-subtitle>
                         <a :href="item.webUrl">{{item.id}}</a>
-                      </v-list-item-subtitle>
+                      </v-subtitle>
                     </v-col>
                     <v-col md="auto">
                       <v-btn icon :href="item.webUrl">
@@ -85,7 +86,7 @@
           </v-list>
         </v-card>
       </v-col>
-      <v-col class="ma-4" cols="3">
+      <v-col cols="3" class="ma-2" md="auto">
         <TwitterFeed />
       </v-col>
     </v-row>
