@@ -86,17 +86,7 @@
         </v-card>
       </v-col>
       <v-col class="ma-4" cols="3">
-        <div
-          class="hastagify_embed"
-          data-width="400"
-          data-mode="popular"
-          data-popular-type="last-week"
-          data-popular-lang="en"
-        >
-          <div>
-            <a href="http://hashtagify.me/popular"></a>
-          </div>
-        </div>
+        <TwitterFeed />
       </v-col>
     </v-row>
     <br />
@@ -105,11 +95,14 @@
 <script>
 import AccountsApi from "@/apis/AccountsApi";
 import NewsApi from "@/apis/NewsApi";
+import TwitterFeed from "@/components/TwitterFeed.vue";
 const accountsApi = new AccountsApi();
 const newsApi = new NewsApi();
 
 export default {
-  components: {},
+  components: {
+    TwitterFeed
+  },
   created() {
     this.fetchGuardianSections();
     accountsApi.getCurrentUser().then(data => {
