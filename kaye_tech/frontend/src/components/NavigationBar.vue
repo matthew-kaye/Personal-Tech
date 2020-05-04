@@ -43,12 +43,13 @@
           </v-btn>
         </v-chip>
       </v-toolbar-items>
-      <!-- <v-avatar class="ml-2" size="40">
+      <v-avatar class="ml-2" size="40" v-if="currentUser.profile.avatar">
         <img :src="currentUser.profile.avatar" />
       </v-avatar>
-      <v-btn class="ml-2 mr-1" icon text href="/accounts/logout/">
+      <v-btn class="ml-2 mr-1" icon text href="/accounts/logout/" v-if="currentUser.id">
         <v-icon dark>mdi-logout</v-icon>
-      </v-btn>-->
+      </v-btn>
+      <v-btn class="ml-2 mr-1" text href="/accounts/splash/" v-if="!currentUser.id">Sign In</v-btn>
     </v-app-bar>
   </div>
 </template>
@@ -101,13 +102,13 @@ export default {
     };
   },
   created() {
-    this.currentUser = "test";
-    // accountsApi.getCurrentUser().then(data => {
-    //   this.currentUser = data;
-    //   if (this.currentUser.profile === null) {
-    //     location.href = "/accounts/logout/";
-    //   }
-    // });
+    accountsApi.getCurrentUser().then(data => {
+      console.log(data);
+      this.currentUser = data ? data : null;
+      if (this.currentUser === null) {
+        console.log("Not logged in");
+      }
+    });
   },
   methods: {
     toggleDark() {

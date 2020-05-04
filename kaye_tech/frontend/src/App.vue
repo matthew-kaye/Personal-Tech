@@ -29,6 +29,9 @@ export default {
   components: {
     NavigationBar
   },
+  created() {
+    console.log(document.cookie);
+  },
   data() {
     return {};
   },
