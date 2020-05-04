@@ -59,7 +59,7 @@
             <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
           </v-col>
         </v-row>
-        <v-card color="card" v-if="articles.length>0" class="ma-4" width="100%">
+        <v-card color="card" v-if="articles.length>0" class="ml-4" width="100%">
           <v-card-title class="headline">Results</v-card-title>
           <v-divider></v-divider>
           <v-list>
@@ -86,7 +86,7 @@
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="3" class="ma-2" md="auto">
+      <v-col cols="3" class="ma-4" md="auto">
         <TwitterFeed />
       </v-col>
     </v-row>
