@@ -7,7 +7,7 @@ services:
       - DJANGO_ENV=prod
     volumes:
       - ./socket:/socket
-      - ./kaye_tech//backend/fixtures:/kaye_tech/backend/fixtures
+      - ./kaye_tech/backend/fixtures:/kaye_tech/backend/fixtures
     depends_on:
       - nginx
 
