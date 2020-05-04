@@ -5,10 +5,10 @@
     </v-card-title>
     <v-row align="center" justify="start" class="ma-2">
       <v-card-title>Search Criteria:</v-card-title>
-      <v-col v-for="(searchTerm, i) in searchTerms" :key="searchTerm.text" class="shrink">
+      <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
         <v-chip
           close
-          @click:close="searchTerms.splice(i, 1)"
+          @click:close="searchCriteria.splice(i, 1)"
         >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
       </v-col>
     </v-row>
@@ -21,7 +21,7 @@
           required
         ></v-text-field>
         <v-btn
-          :disabled="(!searchTerm) ||searchTerms.includes({text: searchTerm, type:'Keyword'})"
+          :disabled="(!searchTerm) || keywords.includes(searchTerm)"
           class="mb-2 mr-2"
           color="primary"
           @click="addSearch()"
@@ -30,7 +30,7 @@
       <v-col cols="3">
         <v-select
           v-model="section"
-          :items="sections"
+          :items="guardianSections"
           item-text="webTitle"
           item-value="id"
           label="Section (Optional)"
@@ -38,7 +38,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
         <v-btn
-          :disabled="!section ||searchTerms.includes({text: section, type: 'Section'})"
+          :disabled="(!section) || sections.includes(section)"
           class="mb-2 mr-2"
           color="primary"
           @click="addSection()"
@@ -94,7 +94,7 @@ const newsApi = new NewsApi();
 export default {
   components: {},
   created() {
-    this.fetchSections();
+    this.fetchGuardianSections();
     accountsApi.getCurrentUser().then(data => {
       this.currentUser = data.username;
       console.log(this.currentUser);
@@ -104,18 +104,33 @@ export default {
   data() {
     return {
       searchTerm: null,
-      sections: [{ webTitle: "" }],
+      guardianSections: [{ webTitle: "" }],
       articles: [],
       currentUser: "",
       section: null,
       pageSize: 10,
-      searchTerms: [],
+      searchCriteria: [],
       searchParameter: "",
       keywordParams: [],
       sectionParams: []
     };
   },
-  computed: {},
+  computed: {
+    keywords() {
+      return this.searchCriteria
+        .filter(function(searchTerm) {
+          return searchTerm.type == "Keyword";
+        })
+        .map(a => a.text);
+    },
+    sections() {
+      return this.searchCriteria
+        .filter(function(searchTerm) {
+          return searchTerm.type == "Section";
+        })
+        .map(a => a.text);
+    }
+  },
   methods: {
     fetchArticles() {
       if (this.searchTerm) {
@@ -124,18 +139,8 @@ export default {
       if (this.section && this.section.webTitle != "None") {
         this.addSection();
       }
-      this.keywordParams = this.searchTerms
-        .filter(function(searchTerm) {
-          return searchTerm.type == "Keyword";
-        })
-        .map(a => a.text)
-        .join(" OR ");
-      this.sectionParams = this.searchTerms
-        .filter(function(searchTerm) {
-          return searchTerm.type == "Section";
-        })
-        .map(a => a.text)
-        .join(" OR ");
+      this.keywordParams = this.keywords.join(" OR ");
+      this.sectionParams = this.sections.join(" OR ");
       var params = {
         q: this.keywordParams ? this.keywordParams : null,
         section: this.sectionParams ? this.sectionParams : null,
@@ -148,7 +153,7 @@ export default {
     },
 
     addSearch() {
-      this.searchTerms.push({
+      this.searchCriteria.push({
         text: this.searchTerm,
         type: "Keyword"
       });
@@ -156,19 +161,19 @@ export default {
     },
 
     addSection() {
-      this.searchTerms.push({ text: this.section, type: "Section" });
+      this.searchCriteria.push({ text: this.section, type: "Section" });
       this.section = "";
     },
 
     removeSearch(item) {
-      this.searchTerms.splice(this.searchTerms.indexOf(item), 1);
-      this.searchTerms = [...this.searchTerms];
+      this.searchCriteria.splice(this.searchCriteria.indexOf(item), 1);
+      this.searchCriteria = [...this.searchCriteria];
     },
 
-    fetchSections() {
+    fetchGuardianSections() {
       newsApi.fetchSections().then(data => {
-        this.sections = data.response.results;
-        this.sections.push({ id: null, webTitle: "None" });
+        this.guardianSections = data.response.results;
+        this.guardianSections.push({ id: null, webTitle: "None" });
       });
     }
   }
