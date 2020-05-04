@@ -70,9 +70,7 @@
                     <v-col md="auto">
                       {{item.webTitle}}
                       <br />
-                      <v-subtitle>
-                        <a :href="item.webUrl">{{item.id}}</a>
-                      </v-subtitle>
+                      <a :href="item.webUrl">{{item.id}}</a>
                     </v-col>
                     <v-col md="auto">
                       <v-btn icon :href="item.webUrl">
@@ -106,10 +104,6 @@ export default {
   },
   created() {
     this.fetchGuardianSections();
-    accountsApi.getCurrentUser().then(data => {
-      this.currentUser = data.username;
-      console.log(this.currentUser);
-    });
     this.fetchArticles();
   },
   data() {

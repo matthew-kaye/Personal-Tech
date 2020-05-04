@@ -43,12 +43,12 @@
           </v-btn>
         </v-chip>
       </v-toolbar-items>
-      <v-avatar class="ml-2" size="40">
+      <!-- <v-avatar class="ml-2" size="40">
         <img :src="currentUser.profile.avatar" />
       </v-avatar>
       <v-btn class="ml-2 mr-1" icon text href="/accounts/logout/">
         <v-icon dark>mdi-logout</v-icon>
-      </v-btn>
+      </v-btn>-->
     </v-app-bar>
   </div>
 </template>
@@ -101,12 +101,13 @@ export default {
     };
   },
   created() {
-    accountsApi.getCurrentUser().then(data => {
-      this.currentUser = data;
-      if (this.currentUser.profile === null) {
-        location.href = "/accounts/logout/";
-      }
-    });
+    this.currentUser = "test";
+    // accountsApi.getCurrentUser().then(data => {
+    //   this.currentUser = data;
+    //   if (this.currentUser.profile === null) {
+    //     location.href = "/accounts/logout/";
+    //   }
+    // });
   },
   methods: {
     toggleDark() {
