@@ -12,13 +12,13 @@
           :src="book.book_image"
         />
       </v-col>
-      <v-col md="auto">
+      <v-col cols="8">
         <v-card class="ma-4">
           <v-card-title class="primary headline">
             <span class="white--text">Description</span>
           </v-card-title>
           <div class="text--primary ma-4">{{book.description}}</div>
-          <v-row>
+          <v-row justify="start">
             <v-col>
               <v-btn
                 class="ma-6"
@@ -39,7 +39,7 @@
             <template v-for="(item, index) in reviews">
               <v-list-item :key="index">
                 <v-list-item-content>
-                  <v-list-item-title v-html="item.summary"></v-list-item-title>
+                  {{item.summary}}
                   <v-list-item-subtitle>
                     <a :href="item.url">See Full Review</a>
                   </v-list-item-subtitle>

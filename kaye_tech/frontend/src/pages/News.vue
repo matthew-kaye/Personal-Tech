@@ -65,15 +65,13 @@
           <v-list-item :key="index">
             <v-list-item-content>
               <v-row justify="start">
-                <v-col>
-                  <b>
-                    <v-list-item-title v-html="item.webTitle"></v-list-item-title>
-                  </b>
+                <v-col md="auto">
+                  <v-list-item-title v-html="item.webTitle"></v-list-item-title>
                   <v-list-item-subtitle>
                     <a :href="item.webUrl">{{item.id}}</a>
                   </v-list-item-subtitle>
                 </v-col>
-                <v-col class="md-auto">
+                <v-col md="auto">
                   <v-btn icon :href="item.webUrl">
                     <v-icon color="primary" large>mdi-arrow-right-circle-outline</v-icon>
                   </v-btn>
