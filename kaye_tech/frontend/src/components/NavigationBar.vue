@@ -21,7 +21,6 @@
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
       <router-link to="/" tag="span" style="cursor: pointer; display: flex;">
         <v-img class="ml-2" max-height="50" max-width="60" src="/static/frontend/k-logo.jpg" />
-
         <v-toolbar-title class="ma-3">
           <b class="headline font-weight-bold">Matt's Tech</b>
         </v-toolbar-title>
@@ -74,6 +73,11 @@ export default {
           label: "Books",
           link: "/books",
           icon: "mdi-book-open-page-variant"
+        },
+        {
+          label: "Burritos",
+          link: "/burritos",
+          icon: "mdi-taco"
         },
         {
           label: "Empty",

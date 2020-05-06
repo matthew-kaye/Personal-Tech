@@ -4,14 +4,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 
-class IndexViewSet(viewsets.ViewSet):
+class BurritoViewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request):
         try:
-            request_data = json.loads(request.data["data"])
-            print(request_data)
+            # request_data = json.loads(request.data)
+            print(request.data)
         except Exception as e:
+            print(f"Error: {e}")
             return Response(
                 {
                     "responseType": "error",

@@ -5,6 +5,7 @@
     data-mode="popular"
     data-popular-type="last-week"
     data-popular-lang="en"
+    v-bind:class="color='primary'"
   >
     <div>
       <a href="http://hashtagify.me/popular"></a>
