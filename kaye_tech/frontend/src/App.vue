@@ -6,16 +6,23 @@
     </v-content>
     <br />
     <br />
-    <v-footer padless>
-      <v-card width="100%" class="text-right">
-        <v-card-text>
-          <a href="https://www.linkedin.com/in/matthew-kaye-20332016a/">
-            <span class="secondary--text">
-              <strong>Matthew Kaye</strong>
+    <v-footer padless height="50">
+      <v-card width="100%" height="55" class="text-right">
+        <div class="mt-2" color="card">
+          <span class="secondary--text" style="font-size:11pt">
+            <strong>
+              Matthew Kaye
               - {{ new Date().getFullYear() }}
-            </span>
-          </a>
-        </v-card-text>
+            </strong>
+          </span>
+          <v-btn
+            class="mb-2 ml-2 mr-4"
+            icon
+            href="https://www.linkedin.com/in/matthew-kaye-20332016a/"
+          >
+            <v-icon>mdi-linkedin</v-icon>
+          </v-btn>
+        </div>
       </v-card>
     </v-footer>
   </v-app>
@@ -30,7 +37,7 @@ export default {
     NavigationBar
   },
   created() {
-    console.log(document.cookie);
+    // console.log(document.cookie);
   },
   data() {
     return {};
@@ -64,7 +71,7 @@ export default {
   width: 100%;
   p {
     color: color(text, muted);
-    font-size: font-size(caption);
+    font-size: 10;
   }
 }
 
