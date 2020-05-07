@@ -55,7 +55,6 @@
 
 <script>
 import AccountsApi from "@/apis/AccountsApi";
-
 const accountsApi = new AccountsApi();
 
 export default {
