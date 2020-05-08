@@ -4,7 +4,7 @@ import VueRouter from "vue-router";
 import vuetify from "./plugins/vuetify";
 
 import App from "./App.vue";
-import Index from "./pages/Index.vue";
+import Canvas from "./pages/Canvas.vue";
 import Joke from "./pages/Joke.vue";
 import Tabletop from "./pages/Tabletop.vue";
 import News from "./pages/News.vue";
@@ -31,7 +31,7 @@ const routes = [
     component: BurritoDetailPage
   },
   { path: "/burritos", name: "burritos", component: Burritos },
-  { path: "/home", name: "home", component: Index },
+  { path: "/canvas", name: "canvas", component: Canvas },
   { path: "/jokes", name: "jokes", component: Joke },
   { path: "/tabletop", name: "tabletop", component: Tabletop },
 ];

@@ -79,9 +79,9 @@ export default {
           icon: "mdi-taco"
         },
         {
-          label: "Empty",
-          link: "/home",
-          icon: "mdi-alpha-k-box"
+          label: "Canvas",
+          link: "/canvas",
+          icon: "mdi-brush"
         },
         {
           label: "D&D",

@@ -2,6 +2,7 @@ import json
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from .models import Vendor
 
 
 class BurritoViewSet(viewsets.ViewSet):
@@ -9,8 +10,16 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def create(self, request):
         try:
-            # request_data = json.loads(request.data)
-            print(request.data)
+            vendor_data = request.data["vendorData"]
+            vendor = Vendor(
+                name=vendor_data["name"],
+                description=vendor_data["review"],
+                url=vendor_data["url"],
+                img_url=vendor_data["imageUrl"],
+                rating=vendor_data["rating"]
+            )
+            print(vendor)
+            # vendor.save()
         except Exception as e:
             print(f"Error: {e}")
             return Response(
@@ -26,7 +35,11 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def list(self, request):
         try:
-            items = []
+
+            print(request)
+            vendors = Vendor.objects.get()
+            print(request)
+            print(vendors)
             return Response(json.dumps(items), status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
@@ -36,7 +49,9 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            response = {}
+            print("Retrieving")
+            vendor = Vendor.objects.get(pk=pk)
+            response = vendor
             return Response(json.dumps(response), status=status.HTTP_200_OK)
         except Exception as e:
             return Response(

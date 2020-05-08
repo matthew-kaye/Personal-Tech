@@ -14,7 +14,7 @@ export default class ItemsApi {
       .catch();
   }
 
-  getItems(data) {
+  getVendors(data) {
     return axios
       .get(baseUrl, { params: data })
       .then((response) => response.data)

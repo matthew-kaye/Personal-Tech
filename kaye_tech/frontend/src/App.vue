@@ -9,7 +9,7 @@
     <v-footer padless height="50">
       <v-card width="100%" height="55" class="text-right">
         <div class="mt-2" color="card">
-          <span class="secondary--text" style="font-size:11pt">
+          <span class="secondary--text">
             <strong>
               Matthew Kaye
               - {{ new Date().getFullYear() }}
@@ -71,7 +71,7 @@ export default {
   width: 100%;
   p {
     color: color(text, muted);
-    font-size: 10;
+    font-size: 11;
   }
 }
 
