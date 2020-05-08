@@ -899,7 +899,7 @@ let bloomFramebuffers = [];
 let sunrays;
 let sunraysTemp;
 
-let ditheringTexture = createTextureAsync('/static/canvas/LDR_LLL1_0.png');
+let ditheringTexture = createTextureAsync();
 
 const blurProgram = new Program(blurVertexShader, blurShader);
 const copyProgram = new Program(baseVertexShader, copyShader);
@@ -1064,7 +1064,7 @@ function resizeDoubleFBO(target, w, h, internalFormat, format, type, param) {
     return target;
 }
 
-function createTextureAsync(url) {
+function createTextureAsync() {
     let texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -1091,7 +1091,7 @@ function createTextureAsync(url) {
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
     };
-    image.src = url;
+    // image.src = url;
 
     return obj;
 }
