@@ -8,10 +8,12 @@
       <CanvasSheet />
       <v-divider />
       <br />
-      <v-card md="auto" elevation="10" width="20%">
+      <v-card md="auto" elevation="10" width="30%">
         <v-card-title class="primary headline">Instructions</v-card-title>
         <v-divider />
-        <v-card-text style="font-size:12pt">Press 'p' to pause</v-card-text>
+        <v-card-text
+          style="font-size:12pt"
+        >Press 'p' to pause, and space bar to generate more swirls</v-card-text>
       </v-card>
     </div>
   </v-card>

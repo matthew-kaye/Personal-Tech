@@ -27,7 +27,6 @@ export default {
   methods: {
     addScriptIfNotDuplicate(source) {
       const plugin = document.createElement("script");
-
       plugin.setAttribute("src", source);
       if (!this.scripts.includes(plugin.src)) {
         document.head.appendChild(plugin);

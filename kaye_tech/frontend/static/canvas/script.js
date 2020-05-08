@@ -1473,6 +1473,12 @@ window.addEventListener('keydown', e => {
         splatStack.push(parseInt(Math.random() * 20) + 5);
 });
 
+window.addEventListener('keydown', function (e) {
+    if (e.keyCode == 32 && e.target == document.body) {
+        e.preventDefault();
+    }
+});
+
 function updatePointerDownData(pointer, id, posX, posY) {
     pointer.id = id;
     pointer.down = true;
