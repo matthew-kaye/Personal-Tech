@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="overlay = false">
     <CanvasSheet></CanvasSheet>
     <v-overlay width="100%" height="100%" :value="overlay">
       <v-lazy transition="slide-x-transition">

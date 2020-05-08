@@ -17,7 +17,6 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-
       <v-app-bar dark color="primary">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <router-link to="/" tag="span" style="cursor: pointer; display: flex;">
