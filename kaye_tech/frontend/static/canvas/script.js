@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// console.log(window.hasOwnProperty("canvas"))
 const canvas = document.getElementsByTagName('canvas')[0]
 resizeCanvas();
 
@@ -306,11 +305,9 @@ function textureToCanvas(texture, width, height) {
     let ctx = captureCanvas.getContext('2d');
     captureCanvas.width = width;
     captureCanvas.height = height;
-
     let imageData = ctx.createImageData(width, height);
     imageData.data.set(texture);
     ctx.putImageData(imageData, 0, 0);
-
     return captureCanvas;
 }
 
@@ -908,7 +905,7 @@ let bloomFramebuffers = [];
 let sunrays;
 let sunraysTemp;
 
-let ditheringTexture = createTextureAsync('/static/LDR_LLL1_0.png');
+let ditheringTexture = createTextureAsync('/static/canvas/LDR_LLL1_0.png');
 
 const blurProgram = new Program(blurVertexShader, blurShader);
 const copyProgram = new Program(baseVertexShader, copyShader);

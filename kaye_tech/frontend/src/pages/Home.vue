@@ -2,8 +2,9 @@
   <div>
     <CanvasSheet></CanvasSheet>
     <v-overlay width="100%" height="100%" :value="overlay">
-      <span style="font-size:64pt">{{welcomeMessage}}</span>
-
+      <v-lazy transition="slide-x-transition">
+        <span style="font-size:64pt">{{welcomeMessage}}</span>
+      </v-lazy>
       <v-btn top right absolute fab icon class="mr-n12 mx-auto" @click="overlay = false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -22,7 +23,6 @@ export default {
   created() {
     accountsApi.getCurrentUser().then(data => {
       this.currentUser = data;
-      console.log(this.currentUser);
     });
   },
   data() {
@@ -35,7 +35,7 @@ export default {
     welcomeMessage() {
       return this.currentUser.first_name
         ? `Hello ${this.currentUser.first_name}!`
-        : `Welcome!`;
+        : `Hello!`;
     }
   },
   methods: {}

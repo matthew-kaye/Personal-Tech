@@ -7,7 +7,19 @@
 <script>
 export default {
   name: "CanvasSheet",
+  data() {
+    return {
+      scripts: []
+    };
+  },
   created() {
+    var scripts = document.querySelectorAll("script");
+    for (var i = 0; i < scripts.length; i++) {
+      var scriptObject = scripts[i];
+      this.scripts.push(scripts[i].src);
+    }
+  },
+  mounted() {
     window.ga =
       window.ga ||
       function() {
@@ -16,18 +28,23 @@ export default {
     ga.l = +new Date();
     ga("create", "UA-105392568-1", "auto");
     ga("send", "pageview");
-  },
-  mounted() {
-    const guiPlugin = document.createElement("script");
-    guiPlugin.setAttribute("src", "/static/dat.gui.min.js");
-    guiPlugin.async = true;
-    document.head.appendChild(guiPlugin);
 
+    const guiPlugin = document.createElement("script");
+    guiPlugin.setAttribute("src", "/static/canvas/dat.gui.min.js");
+    if (!this.scripts.includes(guiPlugin.src)) {
+      document.head.appendChild(guiPlugin);
+      guiPlugin.async = true;
+      this.scripts.push(guiPlugin.src);
+    }
     const scriptPlugin = document.createElement("script");
-    scriptPlugin.setAttribute("src", "/static/script.js");
-    scriptPlugin.async = true;
-    document.head.appendChild(scriptPlugin);
-  }
+    scriptPlugin.setAttribute("src", "/static/canvas/script.js");
+    if (!this.scripts.includes(scriptPlugin.src)) {
+      document.head.appendChild(scriptPlugin);
+      scriptPlugin.async = true;
+      this.scripts.push(scriptPlugin.src);
+    }
+  },
+  computed: {}
 };
 </script>
 <style module lang="scss">
