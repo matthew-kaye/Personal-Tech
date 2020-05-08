@@ -120,8 +120,6 @@ function getWebGLContext(canvas) {
         formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
     }
 
-    ga('send', 'event', isWebGL2 ? 'webgl2' : 'webgl', formatRGBA == null ? 'not supported' : 'supported');
-
     return {
         gl,
         ext: {
@@ -205,7 +203,6 @@ function startGUI() {
     let github = gui.add({
         fun: () => {
             window.open('https://github.com/PavelDoGreat/WebGL-Fluid-Simulation');
-            ga('send', 'event', 'link button', 'github');
         }
     }, 'fun').name('Github');
     github.__li.className = 'cr function bigFont';
@@ -216,7 +213,6 @@ function startGUI() {
 
     let twitter = gui.add({
         fun: () => {
-            ga('send', 'event', 'link button', 'twitter');
             window.open('https://twitter.com/PavelDoGreat');
         }
     }, 'fun').name('Twitter');
@@ -228,7 +224,6 @@ function startGUI() {
 
     let discord = gui.add({
         fun: () => {
-            ga('send', 'event', 'link button', 'discord');
             window.open('https://discordapp.com/invite/CeqZDDE');
         }
     }, 'fun').name('Discord');
@@ -240,7 +235,6 @@ function startGUI() {
 
     let app = gui.add({
         fun: () => {
-            ga('send', 'event', 'link button', 'app');
             window.open('http://onelink.to/5b58bn');
         }
     }, 'fun').name('Check out mobile app');
