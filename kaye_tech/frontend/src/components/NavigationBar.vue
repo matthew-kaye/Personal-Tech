@@ -68,7 +68,7 @@ export default {
         {
           label: "News",
           link: "/news",
-          icon: "mdi-home"
+          icon: "mdi-newspaper"
         },
         {
           label: "Books",

@@ -5,11 +5,13 @@
 </template>
 
 <script>
+import Vue from "vue";
 export default {
   name: "CanvasSheet",
   data() {
     return {
-      scripts: []
+      scripts: [],
+      render: false
     };
   },
   created() {
@@ -28,23 +30,20 @@ export default {
     ga.l = +new Date();
     ga("create", "UA-105392568-1", "auto");
     ga("send", "pageview");
-
-    const guiPlugin = document.createElement("script");
-    guiPlugin.setAttribute("src", "/static/canvas/dat.gui.min.js");
-    if (!this.scripts.includes(guiPlugin.src)) {
-      document.head.appendChild(guiPlugin);
-      guiPlugin.async = true;
-      this.scripts.push(guiPlugin.src);
-    }
-    const scriptPlugin = document.createElement("script");
-    scriptPlugin.setAttribute("src", "/static/canvas/script.js");
-    if (!this.scripts.includes(scriptPlugin.src)) {
-      document.head.appendChild(scriptPlugin);
-      scriptPlugin.async = true;
-      this.scripts.push(scriptPlugin.src);
-    }
+    this.addScriptIfNotDuplicate("/static/canvas/dat.gui.min.js");
+    this.addScriptIfNotDuplicate("/static/canvas/script.js");
   },
-  computed: {}
+  methods: {
+    addScriptIfNotDuplicate(source) {
+      const plugin = document.createElement("script");
+      if (!this.scripts.includes(source)) {
+        plugin.setAttribute("src", source);
+        document.head.appendChild(plugin);
+        plugin.async = true;
+        this.scripts.push(source);
+      }
+    }
+  }
 };
 </script>
 <style module lang="scss">
