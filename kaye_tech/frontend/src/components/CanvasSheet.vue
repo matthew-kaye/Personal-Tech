@@ -17,22 +17,22 @@ export default {
   created() {
     var scripts = document.querySelectorAll("script");
     for (var i = 0; i < scripts.length; i++) {
-      var scriptObject = scripts[i];
       this.scripts.push(scripts[i].src);
     }
-  },
-  mounted() {
+
     this.addScriptIfNotDuplicate("/static/canvas/dat.gui.min.js");
     this.addScriptIfNotDuplicate("/static/canvas/script.js");
   },
+  mounted() {},
   methods: {
     addScriptIfNotDuplicate(source) {
       const plugin = document.createElement("script");
-      if (!this.scripts.includes(source)) {
-        plugin.setAttribute("src", source);
+
+      plugin.setAttribute("src", source);
+      if (!this.scripts.includes(plugin.src)) {
         document.head.appendChild(plugin);
         plugin.async = true;
-        this.scripts.push(source);
+        this.scripts.push(plugin.src);
       }
     }
   }
