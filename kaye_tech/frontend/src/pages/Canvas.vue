@@ -2,7 +2,6 @@
   <v-card class="ma-6" height="100%">
     <v-card-title class="primary headline">
       <span class="white--text">Canvas</span>
-
       <v-btn color="primary" class="ml-8 mr-1" @click="refresh()">Refresh</v-btn>
     </v-card-title>
     <div width="100%" height="100%" class="ma-10">

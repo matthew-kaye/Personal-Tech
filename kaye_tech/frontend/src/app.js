@@ -2,8 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import vuetify from "./plugins/vuetify";
-
 import App from "./App.vue";
+import Home from "./pages/Home.vue"
 import Canvas from "./pages/Canvas.vue";
 import Joke from "./pages/Joke.vue";
 import Tabletop from "./pages/Tabletop.vue";
@@ -17,7 +17,8 @@ import BurritoDetailPage from "./pages/Burritos.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", redirect: "/news" },
+  { path: "/", redirect: "/home" },
+  { path: "/home", name: "home", component: Home },
   { path: "/news", name: "news", component: News },
   { path: "/books", name: "books", component: Books },
   {

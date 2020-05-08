@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-console.log(window.hasOwnProperty("canvas"))
+// console.log(window.hasOwnProperty("canvas"))
 const canvas = document.getElementsByTagName('canvas')[0]
 resizeCanvas();
 

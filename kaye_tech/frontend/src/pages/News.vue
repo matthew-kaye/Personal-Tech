@@ -106,10 +106,8 @@
   </div>
 </template>
 <script>
-import AccountsApi from "@/apis/AccountsApi";
 import NewsApi from "@/apis/NewsApi";
 import TwitterFeed from "@/components/TwitterFeed.vue";
-const accountsApi = new AccountsApi();
 const newsApi = new NewsApi();
 
 export default {

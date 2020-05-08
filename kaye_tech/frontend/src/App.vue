@@ -4,8 +4,6 @@
     <v-content>
       <router-view />
     </v-content>
-    <br />
-    <br />
     <v-footer padless height="50">
       <v-card width="100%" height="55" class="text-right">
         <div class="mt-2" color="card">
