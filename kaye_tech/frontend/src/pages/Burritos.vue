@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="ma-6">
-      <v-data-table :headers="headers" :items="vendors">
+      <v-data-table :headers="headers" :items="vendors" :sort-by="'rating'">
         <template v-slot:item="row">
           <tr v-bind:style="{ cursor: 'pointer' }" @click="viewVendor(row.item)">
             <td>
@@ -11,48 +11,50 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-speed-dial
-      v-model="fab"
+    <BurritoInputDialog
+      :dialog="burritoInputDialog"
+      @close="burritoInputDialog = false"
+      @save="saveData"
+      ref="burritoInputDialog"
+    />
+    <v-btn
+      color="primary"
+      fixed
       bottom
       right
-      direction="top"
-      transition="slide-y-reverse-transition"
-      fixed
-      class="ma-12"
+      fab
+      large
+      class="mb-12 mr-4"
+      @click="burritoInputDialog = true"
     >
-      <template v-slot:activator>
-        <v-btn v-model="fab" fab color="primary">
-          <v-icon v-if="fab">mdi-close</v-icon>
-          <v-icon v-else>mdi-chevron-up</v-icon>
-        </v-btn>
-      </template>
-      <v-btn fab dark small color="primary" @click="console.log('add')">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="green" @click="console.log('edit')">
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="red" @click="console.log('delete')">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </v-speed-dial>
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
   </div>
 </template>
 
 <script>
 import BurritoApi from "@/apis/BurritoApi";
+import BurritoInputDialog from "@/components/BurritoInputDialog";
+import AccountsApi from "@/apis/AccountsApi";
+const accountsApi = new AccountsApi();
+
 const burritoApi = new BurritoApi();
 
 export default {
-  components: {},
+  components: {
+    BurritoInputDialog
+  },
   created() {
-    burritoApi.makeVendor({
-      name: "Chilango",
-      rating: 4.9
+    burritoApi.getVendors({});
+
+    accountsApi.getCurrentUser().then(data => {
+      this.currentUser = data;
+      console.log(data);
     });
   },
   data() {
     return {
+      burritoInputDialog: false,
       vendors: [],
       vendorData: {
         name: "",
@@ -65,9 +67,16 @@ export default {
   },
   computed: {
     headers() {
-      return [{ text: "Name", align: "start", value: "name", width: 250 }];
+      return [
+        { text: "Name", align: "start", value: "name" },
+        { text: "Rating", align: "start", value: "rating" }
+      ];
     }
   },
-  methods: {}
+  methods: {
+    saveData(vendorData) {
+      burritoApi.makeVendor(vendorData);
+    }
+  }
 };
 </script>
