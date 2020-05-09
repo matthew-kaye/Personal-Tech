@@ -12,7 +12,14 @@ export default {
     return {
       canvas: {},
       pointers: [],
-      canvasConfig: {
+      params: {
+        alpha: true,
+        depth: false,
+        stencil: false,
+        antialias: false,
+        preserveDrawingBuffer: false
+      },
+      config: {
         SIM_RESOLUTION: 128,
         DYE_RESOLUTION: 1024,
         CAPTURE_RESOLUTION: 512,
@@ -43,20 +50,19 @@ export default {
   },
   created() {
     this.refreshScripts();
-    window.canvasConfig = this.canvasConfig;
   },
   mounted() {
     const oldCanvas = document.getElementsByTagName("canvas")[0];
     const canvas = oldCanvas.cloneNode(false);
     oldCanvas.parentElement.appendChild(canvas);
     oldCanvas.parentElement.removeChild(oldCanvas);
-    let config = this.canvasConfig;
+    let config = this.config;
 
     let pointers = [];
     let splatStack = [];
     pointers.push(this.pointerPrototype());
-    const { gl, ext } = getWebGLContext(canvas);
-    if (isMobile()) {
+    const { gl, ext } = getWebGLContext(canvas, this.params);
+    if (this.isMobile()) {
       config.DYE_RESOLUTION = 512;
     }
     if (!ext.supportLinearFiltering) {
@@ -66,14 +72,7 @@ export default {
       config.SUNRAYS = false;
     }
 
-    function getWebGLContext(canvas) {
-      const params = {
-        alpha: true,
-        depth: false,
-        stencil: false,
-        antialias: false,
-        preserveDrawingBuffer: false
-      };
+    function getWebGLContext(canvas, params) {
       let gl = canvas.getContext("webgl2", params);
       const isWebGL2 = !!gl;
       if (!isWebGL2)
@@ -168,9 +167,6 @@ export default {
       );
       const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
       return status == gl.FRAMEBUFFER_COMPLETE;
-    }
-    function isMobile() {
-      return /Mobi|Android/i.test(navigator.userAgent);
     }
     function captureScreenshot() {
       let res = getResolution(config.CAPTURE_RESOLUTION);
@@ -1683,7 +1679,7 @@ export default {
     startGUI() {
       this.gui = new dat.GUI({ width: 300 });
       this.gui
-        .add(config, "DYE_RESOLUTION", {
+        .add(this.config, "DYE_RESOLUTION", {
           high: 1024,
           medium: 512,
           low: 256,
@@ -1692,7 +1688,7 @@ export default {
         .name("quality")
         .onFinishChange(initFramebuffers);
       this.gui
-        .add(config, "SIM_RESOLUTION", {
+        .add(this.config, "SIM_RESOLUTION", {
           "32": 32,
           "64": 64,
           "128": 128,
@@ -1701,24 +1697,24 @@ export default {
         .name("sim resolution")
         .onFinishChange(initFramebuffers);
       this.gui
-        .add(config, "DENSITY_DISSIPATION", 0, 4.0)
+        .add(this.config, "DENSITY_DISSIPATION", 0, 4.0)
         .name("density diffusion");
       this.gui
-        .add(config, "VELOCITY_DISSIPATION", 0, 4.0)
+        .add(this.config, "VELOCITY_DISSIPATION", 0, 4.0)
         .name("velocity diffusion");
-      this.gui.add(config, "PRESSURE", 0.0, 1.0).name("pressure");
+      this.gui.add(this.config, "PRESSURE", 0.0, 1.0).name("pressure");
       this.gui
-        .add(config, "CURL", 0, 50)
+        .add(this.config, "CURL", 0, 50)
         .name("vorticity")
         .step(1);
-      this.gui.add(config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
+      this.gui.add(this.config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
       this.gui
-        .add(config, "SHADING")
+        .add(this.config, "SHADING")
         .name("shading")
         .onFinishChange(updateKeywords);
-      this.gui.add(config, "COLORFUL").name("colorful");
+      this.gui.add(this.config, "COLORFUL").name("colorful");
       this.gui
-        .add(config, "PAUSED")
+        .add(this.config, "PAUSED")
         .name("paused")
         .listen();
       this.gui
@@ -1733,24 +1729,33 @@ export default {
         .name("Random splats");
       let bloomFolder = this.gui.addFolder("Bloom");
       bloomFolder
-        .add(config, "BLOOM")
+        .add(this.config, "BLOOM")
         .name("enabled")
         .onFinishChange(updateKeywords);
-      bloomFolder.add(config, "BLOOM_INTENSITY", 0.1, 2.0).name("intensity");
-      bloomFolder.add(config, "BLOOM_THRESHOLD", 0.0, 1.0).name("threshold");
+      bloomFolder
+        .add(this.config, "BLOOM_INTENSITY", 0.1, 2.0)
+        .name("intensity");
+      bloomFolder
+        .add(this.config, "BLOOM_THRESHOLD", 0.0, 1.0)
+        .name("threshold");
       let sunraysFolder = this.gui.addFolder("Sunrays");
       sunraysFolder
-        .add(config, "SUNRAYS")
+        .add(this.config, "SUNRAYS")
         .name("enabled")
         .onFinishChange(updateKeywords);
-      sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("weight");
+      sunraysFolder.add(this.config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("weight");
       let captureFolder = this.gui.addFolder("Capture");
-      captureFolder.addColor(config, "BACK_COLOR").name("background color");
-      captureFolder.add(config, "TRANSPARENT").name("transparent");
+      captureFolder
+        .addColor(this.config, "BACK_COLOR")
+        .name("background color");
+      captureFolder.add(this.config, "TRANSPARENT").name("transparent");
       captureFolder
         .add({ fun: captureScreenshot }, "fun")
         .name("take screenshot");
-      if (isMobile()) this.gui.close();
+      if (this.isMobile()) this.gui.close();
+    },
+    isMobile() {
+      return /Mobi|Android/i.test(navigator.userAgent);
     }
   }
 };
