@@ -2,9 +2,9 @@
   <div @click="overlay = false">
     <CanvasSheet></CanvasSheet>
     <v-overlay width="100%" height="100%" :value="overlay">
-      <v-lazy transition="slide-x-transition">
-        <span style="font-size:64pt">{{welcomeMessage}}</span>
-      </v-lazy>
+      <span style="font-size:64pt">{{welcomeMessage}}</span>
+      <br />
+      <span>*Click and drag to generate animations</span>
       <v-btn top right absolute fab icon class="mr-n12 mx-auto" @click="overlay = false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -24,6 +24,7 @@ export default {
     accountsApi.getCurrentUser().then(data => {
       this.currentUser = data;
     });
+    window.activeGui = false;
   },
   data() {
     return {
@@ -32,10 +33,13 @@ export default {
     };
   },
   computed: {
+    dark() {
+      return this.$vuetify.theme.dark ? "dark" : "light";
+    },
     welcomeMessage() {
       return this.currentUser.first_name
-        ? `Hello ${this.currentUser.first_name}!`
-        : `Hello!`;
+        ? `Hello ${this.currentUser.first_name}!*`
+        : `Hello!*`;
     }
   },
   methods: {}
