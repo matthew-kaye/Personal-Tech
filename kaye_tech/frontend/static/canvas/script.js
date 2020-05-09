@@ -22,37 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 try {
-    const canvas = document.getElementsByTagName('canvas')[0]
-
+    const canvas = document.getElementsByTagName('canvas')[0];
     resizeCanvas();
 
-    let config = {
-        SIM_RESOLUTION: 128,
-        DYE_RESOLUTION: 1024,
-        CAPTURE_RESOLUTION: 512,
-        DENSITY_DISSIPATION: 1,
-        VELOCITY_DISSIPATION: 0.2,
-        PRESSURE: 0.8,
-        PRESSURE_ITERATIONS: 20,
-        CURL: 30,
-        SPLAT_RADIUS: 0.25,
-        SPLAT_FORCE: 6000,
-        SHADING: true,
-        COLORFUL: true,
-        COLOR_UPDATE_SPEED: 10,
-        PAUSED: false,
-        BACK_COLOR: { r: 0, g: 0, b: 0 },
-        TRANSPARENT: false,
-        BLOOM: true,
-        BLOOM_ITERATIONS: 8,
-        BLOOM_RESOLUTION: 256,
-        BLOOM_INTENSITY: 0.8,
-        BLOOM_THRESHOLD: 0.6,
-        BLOOM_SOFT_KNEE: 0.7,
-        SUNRAYS: true,
-        SUNRAYS_RESOLUTION: 196,
-        SUNRAYS_WEIGHT: 1.0,
-    }
+    let config = window.canvasConfig;
 
     function pointerPrototype() {
         this.id = -1;
@@ -83,7 +56,10 @@ try {
         config.SUNRAYS = false;
     }
 
-    // startGUI();
+    if (window.activeGui) {
+        window.console.log("activating gui")
+        startGUI()
+    };
 
     function getWebGLContext(canvas) {
         const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false };
@@ -200,50 +176,6 @@ try {
         captureFolder.addColor(config, 'BACK_COLOR').name('background color');
         captureFolder.add(config, 'TRANSPARENT').name('transparent');
         captureFolder.add({ fun: captureScreenshot }, 'fun').name('take screenshot');
-
-        let github = gui.add({
-            fun: () => {
-                window.open('https://github.com/PavelDoGreat/WebGL-Fluid-Simulation');
-            }
-        }, 'fun').name('Github');
-        github.__li.className = 'cr function bigFont';
-        github.__li.style.borderLeft = '3px solid #8C8C8C';
-        let githubIcon = document.createElement('span');
-        github.domElement.parentElement.appendChild(githubIcon);
-        githubIcon.className = 'icon github';
-
-        let twitter = gui.add({
-            fun: () => {
-                window.open('https://twitter.com/PavelDoGreat');
-            }
-        }, 'fun').name('Twitter');
-        twitter.__li.className = 'cr function bigFont';
-        twitter.__li.style.borderLeft = '3px solid #8C8C8C';
-        let twitterIcon = document.createElement('span');
-        twitter.domElement.parentElement.appendChild(twitterIcon);
-        twitterIcon.className = 'icon twitter';
-
-        let discord = gui.add({
-            fun: () => {
-                window.open('https://discordapp.com/invite/CeqZDDE');
-            }
-        }, 'fun').name('Discord');
-        discord.__li.className = 'cr function bigFont';
-        discord.__li.style.borderLeft = '3px solid #8C8C8C';
-        let discordIcon = document.createElement('span');
-        discord.domElement.parentElement.appendChild(discordIcon);
-        discordIcon.className = 'icon discord';
-
-        let app = gui.add({
-            fun: () => {
-                window.open('http://onelink.to/5b58bn');
-            }
-        }, 'fun').name('Check out mobile app');
-        app.__li.className = 'cr function appBigFont';
-        app.__li.style.borderLeft = '3px solid #00FF7F';
-        let appIcon = document.createElement('span');
-        app.domElement.parentElement.appendChild(appIcon);
-        appIcon.className = 'icon app';
 
         if (isMobile())
             gui.close();
@@ -1603,5 +1535,5 @@ try {
     };
 
 } catch (error) {
-    console.log(error)
+    window.console.log(error)
 }
