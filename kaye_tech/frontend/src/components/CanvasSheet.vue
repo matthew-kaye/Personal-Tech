@@ -60,19 +60,19 @@ export default {
       this.addScriptIfNotDuplicate("/static/canvas/script.js");
     },
     addScriptIfNotDuplicate(source) {
-      const plugin = document.createElement("script");
-      plugin.setAttribute("src", source);
-      if (!this.scripts.includes(plugin.src)) {
-        document.head.appendChild(plugin);
-        plugin.async = true;
-        this.scripts.push(plugin.src);
+      const script = document.createElement("script");
+      script.setAttribute("src", source);
+      if (!this.scripts.includes(script.src)) {
+        document.head.appendChild(script);
+        script.async = true;
+        this.scripts.push(script.src);
       }
     },
     removeScripts() {
       var elem = document.querySelector("script");
       for (var script of document.querySelectorAll("script")) {
         if (script.src.includes("/static/canvas/script.js")) {
-          script.parentNode.removeChild(script);
+          document.head.removeChild(script);
         }
       }
     }
