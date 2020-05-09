@@ -10,6 +10,8 @@ export default {
   data() {
     var background = this.$vuetify.theme.dark ? 0 : 255;
     return {
+      canvas: {},
+      pointers: [],
       canvasConfig: {
         SIM_RESOLUTION: 128,
         DYE_RESOLUTION: 1024,
@@ -40,6 +42,7 @@ export default {
     };
   },
   created() {
+    this.refreshScripts();
     window.canvasConfig = this.canvasConfig;
   },
   mounted() {
@@ -47,23 +50,11 @@ export default {
     const canvas = oldCanvas.cloneNode(false);
     oldCanvas.parentElement.appendChild(canvas);
     oldCanvas.parentElement.removeChild(oldCanvas);
-    resizeCanvas();
     let config = this.canvasConfig;
-    function pointerPrototype() {
-      this.id = -1;
-      this.texcoordX = 0;
-      this.texcoordY = 0;
-      this.prevTexcoordX = 0;
-      this.prevTexcoordY = 0;
-      this.deltaX = 0;
-      this.deltaY = 0;
-      this.down = false;
-      this.moved = false;
-      this.color = [30, 0, 300];
-    }
+
     let pointers = [];
     let splatStack = [];
-    pointers.push(new pointerPrototype());
+    pointers.push(this.pointerPrototype());
     const { gl, ext } = getWebGLContext(canvas);
     if (isMobile()) {
       config.DYE_RESOLUTION = 512;
@@ -74,10 +65,7 @@ export default {
       config.BLOOM = false;
       config.SUNRAYS = false;
     }
-    if (window.activeGui) {
-      window.console.log("activating gui");
-      startGUI();
-    }
+
     function getWebGLContext(canvas) {
       const params = {
         alpha: true,
@@ -180,76 +168,6 @@ export default {
       );
       const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
       return status == gl.FRAMEBUFFER_COMPLETE;
-    }
-    function startGUI() {
-      var gui = new dat.GUI({ width: 300 });
-      gui
-        .add(config, "DYE_RESOLUTION", {
-          high: 1024,
-          medium: 512,
-          low: 256,
-          "very low": 128
-        })
-        .name("quality")
-        .onFinishChange(initFramebuffers);
-      gui
-        .add(config, "SIM_RESOLUTION", {
-          "32": 32,
-          "64": 64,
-          "128": 128,
-          "256": 256
-        })
-        .name("sim resolution")
-        .onFinishChange(initFramebuffers);
-      gui.add(config, "DENSITY_DISSIPATION", 0, 4.0).name("density diffusion");
-      gui
-        .add(config, "VELOCITY_DISSIPATION", 0, 4.0)
-        .name("velocity diffusion");
-      gui.add(config, "PRESSURE", 0.0, 1.0).name("pressure");
-      gui
-        .add(config, "CURL", 0, 50)
-        .name("vorticity")
-        .step(1);
-      gui.add(config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
-      gui
-        .add(config, "SHADING")
-        .name("shading")
-        .onFinishChange(updateKeywords);
-      gui.add(config, "COLORFUL").name("colorful");
-      gui
-        .add(config, "PAUSED")
-        .name("paused")
-        .listen();
-      gui
-        .add(
-          {
-            fun: () => {
-              splatStack.push(parseInt(Math.random() * 20) + 5);
-            }
-          },
-          "fun"
-        )
-        .name("Random splats");
-      let bloomFolder = gui.addFolder("Bloom");
-      bloomFolder
-        .add(config, "BLOOM")
-        .name("enabled")
-        .onFinishChange(updateKeywords);
-      bloomFolder.add(config, "BLOOM_INTENSITY", 0.1, 2.0).name("intensity");
-      bloomFolder.add(config, "BLOOM_THRESHOLD", 0.0, 1.0).name("threshold");
-      let sunraysFolder = gui.addFolder("Sunrays");
-      sunraysFolder
-        .add(config, "SUNRAYS")
-        .name("enabled")
-        .onFinishChange(updateKeywords);
-      sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("weight");
-      let captureFolder = gui.addFolder("Capture");
-      captureFolder.addColor(config, "BACK_COLOR").name("background color");
-      captureFolder.add(config, "TRANSPARENT").name("transparent");
-      captureFolder
-        .add({ fun: captureScreenshot }, "fun")
-        .name("take screenshot");
-      if (isMobile()) gui.close();
     }
     function isMobile() {
       return /Mobi|Android/i.test(navigator.userAgent);
@@ -1538,7 +1456,7 @@ export default {
       let posX = scaleByPixelRatio(e.offsetX);
       let posY = scaleByPixelRatio(e.offsetY);
       let pointer = pointers.find(p => p.id == -1);
-      if (pointer == null) pointer = new pointerPrototype();
+      if (pointer == null) pointer = this.pointerPrototype();
       updatePointerDownData(pointer, -1, posX, posY);
     });
     canvas.addEventListener("mousemove", e => {
@@ -1555,7 +1473,7 @@ export default {
       e.preventDefault();
       const touches = e.targetTouches;
       while (touches.length >= pointers.length)
-        pointers.push(new pointerPrototype());
+        pointers.push(this.pointerPrototype());
       for (let i = 0; i < touches.length; i++) {
         let posX = scaleByPixelRatio(touches[i].pageX);
         let posY = scaleByPixelRatio(touches[i].pageY);
@@ -1716,8 +1634,125 @@ export default {
       return hash;
     }
   },
-  computed: {},
-  methods: {}
+  computed: {
+    scripts() {
+      var scripts = [];
+      for (var script of document.querySelectorAll("script")) {
+        scripts.push(script.src);
+      }
+      return scripts;
+    }
+  },
+  methods: {
+    refreshScripts() {
+      this.$forceUpdate();
+      this.addScriptIfNotDuplicate("/static/canvas/dat.gui.min.js");
+    },
+    addScriptIfNotDuplicate(source) {
+      const script = document.createElement("script");
+      script.setAttribute("src", source);
+      if (!this.scripts.includes(script.src)) {
+        document.head.appendChild(script);
+        script.async = true;
+        this.scripts.push(script.src);
+      }
+    },
+    removeScripts() {
+      var elem = document.querySelector("script");
+      for (var script of document.querySelectorAll("script")) {
+        if (script.src.includes("/static/canvas/script.js")) {
+          document.head.removeChild(script);
+        }
+      }
+    },
+    pointerPrototype() {
+      return {
+        id: -1,
+        texcoordX: 0,
+        texcoordY: 0,
+        prevTexcoordX: 0,
+        prevTexcoordY: 0,
+        deltaX: 0,
+        deltaY: 0,
+        down: false,
+        moved: false,
+        color: [30, 0, 300]
+      };
+    },
+    addEventListeners() {},
+    startGUI() {
+      this.gui = new dat.GUI({ width: 300 });
+      this.gui
+        .add(config, "DYE_RESOLUTION", {
+          high: 1024,
+          medium: 512,
+          low: 256,
+          "very low": 128
+        })
+        .name("quality")
+        .onFinishChange(initFramebuffers);
+      this.gui
+        .add(config, "SIM_RESOLUTION", {
+          "32": 32,
+          "64": 64,
+          "128": 128,
+          "256": 256
+        })
+        .name("sim resolution")
+        .onFinishChange(initFramebuffers);
+      this.gui
+        .add(config, "DENSITY_DISSIPATION", 0, 4.0)
+        .name("density diffusion");
+      this.gui
+        .add(config, "VELOCITY_DISSIPATION", 0, 4.0)
+        .name("velocity diffusion");
+      this.gui.add(config, "PRESSURE", 0.0, 1.0).name("pressure");
+      this.gui
+        .add(config, "CURL", 0, 50)
+        .name("vorticity")
+        .step(1);
+      this.gui.add(config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
+      this.gui
+        .add(config, "SHADING")
+        .name("shading")
+        .onFinishChange(updateKeywords);
+      this.gui.add(config, "COLORFUL").name("colorful");
+      this.gui
+        .add(config, "PAUSED")
+        .name("paused")
+        .listen();
+      this.gui
+        .add(
+          {
+            fun: () => {
+              splatStack.push(parseInt(Math.random() * 20) + 5);
+            }
+          },
+          "fun"
+        )
+        .name("Random splats");
+      let bloomFolder = this.gui.addFolder("Bloom");
+      bloomFolder
+        .add(config, "BLOOM")
+        .name("enabled")
+        .onFinishChange(updateKeywords);
+      bloomFolder.add(config, "BLOOM_INTENSITY", 0.1, 2.0).name("intensity");
+      bloomFolder.add(config, "BLOOM_THRESHOLD", 0.0, 1.0).name("threshold");
+      let sunraysFolder = this.gui.addFolder("Sunrays");
+      sunraysFolder
+        .add(config, "SUNRAYS")
+        .name("enabled")
+        .onFinishChange(updateKeywords);
+      sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("weight");
+      let captureFolder = this.gui.addFolder("Capture");
+      captureFolder.addColor(config, "BACK_COLOR").name("background color");
+      captureFolder.add(config, "TRANSPARENT").name("transparent");
+      captureFolder
+        .add({ fun: captureScreenshot }, "fun")
+        .name("take screenshot");
+      if (isMobile()) this.gui.close();
+    }
+  }
 };
 </script>
 <style module lang="scss">
