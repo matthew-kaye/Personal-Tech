@@ -5,7 +5,6 @@
     </v-card-title>
     <div width="100%" height="100%" class="ma-10">
       <CanvasSheet ref="canvasSheet" />
-      <CanvasGui />
       <v-divider />
       <br />
       <v-card md="auto" elevation="10" width="30%">
@@ -22,12 +21,10 @@
 
 <script>
 import CanvasSheet from "@/components/CanvasSheet.vue";
-import CanvasGui from "@/components/CanvasGui.vue";
 
 export default {
   components: {
-    CanvasSheet,
-    CanvasGui
+    CanvasSheet
   },
   created() {},
   computed: {},
