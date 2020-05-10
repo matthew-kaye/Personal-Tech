@@ -55,6 +55,10 @@ export default {
   mounted() {
     const canvas = document.getElementsByTagName("canvas")[0];
     let config = this.config;
+    if (this.activateGui && !window.gui) {
+      this.gui = startGUI();
+      window.gui = true;
+    }
 
     let pointers = [];
     let splatStack = [];
@@ -69,11 +73,6 @@ export default {
       config.BLOOM = false;
       config.SUNRAYS = false;
     }
-
-    if (this.activateGui) {
-      this.gui = startGUI();
-    }
-
     function captureScreenshot() {
       let res = getResolution(config.CAPTURE_RESOLUTION);
       let target = createFBO(
