@@ -8,6 +8,7 @@
 export default {
   name: "CanvasSheet",
   data() {
+    var background = this.$vuetify.theme.dark ? 0 : 255;
     return {
       gui: {},
       params: {
@@ -32,7 +33,7 @@ export default {
         COLORFUL: true,
         COLOR_UPDATE_SPEED: 10,
         PAUSED: false,
-        BACK_COLOR: { r: 0, g: 0, b: 0 },
+        BACK_COLOR: { r: background, g: background, b: background },
         TRANSPARENT: false,
         BLOOM: true,
         BLOOM_ITERATIONS: 8,

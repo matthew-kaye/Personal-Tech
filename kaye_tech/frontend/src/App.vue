@@ -38,6 +38,8 @@ export default {
     if (window.location.href.includes("dark")) {
       this.$vuetify.theme.dark =
         window.location.href.split("dark=").pop() == "true";
+    } else {
+      this.$vuetify.theme.dark = true;
     }
   },
   data() {

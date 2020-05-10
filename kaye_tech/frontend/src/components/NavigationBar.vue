@@ -111,6 +111,11 @@ export default {
   methods: {
     toggleDark() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      var newUrl = location.pathname + "?dark=" + this.$vuetify.theme.dark;
+      window.history.pushState("string", "Title", newUrl);
+      if (window.needsRefresh) {
+        location.reload();
+      }
     }
   }
 };
