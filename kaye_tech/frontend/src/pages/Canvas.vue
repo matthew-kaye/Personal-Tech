@@ -40,7 +40,6 @@ export default {
     toggleGui() {
       if (this.showGui) {
         this.gui.close();
-        this.gui.end();
         this.showGui = false;
       } else {
         this.gui.open();
