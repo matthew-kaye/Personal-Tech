@@ -56,7 +56,8 @@ export default {
     const canvas = document.getElementsByTagName("canvas")[0];
     let config = this.config;
     if (this.activateGui && !window.gui) {
-      this.gui = startGUI();
+      this.gui = new dat.GUI({ width: 300 });
+      startGUI(this.gui);
       window.gui = true;
     }
 
@@ -1534,8 +1535,7 @@ export default {
       }
       return hash;
     }
-    function startGUI() {
-      var gui = new dat.GUI({ width: 300 });
+    function startGUI(gui) {
       gui
         .add(config, "DYE_RESOLUTION", {
           high: 1024,
