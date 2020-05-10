@@ -37,15 +37,15 @@ export default {
     };
   },
   mounted() {
-    this.gui = this.$refs.canvasSheet.gui;
+    window.gui = this.$refs.canvasSheet.gui;
   },
   methods: {
     toggleGui() {
       if (this.showGui) {
-        this.gui.close();
+        window.gui.close();
         this.showGui = false;
       } else {
-        this.gui.open();
+        window.gui.open();
         this.showGui = true;
       }
     }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="currentUser">
+  <div v-if="currentUser" @click="closeGui()">
     <v-navigation-drawer v-model="drawer" absolute temporary app>
       <v-list>
         <v-list-item v-for="item in navigationItems" :key="item.label" :to="item.link" link>
@@ -115,6 +115,11 @@ export default {
       window.history.pushState("string", "Title", newUrl);
       if (window.needsRefresh) {
         location.reload();
+      }
+    },
+    closeGui() {
+      if (window.gui && !location.href.includes("canvas")) {
+        window.gui.close();
       }
     }
   }
