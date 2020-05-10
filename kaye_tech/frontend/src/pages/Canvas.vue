@@ -3,8 +3,9 @@
     <v-card-title class="primary headline">
       <span class="white--text">Canvas</span>
     </v-card-title>
+    <v-btn @click="toggleGui">Toggle Controls</v-btn>
     <div width="100%" height="100%" class="ma-10">
-      <CanvasSheet ref="canvasSheet" />
+      <CanvasSheet ref="canvasSheet" :activateGui="true" />
       <v-divider />
       <br />
       <v-card md="auto" elevation="10" width="30%">
@@ -26,9 +27,25 @@ export default {
   components: {
     CanvasSheet
   },
-  created() {},
-  computed: {},
-  mounted() {},
-  methods: {}
+  data() {
+    return {
+      showGui: true,
+      gui: {}
+    };
+  },
+  mounted() {
+    this.gui = this.$refs.canvasSheet.gui;
+  },
+  methods: {
+    toggleGui() {
+      if (this.showGui) {
+        this.gui.close();
+        this.showGui = false;
+      } else {
+        this.gui.open();
+        this.showGui = true;
+      }
+    }
+  }
 };
 </script>

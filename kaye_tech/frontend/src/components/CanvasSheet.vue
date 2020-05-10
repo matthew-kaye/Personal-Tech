@@ -8,10 +8,8 @@
 export default {
   name: "CanvasSheet",
   data() {
-    var background = this.$vuetify.theme.dark ? 0 : 255;
     return {
-      canvas: {},
-      pointers: [],
+      gui: {},
       params: {
         alpha: true,
         depth: false,
@@ -34,7 +32,7 @@ export default {
         COLORFUL: true,
         COLOR_UPDATE_SPEED: 10,
         PAUSED: false,
-        BACK_COLOR: { r: background, g: background, b: background },
+        BACK_COLOR: { r: 0, g: 0, b: 0 },
         TRANSPARENT: false,
         BLOOM: true,
         BLOOM_ITERATIONS: 8,
@@ -49,20 +47,20 @@ export default {
     };
   },
   created() {
-    this.refreshScripts();
+    if (window.needsRefresh) {
+      location.reload();
+    }
+    window.needsRefresh = true;
   },
   mounted() {
-    const oldCanvas = document.getElementsByTagName("canvas")[0];
-    const canvas = oldCanvas.cloneNode(false);
-    oldCanvas.parentElement.appendChild(canvas);
-    oldCanvas.parentElement.removeChild(oldCanvas);
+    const canvas = document.getElementsByTagName("canvas")[0];
     let config = this.config;
 
     let pointers = [];
     let splatStack = [];
     pointers.push(this.pointerPrototype());
     const { gl, ext } = this.getWebGLContext(canvas);
-    if (this.isMobile()) {
+    if (isMobile()) {
       config.DYE_RESOLUTION = 512;
     }
     if (!ext.supportLinearFiltering) {
@@ -70,6 +68,10 @@ export default {
       config.SHADING = false;
       config.BLOOM = false;
       config.SUNRAYS = false;
+    }
+
+    if (this.activateGui) {
+      this.gui = startGUI();
     }
 
     function captureScreenshot() {
@@ -1352,6 +1354,23 @@ export default {
       if (aspectRatio > 1) radius *= aspectRatio;
       return radius;
     }
+    window.addEventListener("keydown", function(e) {
+      if (e.key === " " && e.target == document.body) {
+        e.preventDefault();
+      }
+    });
+    canvas.addEventListener("touchend", e => {
+      const touches = e.changedTouches;
+      for (let i = 0; i < touches.length; i++) {
+        let pointer = pointers.find(p => p.id == touches[i].identifier);
+        if (pointer == null) continue;
+        updatePointerUpData(pointer);
+      }
+    });
+    window.addEventListener("keydown", e => {
+      if (e.code === "KeyP") config.PAUSED = !config.PAUSED;
+      if (e.key === " ") splatStack.push(parseInt(Math.random() * 20) + 5);
+    });
     canvas.addEventListener("mousedown", e => {
       let posX = scaleByPixelRatio(e.offsetX);
       let posY = scaleByPixelRatio(e.offsetY);
@@ -1365,9 +1384,6 @@ export default {
       let posX = scaleByPixelRatio(e.offsetX);
       let posY = scaleByPixelRatio(e.offsetY);
       updatePointerMoveData(pointer, posX, posY);
-    });
-    window.addEventListener("mouseup", () => {
-      updatePointerUpData(pointers[0]);
     });
     canvas.addEventListener("touchstart", e => {
       e.preventDefault();
@@ -1400,22 +1416,8 @@ export default {
       },
       false
     );
-    window.addEventListener("touchend", e => {
-      const touches = e.changedTouches;
-      for (let i = 0; i < touches.length; i++) {
-        let pointer = pointers.find(p => p.id == touches[i].identifier);
-        if (pointer == null) continue;
-        updatePointerUpData(pointer);
-      }
-    });
-    window.addEventListener("keydown", e => {
-      if (e.code === "KeyP") config.PAUSED = !config.PAUSED;
-      if (e.key === " ") splatStack.push(parseInt(Math.random() * 20) + 5);
-    });
-    window.addEventListener("keydown", function(e) {
-      if (e.keyCode == 32 && e.target == document.body) {
-        e.preventDefault();
-      }
+    canvas.addEventListener("mouseup", () => {
+      updatePointerUpData(pointers[0]);
     });
     function updatePointerDownData(pointer, id, posX, posY) {
       pointer.id = id;
@@ -1533,6 +1535,86 @@ export default {
       }
       return hash;
     }
+    function startGUI() {
+      var gui = new dat.GUI({ width: 300 });
+      gui
+        .add(config, "DYE_RESOLUTION", {
+          high: 1024,
+          medium: 512,
+          low: 256,
+          "very low": 128
+        })
+        .name("quality")
+        .onFinishChange(initFramebuffers);
+      gui
+        .add(config, "SIM_RESOLUTION", {
+          "32": 32,
+          "64": 64,
+          "128": 128,
+          "256": 256
+        })
+        .name("sim resolution")
+        .onFinishChange(initFramebuffers);
+      gui.add(config, "DENSITY_DISSIPATION", 0, 4.0).name("density diffusion");
+      gui
+        .add(config, "VELOCITY_DISSIPATION", 0, 4.0)
+        .name("velocity diffusion");
+      gui.add(config, "PRESSURE", 0.0, 1.0).name("pressure");
+      gui
+        .add(config, "CURL", 0, 50)
+        .name("vorticity")
+        .step(1);
+      gui.add(config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
+      gui
+        .add(config, "SHADING")
+        .name("shading")
+        .onFinishChange(updateKeywords);
+      gui.add(config, "COLORFUL").name("colorful");
+      gui
+        .add(config, "PAUSED")
+        .name("paused")
+        .listen();
+
+      gui
+        .add(
+          {
+            fun: () => {
+              splatStack.push(parseInt(Math.random() * 20) + 5);
+            }
+          },
+          "fun"
+        )
+        .name("Random splats");
+
+      let bloomFolder = gui.addFolder("Bloom");
+      bloomFolder
+        .add(config, "BLOOM")
+        .name("enabled")
+        .onFinishChange(updateKeywords);
+      bloomFolder.add(config, "BLOOM_INTENSITY", 0.1, 2.0).name("intensity");
+      bloomFolder.add(config, "BLOOM_THRESHOLD", 0.0, 1.0).name("threshold");
+
+      let sunraysFolder = gui.addFolder("Sunrays");
+      sunraysFolder
+        .add(config, "SUNRAYS")
+        .name("enabled")
+        .onFinishChange(updateKeywords);
+      sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("weight");
+
+      let captureFolder = gui.addFolder("Capture");
+      captureFolder.addColor(config, "BACK_COLOR").name("background color");
+      captureFolder.add(config, "TRANSPARENT").name("transparent");
+      captureFolder
+        .add({ fun: captureScreenshot }, "fun")
+        .name("take screenshot");
+
+      if (isMobile()) gui.close();
+      return gui;
+    }
+
+    function isMobile() {
+      return /Mobi|Android/i.test(navigator.userAgent);
+    }
   },
   computed: {
     scripts() {
@@ -1544,27 +1626,6 @@ export default {
     }
   },
   methods: {
-    refreshScripts() {
-      this.$forceUpdate();
-      this.addScriptIfNotDuplicate("/static/canvas/dat.gui.min.js");
-    },
-    addScriptIfNotDuplicate(source) {
-      const script = document.createElement("script");
-      script.setAttribute("src", source);
-      if (!this.scripts.includes(script.src)) {
-        document.head.appendChild(script);
-        script.async = true;
-        this.scripts.push(script.src);
-      }
-    },
-    removeScripts() {
-      var elem = document.querySelector("script");
-      for (var script of document.querySelectorAll("script")) {
-        if (script.src.includes("/static/canvas/script.js")) {
-          document.head.removeChild(script);
-        }
-      }
-    },
     pointerPrototype() {
       return {
         id: -1,
@@ -1579,7 +1640,6 @@ export default {
         color: [30, 0, 300]
       };
     },
-    addEventListeners() {},
     getWebGLContext(canvas) {
       let gl = canvas.getContext("webgl2", this.params);
       const isWebGL2 = !!gl;
@@ -1700,88 +1760,10 @@ export default {
       );
       const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
       return status == gl.FRAMEBUFFER_COMPLETE;
-    },
-    startGUI() {
-      this.gui = new dat.GUI({ width: 300 });
-      this.gui
-        .add(this.config, "DYE_RESOLUTION", {
-          high: 1024,
-          medium: 512,
-          low: 256,
-          "very low": 128
-        })
-        .name("quality")
-        .onFinishChange(initFramebuffers);
-      this.gui
-        .add(this.config, "SIM_RESOLUTION", {
-          "32": 32,
-          "64": 64,
-          "128": 128,
-          "256": 256
-        })
-        .name("sim resolution")
-        .onFinishChange(initFramebuffers);
-      this.gui
-        .add(this.config, "DENSITY_DISSIPATION", 0, 4.0)
-        .name("density diffusion");
-      this.gui
-        .add(this.config, "VELOCITY_DISSIPATION", 0, 4.0)
-        .name("velocity diffusion");
-      this.gui.add(this.config, "PRESSURE", 0.0, 1.0).name("pressure");
-      this.gui
-        .add(this.config, "CURL", 0, 50)
-        .name("vorticity")
-        .step(1);
-      this.gui.add(this.config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
-      this.gui
-        .add(this.config, "SHADING")
-        .name("shading")
-        .onFinishChange(updateKeywords);
-      this.gui.add(this.config, "COLORFUL").name("colorful");
-      this.gui
-        .add(this.config, "PAUSED")
-        .name("paused")
-        .listen();
-      this.gui
-        .add(
-          {
-            fun: () => {
-              splatStack.push(parseInt(Math.random() * 20) + 5);
-            }
-          },
-          "fun"
-        )
-        .name("Random splats");
-      let bloomFolder = this.gui.addFolder("Bloom");
-      bloomFolder
-        .add(this.config, "BLOOM")
-        .name("enabled")
-        .onFinishChange(updateKeywords);
-      bloomFolder
-        .add(this.config, "BLOOM_INTENSITY", 0.1, 2.0)
-        .name("intensity");
-      bloomFolder
-        .add(this.config, "BLOOM_THRESHOLD", 0.0, 1.0)
-        .name("threshold");
-      let sunraysFolder = this.gui.addFolder("Sunrays");
-      sunraysFolder
-        .add(this.config, "SUNRAYS")
-        .name("enabled")
-        .onFinishChange(updateKeywords);
-      sunraysFolder.add(this.config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("weight");
-      let captureFolder = this.gui.addFolder("Capture");
-      captureFolder
-        .addColor(this.config, "BACK_COLOR")
-        .name("background color");
-      captureFolder.add(this.config, "TRANSPARENT").name("transparent");
-      captureFolder
-        .add({ fun: captureScreenshot }, "fun")
-        .name("take screenshot");
-      if (this.isMobile()) this.gui.close();
-    },
-    isMobile() {
-      return /Mobi|Android/i.test(navigator.userAgent);
     }
+  },
+  props: {
+    activateGui: Boolean
   }
 };
 </script>
