@@ -48,7 +48,7 @@ export default {
   },
   created() {
     if (window.needsRefresh) {
-      location.reload();
+      location.href = location.href + "?dark=" + this.$vuetify.theme.dark;
     }
     window.needsRefresh = true;
   },
@@ -1416,7 +1416,7 @@ export default {
       },
       false
     );
-    canvas.addEventListener("mouseup", () => {
+    window.addEventListener("mouseup", () => {
       updatePointerUpData(pointers[0]);
     });
     function updatePointerDownData(pointer, id, posX, posY) {

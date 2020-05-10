@@ -35,7 +35,10 @@ export default {
     NavigationBar
   },
   created() {
-    // console.log(document.cookie);
+    if (window.location.href.includes("dark")) {
+      this.$vuetify.theme.dark =
+        window.location.href.split("dark=").pop() == "true";
+    }
   },
   data() {
     return {};
