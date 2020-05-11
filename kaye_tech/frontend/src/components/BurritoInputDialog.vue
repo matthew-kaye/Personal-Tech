@@ -1,22 +1,9 @@
 <template>
-  <v-dialog v-model="isVisible" persistent max-width="600px">
+  <v-dialog v-model="dialog" max-width="600px">
     <v-card>
       <v-card-title>
-        <span class="headline">Add Burrito Vendor</span>
-      </v-card-title>
-      <v-divider />
-      <br />
-      <v-card-text>
         <v-row justify="start">
-          <v-col>
-            <v-text-field
-              :readonly="!editable"
-              v-model="vendorData.name"
-              label="Vendor name"
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col cols="1" md="auto">
+          <v-col md="auto">
             <v-img
               max-height="50"
               max-width="50"
@@ -24,14 +11,37 @@
               :src="vendorData.imageUrl"
             />
           </v-col>
+          <v-col>
+            <span v-if="dialogMode=='Create'" class="headline">Add Burrito Vendor</span>
+            <span v-if="dialogMode!='Create'" class="headline">{{vendorData.name}}</span>
+          </v-col>
         </v-row>
+      </v-card-title>
+      <v-divider />
+      <v-card-text>
+        <v-text-field
+          v-if="dialogMode=='Create'"
+          v-model="vendorData.name"
+          label="Vendor name"
+          required
+        ></v-text-field>
         <br />
         <v-textarea v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
-        <div v-html="reviewDisplay" v-if="!editable"></div>
+        <v-card v-if="!editable" elevation="12">
+          <v-card-title class="primary headline white--text">
+            <span style="font-size:14pt">Review</span>
+          </v-card-title>
+          <v-divider />
+          <v-card-text class="secondary--text">
+            <div v-html="reviewDisplay"></div>
+          </v-card-text>
+        </v-card>
+
         <br />
         <v-text-field :readonly="!editable" v-model="vendorData.url" label="Url" required></v-text-field>
         <br />
         <v-text-field
+          v-if="editable"
           :readonly="!editable"
           v-model="vendorData.imageUrl"
           label="Image Url"
@@ -68,10 +78,12 @@
 
 <script>
 export default {
+  data() {
+    return {
+      dialog: false
+    };
+  },
   computed: {
-    isVisible() {
-      return this.dialog;
-    },
     reviewDisplay() {
       return this.vendorData.review
         ? this.vendorData.review.replace(/\n/g, "<br>")
@@ -92,13 +104,12 @@ export default {
     }
   },
   props: {
-    dialog: Boolean,
     dialogMode: String,
     vendor: Object
   },
   methods: {
     close() {
-      this.$emit("close");
+      this.dialog = false;
     },
     save() {
       this.$emit("save", this.vendorData);

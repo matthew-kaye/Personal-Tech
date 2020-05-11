@@ -1,7 +1,19 @@
 <template>
   <div>
     <v-card class="ma-6">
-      <v-data-table :headers="headers" :items="vendors" :sort-by="'rating'">
+      <v-card-title class="headline">
+        <span class="white--text">Burrito Rankings</span>
+        <v-spacer />
+        <v-text-field
+          class="ml-5"
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          style="max-width: 350px;"
+        ></v-text-field>
+      </v-card-title>
+      <v-divider />
+      <v-data-table :headers="headers" :search="search" :items="vendors" :sort-by="'fields.rating'">
         <template v-slot:item="row">
           <tr>
             <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
@@ -17,7 +29,7 @@
                 <v-col md="auto">{{ row.item.fields.name }}</v-col>
               </v-row>
             </td>
-            <td @click="viewVendor(row.item)">
+            <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
               <v-chip :color="getRatingColour(row.item.fields.rating)">
                 {{ row.item.fields.rating }}
                 <v-icon right>mdi-star</v-icon>
@@ -38,10 +50,8 @@
       </v-data-table>
     </v-card>
     <BurritoInputDialog
-      :dialog="burritoInputDialog"
       :dialogMode="dialogMode"
       :vendor="vendor"
-      @close="burritoInputDialog = false"
       @save="saveData"
       @update="updateData"
       ref="burritoInputDialog"
@@ -85,7 +95,7 @@ export default {
   },
   data() {
     return {
-      burritoInputDialog: false,
+      search: "",
       vendors: [],
       vendor: null,
       dialogMode: "",
@@ -118,17 +128,17 @@ export default {
     addNewVendor() {
       this.vendor = null;
       this.dialogMode = "Create";
-      this.burritoInputDialog = true;
+      this.$refs.burritoInputDialog.dialog = true;
     },
     viewVendor(vendor) {
       this.vendor = vendor;
       this.dialogMode = "View";
-      this.burritoInputDialog = true;
+      this.$refs.burritoInputDialog.dialog = true;
     },
     editVendorData(vendor) {
       this.vendor = vendor;
       this.dialogMode = "Edit";
-      this.burritoInputDialog = true;
+      this.$refs.burritoInputDialog.dialog = true;
     },
     saveData(vendorData) {
       burritoApi.makeVendor(vendorData);
