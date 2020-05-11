@@ -5,7 +5,7 @@
         <template v-slot:item="row">
           <tr v-bind:style="{ cursor: 'pointer' }" @click="viewVendor(row.item)">
             <td>
-              <v-row justify="start">
+              <v-row justify="start" align="center">
                 <v-col md="auto">
                   <v-img
                     max-height="40"
@@ -17,7 +17,6 @@
                 <v-col md="auto">{{ row.item.fields.name }}</v-col>
               </v-row>
             </td>
-
             <td>{{ row.item.fields.rating }}</td>
           </tr>
         </template>
