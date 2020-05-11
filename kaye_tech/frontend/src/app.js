@@ -26,11 +26,6 @@ const routes = [
     name: "BookDetailPage",
     component: BookDetailPage
   },
-  {
-    path: "/burritos/:burritoId",
-    name: "BurritoDetailPage",
-    component: BurritoDetailPage
-  },
   { path: "/burritos", name: "burritos", component: Burritos },
   { path: "/canvas", name: "canvas", component: Canvas },
   { path: "/jokes", name: "jokes", component: Joke },
