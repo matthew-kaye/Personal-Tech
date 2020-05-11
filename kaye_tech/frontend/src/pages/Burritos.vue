@@ -55,6 +55,8 @@
         </template>
       </v-data-table>
     </v-card>
+    <br />
+    <br />
     <BurritoInputDialog
       :dialogMode="dialogMode"
       :vendor="vendor"
@@ -160,12 +162,12 @@ export default {
       });
     },
     getRatingColour(rating) {
-      if (rating > 4) {
+      if (rating >= 4) {
         return colors.green.darken1;
-      } else if (rating > 3) {
+      } else if (rating >= 3) {
         return colors.orange.darken1;
       } else {
-        returncolors.red.darken1;
+        return colors.red.darken1;
       }
     }
   }
