@@ -13,7 +13,13 @@
         ></v-text-field>
       </v-card-title>
       <v-divider />
-      <v-data-table :headers="headers" :search="search" :items="vendors" :sort-by="'fields.rating'">
+      <v-data-table
+        :headers="headers"
+        :search="search"
+        :items="vendors"
+        sort-desc
+        :sort-by="'fields.rating'"
+      >
         <template v-slot:item="row">
           <tr>
             <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">

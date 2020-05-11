@@ -11,21 +11,23 @@
               :src="vendorData.imageUrl"
             />
           </v-col>
-          <v-col>
-            <span v-if="dialogMode=='Create'" class="headline">Add Burrito Vendor</span>
-            <span v-if="dialogMode!='Create'" class="headline">{{vendorData.name}}</span>
+          <v-col class="mt-1">
+            <h1 v-if="dialogMode!='View'">Add Burrito Vendor</h1>
+            <h1 v-if="dialogMode=='View'">{{vendorData.name}}</h1>
           </v-col>
         </v-row>
       </v-card-title>
       <v-divider />
+      <br />
       <v-card-text>
         <v-text-field
-          v-if="dialogMode=='Create'"
+          v-if="dialogMode!='View'"
           v-model="vendorData.name"
           label="Vendor name"
           required
-        ></v-text-field>
-        <br />
+        >
+          <br />
+        </v-text-field>
         <v-textarea v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
         <v-card v-if="!editable" elevation="12">
           <v-card-title class="primary headline white--text">
