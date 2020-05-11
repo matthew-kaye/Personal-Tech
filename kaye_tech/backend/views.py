@@ -58,7 +58,7 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def partial_update(self, request, pk=None):
         try:
-            pass
+            print(("here"))
         except Exception as e:
             return Response(
                 {"responseType": "error", "status": f"Failed to modify id {pk}: {e}"},
@@ -70,11 +70,19 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def update(self, request, pk=None):
         try:
-            pass
+            vendor_data = json.loads(request.data["vendorData"])
+            vendor = Vendor.objects.get(pk=pk)
+            vendor.name = vendor_data["name"]
+            vendor.description = vendor_data["review"]
+            vendor.url = vendor_data["url"]
+            vendor.img_url = vendor_data["imageUrl"]
+            vendor.rating = vendor_data["rating"]
+            vendor.save()
         except Exception as e:
+            print(e)
             return Response(
-                {"responseType": "error", "status": f"Failed to update Id {pk}: {e}"},
-                status=status.HTTP_404_NOT_FOUND,
+                {"responseType": "error", "status": f"Failed to update id {pk}: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         return Response(
             {"responseType": "complete", "job_id": pk}, status=status.HTTP_200_OK

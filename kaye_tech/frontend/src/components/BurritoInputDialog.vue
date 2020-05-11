@@ -22,6 +22,7 @@
         </v-row>
         <br />
         <v-textarea v-model="vendorData.review" label="Review" required></v-textarea>
+        <!-- <p v-if="edit">{{vendorData.review}}</p> -->
         <br />
         <v-text-field v-model="vendorData.url" label="Url" required></v-text-field>
         <br />
@@ -41,7 +42,8 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" text @click="close">Close</v-btn>
-        <v-btn color="primary" text @click="save">Save</v-btn>
+        <v-btn color="primary" v-if="vendorData.id" text @click="update">Update</v-btn>
+        <v-btn color="primary" v-if="!vendorData.id" text @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -56,7 +58,9 @@ export default {
   created() {},
   data() {
     return {
+      edit: true,
       vendorData: {
+        id: null,
         name: "",
         review: "",
         url: "",
@@ -71,14 +75,20 @@ export default {
     }
   },
   props: {
-    dialog: Boolean
+    dialog: Boolean,
+    vendor: Object
   },
   methods: {
     close() {
       this.$emit("close");
+      this.vendorData = {};
     },
     save() {
       this.$emit("save", this.vendorData);
+      this.$emit("close");
+    },
+    update() {
+      this.$emit("update", this.vendorData);
       this.$emit("close");
     }
   }

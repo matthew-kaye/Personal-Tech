@@ -24,8 +24,10 @@
     </v-card>
     <BurritoInputDialog
       :dialog="burritoInputDialog"
+      :vendor="vendor"
       @close="burritoInputDialog = false"
       @save="saveData"
+      @update="updateData"
       ref="burritoInputDialog"
     />
     <v-btn
@@ -69,29 +71,38 @@ export default {
     return {
       burritoInputDialog: false,
       vendors: [],
-      vendorData: {
-        name: "",
-        description: "",
-        url: "",
-        img_url: "",
-        rating: 0
-      }
+      vendor: null
     };
   },
   computed: {
     headers() {
       return [
-        { text: "Name", align: "start", value: "name" },
-        { text: "Rating", align: "start", value: "rating" }
+        { text: "Name", align: "start", value: "fields.name" },
+        { text: "Rating", align: "start", value: "fields.rating" }
       ];
+    },
+    vendorData() {
+      return {
+        id: this.vendor.pk,
+        name: this.vendor.fields.name,
+        review: this.vendor.fields.description,
+        url: this.vendor.fields.url,
+        imageUrl: this.vendor.fields.img_url,
+        rating: this.vendor.fields.rating
+      };
     }
   },
   methods: {
-    viewVendor() {
-      console.log("view vendor");
+    viewVendor(vendor) {
+      this.vendor = vendor;
+      this.$refs.burritoInputDialog.vendorData = this.vendorData;
+      this.burritoInputDialog = true;
     },
     saveData(vendorData) {
       burritoApi.makeVendor(vendorData);
+    },
+    updateData(vendorData) {
+      burritoApi.updateVendor(vendorData);
     }
   }
 };

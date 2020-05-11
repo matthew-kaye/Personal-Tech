@@ -11,14 +11,14 @@ export default class BurritoApi {
     return axios
       .get(url)
       .then((response) => response.data)
-      .catch();
+      .catch(error => console.log(error));
   }
 
   getVendors(data) {
     return axios
       .get(baseUrl, { params: data })
       .then((response) => response.data)
-      .catch();
+      .catch(error => console.log(error));
   }
 
   makeVendor(vendorData) {
@@ -26,18 +26,15 @@ export default class BurritoApi {
     return axios
       .post(baseUrl, data)
       .then((response) => response.data)
-      .catch();
+      .catch(error => console.log(error));
   }
 
-  updateItem(id, data) {
-    const url = baseUrl + id + "/";
-    return axios.put(url, { formData: data }).then((response) => response.data);
-  }
-
-  updateItem(id, status) {
-    const url = baseUrl + id + "/";
+  updateVendor(data) {
+    const url = baseUrl + data.id + "/";
     return axios
-      .patch(url, { status: status })
-      .then((response) => response.data);
+      .put(url, { vendorData: JSON.stringify(data) })
+      .then((response) => response.data)
+      .catch(error => console.log(error));
   }
+
 }
