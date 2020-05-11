@@ -115,11 +115,11 @@ export default {
     },
     save() {
       this.$emit("save", this.vendorData);
-      this.$emit("close");
+      this.dialog = false;
     },
     update() {
       this.$emit("update", this.vendorData);
-      this.$emit("close");
+      this.dialog = false;
     }
   }
 };
