@@ -92,9 +92,7 @@ export default {
     BurritoInputDialog
   },
   created() {
-    burritoApi.getVendors({}).then(data => {
-      this.vendors = JSON.parse(data);
-    });
+    this.fetchVendors();
     accountsApi.getCurrentUser().then(data => {
       this.currentUser = data.username;
     });
@@ -147,10 +145,19 @@ export default {
       this.$refs.burritoInputDialog.dialog = true;
     },
     saveData(vendorData) {
-      burritoApi.makeVendor(vendorData);
+      burritoApi.makeVendor(vendorData).then(data => {
+        this.fetchVendors();
+      });
     },
     updateData(vendorData) {
-      burritoApi.updateVendor(vendorData);
+      burritoApi.updateVendor(vendorData).then(data => {
+        this.fetchVendors();
+      });
+    },
+    fetchVendors() {
+      burritoApi.getVendors({}).then(data => {
+        this.vendors = JSON.parse(data);
+      });
     },
     getRatingColour(rating) {
       if (rating > 4) {

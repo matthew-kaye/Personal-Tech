@@ -12,8 +12,8 @@
             />
           </v-col>
           <v-col class="mt-1">
-            <h1 v-if="dialogMode!='View'">Add Burrito Vendor</h1>
-            <h1 v-if="dialogMode=='View'">{{vendorData.name}}</h1>
+            <h2 v-if="dialogMode!='View'">Add Burrito Vendor</h2>
+            <h2 v-if="dialogMode=='View'">{{vendorData.name}}</h2>
           </v-col>
         </v-row>
       </v-card-title>
