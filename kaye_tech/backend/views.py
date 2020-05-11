@@ -2,6 +2,7 @@ import json
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core import serializers
 from .models import Vendor
 
 
@@ -18,8 +19,7 @@ class BurritoViewSet(viewsets.ViewSet):
                 img_url=vendor_data["imageUrl"],
                 rating=vendor_data["rating"]
             )
-            print(vendor)
-            # vendor.save()
+            vendor.save()
         except Exception as e:
             print(f"Error: {e}")
             return Response(
@@ -35,12 +35,9 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def list(self, request):
         try:
-
-            print(request)
-            vendors = Vendor.objects.get()
-            print(request)
-            print(vendors)
-            return Response(json.dumps(items), status=status.HTTP_200_OK)
+            vendors = Vendor.objects.all()
+            data = serializers.serialize('json', vendors)
+            return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
                 {"responseType": "error", "status": f"Failed to get items: {e}"},

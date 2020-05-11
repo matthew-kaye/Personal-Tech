@@ -5,8 +5,20 @@
         <template v-slot:item="row">
           <tr v-bind:style="{ cursor: 'pointer' }" @click="viewVendor(row.item)">
             <td>
-              <p>{{ row.item.rank }}</p>
+              <v-row justify="start">
+                <v-col md="auto">
+                  <v-img
+                    max-height="40"
+                    max-width="40"
+                    v-if="row.item.fields['img_url']"
+                    :src="row.item.fields['img_url']"
+                  />
+                </v-col>
+                <v-col md="auto">{{ row.item.fields.name }}</v-col>
+              </v-row>
             </td>
+
+            <td>{{ row.item.fields.rating }}</td>
           </tr>
         </template>
       </v-data-table>
@@ -45,7 +57,9 @@ export default {
     BurritoInputDialog
   },
   created() {
-    burritoApi.getVendors({});
+    burritoApi.getVendors({}).then(data => {
+      this.vendors = JSON.parse(data);
+    });
 
     accountsApi.getCurrentUser().then(data => {
       this.currentUser = data;
@@ -74,6 +88,9 @@ export default {
     }
   },
   methods: {
+    viewVendor() {
+      console.log("view vendor");
+    },
     saveData(vendorData) {
       burritoApi.makeVendor(vendorData);
     }

@@ -5,7 +5,7 @@ axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
 const baseUrl = "/api/burritos/";
 
-export default class ItemsApi {
+export default class BurritoApi {
   getVendor(id) {
     const url = baseUrl + id;
     return axios

@@ -5,33 +5,38 @@
         <span class="headline">Add Burrito Vendor</span>
       </v-card-title>
       <v-divider />
+      <br />
       <v-card-text>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-text-field v-model="vendorData.name" label="Vendor name" required></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-textarea v-model="vendorData.review" label="Review" required></v-textarea>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field v-model="vendorData.url" label="Url" required></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field v-model="vendorData.imageUrl" label="Image Url" required></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-slider
-                thumb-label="always"
-                label="Rating"
-                step="0.01"
-                v-model="vendorData.rating"
-                max="5"
-                min="0"
-              ></v-slider>
-            </v-col>
-          </v-row>
-        </v-container>
+        <v-row justify="start">
+          <v-col>
+            <v-text-field v-model="vendorData.name" label="Vendor name" required></v-text-field>
+          </v-col>
+          <v-col cols="1" md="auto">
+            <v-img
+              max-height="50"
+              max-width="50"
+              v-if="vendorData.imageUrl"
+              :src="vendorData.imageUrl"
+            />
+          </v-col>
+        </v-row>
+        <br />
+        <v-textarea v-model="vendorData.review" label="Review" required></v-textarea>
+        <br />
+        <v-text-field v-model="vendorData.url" label="Url" required></v-text-field>
+        <br />
+        <v-text-field v-model="vendorData.imageUrl" label="Image Url" required></v-text-field>
+
+        <br />
+        <br />
+        <v-slider
+          thumb-label="always"
+          label="Rating"
+          step="0.01"
+          v-model="vendorData.rating"
+          max="5"
+          min="0"
+        ></v-slider>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -74,6 +79,7 @@ export default {
     },
     save() {
       this.$emit("save", this.vendorData);
+      this.$emit("close");
     }
   }
 };

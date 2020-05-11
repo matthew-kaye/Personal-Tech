@@ -72,11 +72,11 @@ export default {
           link: "/books",
           icon: "mdi-book-open-page-variant"
         },
-        // {
-        //   label: "Burritos",
-        //   link: "/burritos",
-        //   icon: "mdi-taco"
-        // },
+        {
+          label: "Burritos",
+          link: "/burritos",
+          icon: "mdi-taco"
+        },
         {
           label: "Canvas",
           link: "/canvas",
