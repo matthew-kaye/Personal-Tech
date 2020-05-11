@@ -9,7 +9,12 @@
       <v-card-text>
         <v-row justify="start">
           <v-col>
-            <v-text-field v-model="vendorData.name" label="Vendor name" required></v-text-field>
+            <v-text-field
+              :readonly="!editable"
+              v-model="vendorData.name"
+              label="Vendor name"
+              required
+            ></v-text-field>
           </v-col>
           <v-col cols="1" md="auto">
             <v-img
@@ -21,16 +26,22 @@
           </v-col>
         </v-row>
         <br />
-        <v-textarea v-model="vendorData.review" label="Review" required></v-textarea>
-        <!-- <p v-if="edit">{{vendorData.review}}</p> -->
+        <v-textarea v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
+        <div v-html="reviewDisplay" v-if="!editable"></div>
         <br />
-        <v-text-field v-model="vendorData.url" label="Url" required></v-text-field>
+        <v-text-field :readonly="!editable" v-model="vendorData.url" label="Url" required></v-text-field>
         <br />
-        <v-text-field v-model="vendorData.imageUrl" label="Image Url" required></v-text-field>
+        <v-text-field
+          :readonly="!editable"
+          v-model="vendorData.imageUrl"
+          label="Image Url"
+          required
+        ></v-text-field>
 
         <br />
         <br />
         <v-slider
+          :readonly="!editable"
           thumb-label="always"
           label="Rating"
           step="0.01"
@@ -42,7 +53,13 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" text @click="close">Close</v-btn>
-        <v-btn color="primary" v-if="vendorData.id" text @click="update">Update</v-btn>
+        <v-btn
+          color="primary"
+          :disabled="!editable"
+          v-if="vendorData.id"
+          text
+          @click="update"
+        >Update</v-btn>
         <v-btn color="primary" v-if="!vendorData.id" text @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
@@ -57,31 +74,39 @@ export default {
   components: {},
   created() {},
   data() {
-    return {
-      edit: true,
-      vendorData: {
-        id: null,
-        name: "",
-        review: "",
-        url: "",
-        imageUrl: "",
-        rating: 0
-      }
-    };
+    return {};
   },
   computed: {
     isVisible() {
       return this.dialog;
+    },
+    reviewDisplay() {
+      return this.vendorData.review
+        ? this.vendorData.review.replace(/\n/g, "<br>")
+        : null;
+    },
+    vendorData() {
+      return {
+        id: this.vendor ? this.vendor.pk : null,
+        name: this.vendor ? this.vendor.fields.name : "",
+        review: this.vendor ? this.vendor.fields.description : "",
+        url: this.vendor ? this.vendor.fields.url : "",
+        imageUrl: this.vendor ? this.vendor.fields.img_url : "",
+        rating: this.vendor ? this.vendor.fields.rating : 0
+      };
+    },
+    editable() {
+      return this.dialogMode != "View";
     }
   },
   props: {
     dialog: Boolean,
+    dialogMode: String,
     vendor: Object
   },
   methods: {
     close() {
       this.$emit("close");
-      this.vendorData = {};
     },
     save() {
       this.$emit("save", this.vendorData);

@@ -7,7 +7,6 @@ from .models import Vendor
 
 
 class BurritoViewSet(viewsets.ViewSet):
-    permission_classes = (IsAuthenticated,)
 
     def create(self, request):
         try:
@@ -70,13 +69,14 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def update(self, request, pk=None):
         try:
-            vendor_data = json.loads(request.data["vendorData"])
+            vendor_data = request.data["vendorData"]
             vendor = Vendor.objects.get(pk=pk)
             vendor.name = vendor_data["name"]
             vendor.description = vendor_data["review"]
             vendor.url = vendor_data["url"]
             vendor.img_url = vendor_data["imageUrl"]
             vendor.rating = vendor_data["rating"]
+            print(vendor_data["review"])
             vendor.save()
         except Exception as e:
             print(e)

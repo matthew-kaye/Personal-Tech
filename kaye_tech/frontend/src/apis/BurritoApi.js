@@ -32,7 +32,7 @@ export default class BurritoApi {
   updateVendor(data) {
     const url = baseUrl + data.id + "/";
     return axios
-      .put(url, { vendorData: JSON.stringify(data) })
+      .put(url, { vendorData: data })
       .then((response) => response.data)
       .catch(error => console.log(error));
   }
