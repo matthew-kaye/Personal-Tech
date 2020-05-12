@@ -179,15 +179,19 @@ export default {
         this.addSection();
       }
       this.keywordParams = this.keywords.join(" OR ");
-      var covidString =
-        " AND NOT (coronavirus OR covid OR quarantine OR lockdown OR COV-SARS-2)";
-      this.keywordParams = this.anythingButCoronavirus
-        ? this.keywordParams.concat(covidString)
-        : this.keywordParams;
+      var orderBy = this.keywordParams.length > 0 ? "relevance" : "newest";
+      var covidString = this.anythingButCoronavirus
+        ? "NOT ('coronavirus' OR 'covid' OR 'quarantine' OR 'lockdown' OR 'COV-SARS-2')"
+        : "";
+      this.keywordParams =
+        this.keywordParams.length > 0
+          ? this.keywordParams + " AND ".concat(covidString)
+          : this.keywordParams.concat(covidString);
       this.sectionParams = this.sections.join(" OR ");
       var params = {
         q: this.keywordParams ? this.keywordParams : null,
         section: this.sectionParams ? this.sectionParams : null,
+        "order-by": orderBy,
         "page-size": this.pageSize
       };
       newsApi.fetchArticles(params).then(data => {
