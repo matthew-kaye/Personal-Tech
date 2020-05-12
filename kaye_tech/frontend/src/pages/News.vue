@@ -15,7 +15,7 @@
               >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
             </v-col>
           </v-row>
-          <v-row class="ml-2" md="auto">
+          <v-row class="ml-2" justify="start">
             <v-col cols="3">
               <v-text-field
                 v-model="searchTerm"
@@ -47,7 +47,7 @@
                 @click="addSection()"
               >{{ "Add" }}</v-btn>
             </v-col>
-            <v-col cols="1">
+            <v-col md="auto">
               <v-select
                 v-model="pageSize"
                 :items="[10,25,50]"
@@ -56,10 +56,14 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-select>
             </v-col>
-            <v-col>
+            <v-col md="auto">
               <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
             </v-col>
+            <v-col>
+              <v-btn class="mb-2 mr-2" color="primary" @click="anythingButCovid()">{{ "ABC*" }}</v-btn>
+            </v-col>
           </v-row>
+          <br />
           <v-card color="card" v-if="articles.length>0" class="ml-4" width="100%">
             <v-card-title class="headline">Results</v-card-title>
             <v-divider></v-divider>
@@ -89,6 +93,7 @@
           <TwitterFeed />
         </v-col>
       </v-row>
+      <small class="ml-4 mb-4">* Anything but Coronavirus</small>
       <br />
     </v-card>
     <v-btn
@@ -146,6 +151,14 @@ export default {
           return searchTerm.type == "Section";
         })
         .map(a => a.text);
+    },
+    anythingButCoronavirus() {
+      for (var item of this.searchCriteria) {
+        if (item.type == "ABC") {
+          return true;
+        }
+      }
+      return false;
     }
   },
   methods: {
@@ -157,6 +170,11 @@ export default {
         this.addSection();
       }
       this.keywordParams = this.keywords.join(" OR ");
+      var covidString =
+        " AND NOT (coronavirus OR covid OR quarantine OR lockdown OR COV-SARS-2)";
+      this.keywordParams = this.anythingButCoronavirus
+        ? this.keywordParams.concat(covidString)
+        : this.keywordParams;
       this.sectionParams = this.sections.join(" OR ");
       var params = {
         q: this.keywordParams ? this.keywordParams : null,
@@ -164,11 +182,9 @@ export default {
         "page-size": this.pageSize
       };
       newsApi.fetchArticles(params).then(data => {
-        console.log(data);
         this.articles = data.response.results;
       });
     },
-
     addSearch() {
       this.searchCriteria.push({
         text: this.searchTerm,
@@ -176,21 +192,20 @@ export default {
       });
       this.searchTerm = "";
     },
-
     addSection() {
       this.searchCriteria.push({ text: this.section, type: "Section" });
       this.section = "";
     },
-
-    removeSearch(item) {
-      this.searchCriteria.splice(this.searchCriteria.indexOf(item), 1);
-      this.searchCriteria = [...this.searchCriteria];
-    },
-
     fetchGuardianSections() {
       newsApi.fetchSections().then(data => {
         this.guardianSections = data.response.results;
         this.guardianSections.push({ id: null, webTitle: "None" });
+      });
+    },
+    anythingButCovid() {
+      this.searchCriteria.push({
+        type: "ABC",
+        text: "Anything But Coronavirus"
       });
     }
   }
