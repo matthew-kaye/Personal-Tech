@@ -3,7 +3,7 @@
     <v-card-title class="primary headline">
       <span class="white--text">Joke search</span>
     </v-card-title>
-    <v-card-title>Search term</v-card-title>
+    <v-card-title>Search term - search for a joke by typing in a keyword:</v-card-title>
     <v-card-text>
       <v-row>
         <v-col cols="6" sm="6">
@@ -39,7 +39,9 @@ var MAX_JOKES_RETURNED_BY_SITE = 20;
 
 export default {
   components: {},
-  created() {},
+  created() {
+    this.findJoke("a");
+  },
   data() {
     return {
       jokeSearch: "",
