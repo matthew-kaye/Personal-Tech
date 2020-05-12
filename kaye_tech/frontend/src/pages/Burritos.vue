@@ -42,9 +42,6 @@
               </v-chip>
             </td>
             <td>
-              <v-btn v-if="admin" @click="editVendorData(row.item)" color="primary" dark medium>
-                <v-icon left>mdi-pencil</v-icon>Edit
-              </v-btn>
               <a :href="row.item.fields.url">
                 <v-btn color="primary" dark medium>
                   <v-icon left>mdi-taco</v-icon>Visit Site
@@ -140,11 +137,6 @@ export default {
     viewVendor(vendor) {
       this.vendor = vendor;
       this.dialogMode = "View";
-      this.$refs.burritoInputDialog.open();
-    },
-    editVendorData(vendor) {
-      this.vendor = vendor;
-      this.dialogMode = "Edit";
       this.$refs.burritoInputDialog.open();
     },
     saveData(vendorData) {

@@ -3,20 +3,21 @@
     <v-card>
       <v-card-title>
         <v-row justify="start">
-          <v-col md="auto">
-            <v-img
-              max-height="50"
-              max-width="50"
-              v-if="vendorData.imageUrl"
-              :src="vendorData.imageUrl"
-            />
+          <v-col md="auto" v-if="vendorData.imageUrl">
+            <v-img max-height="50" max-width="50" :src="vendorData.imageUrl" />
           </v-col>
           <v-col class="mt-1">
             <h2 v-if="dialogMode!='View'">Add Burrito Vendor</h2>
             <h2 v-if="dialogMode=='View'">{{vendorData.name}}</h2>
           </v-col>
-          <v-col>
-            <v-btn v-if="admin" @click="toggleEditMode()" color="primary" dark medium>
+          <v-col md="auto">
+            <v-btn
+              v-if="admin && dialogMode=='View'"
+              @click="toggleEditMode()"
+              color="primary"
+              dark
+              medium
+            >
               <v-icon left>mdi-pencil</v-icon>Toggle Edit
             </v-btn>
           </v-col>
@@ -34,8 +35,8 @@
           <br />
         </v-text-field>
         <v-textarea v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
-        <v-card v-if="!editable" elevation="12" @click="toggleEditMode()">
-          <v-card-title class="primary headline white--text">
+        <v-card v-if="!editable" elevation="12">
+          <v-card-title @click="toggleEditMode()" class="primary headline white--text">
             <span style="font-size:14pt">Review</span>
           </v-card-title>
           <v-divider />
@@ -43,7 +44,6 @@
             <div v-html="reviewDisplay"></div>
           </v-card-text>
         </v-card>
-
         <br />
         <v-text-field :readonly="!editable" v-model="vendorData.url" label="Url" required></v-text-field>
         <br />
@@ -54,7 +54,6 @@
           label="Image Url"
           required
         ></v-text-field>
-
         <br />
         <br />
         <v-slider
