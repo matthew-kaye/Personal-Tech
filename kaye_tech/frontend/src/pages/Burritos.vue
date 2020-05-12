@@ -155,12 +155,18 @@ export default {
       });
     },
     getRatingColour(rating) {
-      if (rating >= 4) {
+      if (rating >= 4.5) {
         return colors.green.darken1;
-      } else if (rating >= 3) {
+      } else if (rating >= 4) {
+        return colors.green.lighten1;
+      } else if (rating >= 3.5) {
         return colors.orange.darken1;
-      } else {
+      } else if (rating >= 3) {
+        return colors.orange.darken4;
+      } else if (rating >= 2.5) {
         return colors.red.darken1;
+      } else {
+        return colors.red.darken4;
       }
     }
   }
