@@ -60,7 +60,12 @@
               <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
             </v-col>
             <v-col>
-              <v-btn class="mb-2 mr-2" color="primary" @click="anythingButCovid()">{{ "ABC*" }}</v-btn>
+              <v-btn
+                :disabled="searchCriteria.includes(abcFilter)"
+                class="mb-2 mr-2"
+                color="primary"
+                @click="anythingButCovid()"
+              >{{ "ABC*" }}</v-btn>
             </v-col>
           </v-row>
           <br />
@@ -134,7 +139,11 @@ export default {
       searchCriteria: [],
       searchParameter: "",
       keywordParams: [],
-      sectionParams: []
+      sectionParams: [],
+      abcFilter: {
+        type: "ABC",
+        text: "Anything But Coronavirus"
+      }
     };
   },
   computed: {
@@ -203,10 +212,7 @@ export default {
       });
     },
     anythingButCovid() {
-      this.searchCriteria.push({
-        type: "ABC",
-        text: "Anything But Coronavirus"
-      });
+      this.searchCriteria.push(this.abcFilter);
     }
   }
 };

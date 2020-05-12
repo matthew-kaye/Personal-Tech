@@ -3,6 +3,9 @@
     <v-card class="ma-6">
       <v-card-title class="headline">
         <span class="white--text">Burrito Rankings</span>
+        <v-btn class="ml-6" v-if="admin" color="primary" medium @click="addNewVendor()">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
         <v-spacer />
         <v-text-field
           class="ml-5"
@@ -62,19 +65,6 @@
       @update="updateData"
       ref="burritoInputDialog"
     />
-    <v-btn
-      v-if="admin"
-      color="primary"
-      fixed
-      bottom
-      right
-      fab
-      large
-      class="mb-12 mr-4"
-      @click="addNewVendor()"
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
   </div>
 </template>
 
