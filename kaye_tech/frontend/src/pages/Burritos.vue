@@ -60,6 +60,7 @@
     <BurritoInputDialog
       :dialogMode="dialogMode"
       :vendor="vendor"
+      :admin="admin"
       @save="saveData"
       @update="updateData"
       ref="burritoInputDialog"
@@ -134,17 +135,17 @@ export default {
     addNewVendor() {
       this.vendor = null;
       this.dialogMode = "Create";
-      this.$refs.burritoInputDialog.dialog = true;
+      this.$refs.burritoInputDialog.open();
     },
     viewVendor(vendor) {
       this.vendor = vendor;
       this.dialogMode = "View";
-      this.$refs.burritoInputDialog.dialog = true;
+      this.$refs.burritoInputDialog.open();
     },
     editVendorData(vendor) {
       this.vendor = vendor;
       this.dialogMode = "Edit";
-      this.$refs.burritoInputDialog.dialog = true;
+      this.$refs.burritoInputDialog.open();
     },
     saveData(vendorData) {
       burritoApi.makeVendor(vendorData).then(data => {

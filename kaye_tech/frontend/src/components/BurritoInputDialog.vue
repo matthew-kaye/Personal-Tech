@@ -15,6 +15,11 @@
             <h2 v-if="dialogMode!='View'">Add Burrito Vendor</h2>
             <h2 v-if="dialogMode=='View'">{{vendorData.name}}</h2>
           </v-col>
+          <v-col>
+            <v-btn v-if="admin" @click="toggleEditMode()" color="primary" dark medium>
+              <v-icon left>mdi-pencil</v-icon>Toggle Edit
+            </v-btn>
+          </v-col>
         </v-row>
       </v-card-title>
       <v-divider />
@@ -29,7 +34,7 @@
           <br />
         </v-text-field>
         <v-textarea v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
-        <v-card v-if="!editable" elevation="12">
+        <v-card v-if="!editable" elevation="12" @click="toggleEditMode()">
           <v-card-title class="primary headline white--text">
             <span style="font-size:14pt">Review</span>
           </v-card-title>
@@ -53,7 +58,7 @@
         <br />
         <br />
         <v-slider
-          :readonly="!editable"
+          :readonly="!editable && !admin"
           thumb-label="always"
           label="Rating"
           step="0.01"
@@ -67,7 +72,7 @@
         <v-btn color="primary" text @click="close">Close</v-btn>
         <v-btn
           color="primary"
-          :disabled="!editable"
+          :disabled="!editable &&!admin"
           v-if="vendorData.id"
           text
           @click="update"
@@ -82,7 +87,8 @@
 export default {
   data() {
     return {
-      dialog: false
+      dialog: false,
+      adminAccess: false
     };
   },
   computed: {
@@ -102,14 +108,19 @@ export default {
       };
     },
     editable() {
-      return this.dialogMode != "View";
+      return this.dialogMode != "View" || this.adminAccess;
     }
   },
   props: {
     dialogMode: String,
-    vendor: Object
+    vendor: Object,
+    admin: Boolean
   },
   methods: {
+    open() {
+      this.adminAccess = false;
+      this.dialog = true;
+    },
     close() {
       this.dialog = false;
     },
@@ -120,6 +131,11 @@ export default {
     update() {
       this.$emit("update", this.vendorData);
       this.dialog = false;
+    },
+    toggleEditMode() {
+      if (this.admin) {
+        this.adminAccess = !this.adminAccess;
+      }
     }
   }
 };
