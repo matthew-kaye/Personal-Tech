@@ -55,8 +55,6 @@
         </template>
       </v-data-table>
     </v-card>
-    <br />
-    <br />
     <BurritoInputDialog
       :dialogMode="dialogMode"
       :vendor="vendor"
