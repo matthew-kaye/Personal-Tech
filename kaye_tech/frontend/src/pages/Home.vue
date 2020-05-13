@@ -11,7 +11,6 @@
     </v-overlay>
   </div>
 </template>
-
 <script>
 import CanvasSheet from "@/components/CanvasSheet.vue";
 import AccountsApi from "@/apis/AccountsApi";
@@ -45,7 +44,6 @@ export default {
   methods: {}
 };
 </script>
-
 <style module lang="scss">
 canvas {
   margin: 0;
@@ -53,7 +51,7 @@ canvas {
   height: 100%;
 }
 .homeCanvas {
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
 }
