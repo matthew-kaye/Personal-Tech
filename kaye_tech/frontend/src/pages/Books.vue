@@ -11,7 +11,14 @@
               <p>{{ row.item.rank }}</p>
             </td>
             <td>
-              <p>{{ toTitleCase(row.item.title) }}</p>
+              <v-row justify="start" align="center">
+                <v-col md="auto">
+                  <v-img max-height="40" max-width="25" :src="row.item.book_image" />
+                </v-col>
+                <v-col md="auto">
+                  <p>{{ toTitleCase(row.item.title) }}</p>
+                </v-col>
+              </v-row>
             </td>
             <td>
               <p>{{ row.item.author }}</p>
