@@ -1360,6 +1360,10 @@ export default {
         e.preventDefault();
       }
     });
+    window.addEventListener("keydown", e => {
+      if (e.code === "KeyP") config.PAUSED = !config.PAUSED;
+      if (e.key === " ") splatStack.push(parseInt(Math.random() * 20) + 5);
+    });
     canvas.addEventListener("touchend", e => {
       const touches = e.changedTouches;
       for (let i = 0; i < touches.length; i++) {
@@ -1367,10 +1371,6 @@ export default {
         if (pointer == null) continue;
         updatePointerUpData(pointer);
       }
-    });
-    window.addEventListener("keydown", e => {
-      if (e.code === "KeyP") config.PAUSED = !config.PAUSED;
-      if (e.key === " ") splatStack.push(parseInt(Math.random() * 20) + 5);
     });
     canvas.addEventListener("mousedown", e => {
       let posX = scaleByPixelRatio(e.offsetX);
@@ -1767,9 +1767,3 @@ export default {
   }
 };
 </script>
-<style module lang="scss">
-canvas {
-  width: 100%;
-  height: 100%;
-}
-</style>

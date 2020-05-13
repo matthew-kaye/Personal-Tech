@@ -5,8 +5,8 @@
         <span class="white--text">Canvas</span>
         <v-btn class="ml-12" primary @click="toggleGui">Toggle Controls</v-btn>
       </v-card-title>
-      <div width="100%" height="100%" class="ma-10">
-        <CanvasSheet ref="canvasSheet" :activateGui="true" />
+      <div class="ma-10">
+        <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
         <v-divider />
         <br />
         <v-card md="auto" elevation="10" width="30%">
@@ -52,3 +52,11 @@ export default {
   }
 };
 </script>
+<style module lang="scss">
+.canvasPlayground {
+  margin: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div @click="overlay = false">
-    <CanvasSheet></CanvasSheet>
+    <CanvasSheet class="homeCanvas"></CanvasSheet>
     <v-overlay width="100%" height="100%" :value="overlay">
       <span style="font-size:64pt">{{welcomeMessage}}</span>
       <br />
@@ -45,3 +45,16 @@ export default {
   methods: {}
 };
 </script>
+
+<style module lang="scss">
+canvas {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+.homeCanvas {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+</style>
