@@ -8,7 +8,10 @@
           </v-col>
           <v-col class="mt-1">
             <h2 v-if="dialogMode!='View'">Add Burrito Vendor</h2>
-            <h2 v-if="dialogMode=='View'">{{vendorData.name}}</h2>
+            <h2 v-if="dialogMode=='View' && !editable">{{vendorData.name}}</h2>
+            <v-text-field v-if="editable" v-model="vendorData.name" label="Vendor name" required>
+              <br />
+            </v-text-field>
           </v-col>
           <v-col md="auto">
             <v-btn
@@ -26,14 +29,6 @@
       <v-divider />
       <br />
       <v-card-text>
-        <v-text-field
-          v-if="dialogMode!='View'"
-          v-model="vendorData.name"
-          label="Vendor name"
-          required
-        >
-          <br />
-        </v-text-field>
         <v-textarea v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
         <v-card v-if="!editable" elevation="12">
           <v-card-title @click="toggleEditMode()" class="primary headline white--text">
