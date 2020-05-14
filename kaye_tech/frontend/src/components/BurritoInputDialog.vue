@@ -15,7 +15,7 @@
           </v-col>
           <v-col md="auto">
             <v-btn
-              v-if="admin && dialogMode=='View'"
+              v-if="admin && dialogMode=='View' && editable"
               @click="toggleEditMode()"
               color="primary"
               dark
