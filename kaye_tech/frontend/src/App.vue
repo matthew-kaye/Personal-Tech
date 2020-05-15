@@ -4,14 +4,14 @@
     <v-content>
       <router-view />
       <v-btn absolute bottom left v-if="!footer" @click="footer=true" icon>
-        <v-icon>mdi-arrow-up</v-icon>
+        <v-icon>mdi-chevron-up</v-icon>
       </v-btn>
     </v-content>
     <v-footer padless height="52" v-show="footer" class="text-right">
       <v-card width="100%" height="52" v-if="footer">
         <div class="mt-2" color="card">
           <v-btn @click="footer=false" icon bottom left absolute>
-            <v-icon>mdi-arrow-down</v-icon>
+            <v-icon>mdi-chevron-down</v-icon>
           </v-btn>
           <span class="secondary--text">
             <strong>
