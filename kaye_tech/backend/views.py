@@ -87,3 +87,16 @@ class BurritoViewSet(viewsets.ViewSet):
         return Response(
             {"responseType": "complete", "job_id": pk}, status=status.HTTP_200_OK
         )
+
+    def delete(self, request, pk=None):
+        try:
+            Vendor.objects.get(id=pk).delete()
+        except Exception as e:
+            print(e)
+            return Response(
+                {"responseType": "error", "status": f"Failed to delete id {pk}: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return Response(
+            {"responseType": "complete", "job_id": pk}, status=status.HTTP_200_OK
+        )

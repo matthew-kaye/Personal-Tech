@@ -6,7 +6,7 @@
           <v-col md="auto" v-if="vendorData.imageUrl">
             <v-img max-height="50" max-width="50" :src="vendorData.imageUrl" />
           </v-col>
-          <v-col class="mt-1">
+          <v-col class="mt-1" md="auto">
             <h2 v-if="dialogMode!='View'">Add Burrito Vendor</h2>
             <h2 v-if="dialogMode=='View' && !editable">{{vendorData.name}}</h2>
             <v-text-field v-if="editable" v-model="vendorData.name" label="Vendor name" required>
@@ -23,7 +23,11 @@
             >
               <v-icon left>mdi-pencil</v-icon>Toggle Edit
             </v-btn>
+            <v-btn large @click="deleteVendor()" color="primary" v-if="admin && !editable" icon>
+              <v-icon large class="mb-1">mdi-delete-circle</v-icon>
+            </v-btn>
           </v-col>
+          <v-col></v-col>
         </v-row>
       </v-card-title>
       <v-divider />
@@ -69,9 +73,9 @@
           :disabled="!editable &&!admin"
           v-if="vendorData.id"
           text
-          @click="update"
+          @click="updateVendor()"
         >Update</v-btn>
-        <v-btn color="primary" v-if="!vendorData.id" text @click="save">Save</v-btn>
+        <v-btn color="primary" v-if="!vendorData.id" text @click="saveVendor()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -118,12 +122,16 @@ export default {
     close() {
       this.dialog = false;
     },
-    save() {
+    saveVendor() {
       this.$emit("save", this.vendorData);
       this.dialog = false;
     },
-    update() {
+    updateVendor() {
       this.$emit("update", this.vendorData);
+      this.dialog = false;
+    },
+    deleteVendor() {
+      this.$emit("delete", this.vendorData.id);
       this.dialog = false;
     },
     toggleEditMode() {

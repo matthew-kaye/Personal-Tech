@@ -37,4 +37,12 @@ export default class BurritoApi {
       .catch(error => console.log(error));
   }
 
+  deleteVendor(vendorId) {
+    const url = baseUrl + vendorId + "/";
+    return axios
+      .delete(url)
+      .then((response) => response.data)
+      .catch(error => console.log(error));
+  }
+
 }

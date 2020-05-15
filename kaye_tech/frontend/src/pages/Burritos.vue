@@ -61,6 +61,7 @@
       :admin="admin"
       @save="saveData"
       @update="updateData"
+      @delete="deleteData"
       ref="burritoInputDialog"
     />
   </div>
@@ -134,6 +135,11 @@ export default {
     },
     updateData(vendorData) {
       burritoApi.updateVendor(vendorData).then(data => {
+        this.fetchVendors();
+      });
+    },
+    deleteData(vendorId) {
+      burritoApi.deleteVendor(vendorId).then(data => {
         this.fetchVendors();
       });
     },
