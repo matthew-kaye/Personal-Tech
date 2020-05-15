@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600px">
+  <v-dialog v-model="dialog" max-width="700px">
     <v-card>
       <v-card-title>
         <v-row justify="start">
@@ -131,8 +131,7 @@ export default {
       this.dialog = false;
     },
     deleteVendor() {
-      this.$emit("delete", this.vendorData.id);
-      this.dialog = false;
+      this.$emit("delete");
     },
     toggleEditMode() {
       if (this.admin) {

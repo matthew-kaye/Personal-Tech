@@ -61,15 +61,17 @@
       :admin="admin"
       @save="saveData"
       @update="updateData"
-      @delete="deleteData"
+      @delete="warningDialog=true"
       ref="burritoInputDialog"
     />
+    <WarningDialog cols="3" :dialog="warningDialog" @yes="deleteData" @no="warningDialog=false" />
   </div>
 </template>
 
 <script>
 import BurritoApi from "@/apis/BurritoApi";
 import BurritoInputDialog from "@/components/BurritoInputDialog";
+import WarningDialog from "@/components/WarningDialog";
 import AccountsApi from "@/apis/AccountsApi";
 const accountsApi = new AccountsApi();
 import colors from "vuetify/lib/util/colors";
@@ -78,7 +80,8 @@ const burritoApi = new BurritoApi();
 
 export default {
   components: {
-    BurritoInputDialog
+    BurritoInputDialog,
+    WarningDialog
   },
   created() {
     this.fetchVendors();
@@ -92,7 +95,8 @@ export default {
       vendors: [],
       vendor: null,
       dialogMode: "",
-      currentUser: ""
+      currentUser: "",
+      warningDialog: false
     };
   },
   computed: {
@@ -138,8 +142,10 @@ export default {
         this.fetchVendors();
       });
     },
-    deleteData(vendorId) {
-      burritoApi.deleteVendor(vendorId).then(data => {
+    deleteData() {
+      this.warningDialog = false;
+      this.$refs.burritoInputDialog.close();
+      burritoApi.deleteVendor(this.vendor.pk).then(data => {
         this.fetchVendors();
       });
     },
