@@ -1,15 +1,17 @@
 <template>
-  <div @click="overlay = false">
-    <CanvasSheet class="homeCanvas"></CanvasSheet>
-    <v-overlay width="100%" height="100%" :value="overlay">
-      <span style="font-size:64pt">{{welcomeMessage}}</span>
-      <br />
-      <span>*Click and drag to generate animations</span>
-      <v-btn top right absolute fab icon class="mr-n12 mx-auto" @click="overlay = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </v-overlay>
-  </div>
+  <v-fab-transition>
+    <div @click="overlay = false">
+      <CanvasSheet class="homeCanvas"></CanvasSheet>
+      <v-overlay v-if="currentUser.first_name" width="100%" height="100%" :value="overlay">
+        <span style="font-size:64pt">{{welcomeMessage}}</span>
+        <br />
+        <span>*Click and drag to generate animations</span>
+        <v-btn top right absolute fab icon class="mr-n12 mx-auto" @click="overlay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-overlay>
+    </div>
+  </v-fab-transition>
 </template>
 <script>
 import CanvasSheet from "@/components/CanvasSheet.vue";

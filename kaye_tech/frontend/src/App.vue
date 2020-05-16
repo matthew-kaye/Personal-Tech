@@ -1,14 +1,18 @@
 <template>
   <v-app :style="{ background: $vuetify.theme.themes[theme].background }">
-    <NavigationBar />
+    <v-scroll-x-reverse-transition>
+      <NavigationBar />
+    </v-scroll-x-reverse-transition>
     <v-content>
-      <router-view />
+      <v-scroll-x-reverse-transition :hide-on-leave="true">
+        <router-view />
+      </v-scroll-x-reverse-transition>
       <v-btn absolute bottom left v-if="!footer" @click="footer=true" icon>
         <v-icon>mdi-chevron-up</v-icon>
       </v-btn>
     </v-content>
     <v-footer padless height="52" v-show="footer" class="text-right">
-      <v-card width="100%" height="52" v-if="footer">
+      <v-card width="100%" height="52">
         <div class="mt-2" color="card">
           <v-btn @click="footer=false" icon bottom left absolute>
             <v-icon>mdi-chevron-down</v-icon>

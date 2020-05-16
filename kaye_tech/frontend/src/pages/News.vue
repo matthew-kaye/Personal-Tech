@@ -100,18 +100,21 @@
       </v-row>
       <br />
     </v-card>
-    <v-btn
-      color="primary"
-      fixed
-      bottom
-      right
-      fab
-      large
-      class="mb-10 ma-4"
-      @click="$vuetify.goTo(0)"
-    >
-      <v-icon>mdi-arrow-up</v-icon>
-    </v-btn>
+    <v-scale-transition>
+      <v-btn
+        color="primary"
+        v-show="offsetTop!=0"
+        fixed
+        bottom
+        right
+        fab
+        large
+        class="mb-10 ma-4"
+        @click="$vuetify.goTo(0)"
+      >
+        <v-icon>mdi-arrow-up</v-icon>
+      </v-btn>
+    </v-scale-transition>
   </div>
 </template>
 <script>
@@ -126,6 +129,10 @@ export default {
   created() {
     this.fetchGuardianSections();
     this.fetchArticles();
+    window.addEventListener("scroll", this.onScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
   data() {
     return {
@@ -142,7 +149,8 @@ export default {
       abcFilter: {
         type: "ABC",
         text: "Anything But Coronavirus"
-      }
+      },
+      offsetTop: 0
     };
   },
   computed: {
@@ -216,6 +224,9 @@ export default {
     },
     anythingButCovid() {
       this.searchCriteria.push(this.abcFilter);
+    },
+    onScroll(e) {
+      this.offsetTop = e.target.scrollingElement.scrollTop;
     }
   },
   watch: {

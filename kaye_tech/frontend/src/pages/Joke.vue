@@ -25,7 +25,9 @@
       </v-row>
     </v-card-text>
     <v-card class="my-4" color="card">
-      <v-card-title>{{"Your Joke: " + joke}}</v-card-title>
+      <v-fab-transition>
+        <v-card-title v-if="joke">{{"Your Joke: " + joke}}</v-card-title>
+      </v-fab-transition>
     </v-card>
   </v-card>
 </template>
@@ -46,12 +48,13 @@ export default {
     return {
       jokeSearch: "",
       baseUrl: "https://icanhazdadjoke.com/search",
-      joke: ""
+      joke: null
     };
   },
   computed: {},
   methods: {
     findJoke(searchTerm) {
+      this.joke = null;
       if (searchTerm.length > 0) {
         var jokeResponse = axios
           .get(this.baseUrl, {

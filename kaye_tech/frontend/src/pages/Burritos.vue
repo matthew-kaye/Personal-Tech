@@ -16,44 +16,49 @@
         ></v-text-field>
       </v-card-title>
       <v-divider />
-      <v-data-table
-        :headers="headers"
-        :search="search"
-        :items="vendors"
-        sort-desc
-        :sort-by="'fields.rating'"
-      >
-        <template v-slot:item="row">
-          <tr>
-            <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
-              <v-row justify="start" align="center">
-                <v-col md="auto">
-                  <v-img
-                    max-height="40"
-                    max-width="40"
-                    v-if="row.item.fields['img_url']"
-                    :src="row.item.fields['img_url']"
-                  />
-                </v-col>
-                <v-col md="auto">{{ row.item.fields.name }}</v-col>
-              </v-row>
-            </td>
-            <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
-              <v-chip :color="getRatingColour(row.item.fields.rating)">
-                {{ row.item.fields.rating.toFixed(2) }}
-                <v-icon right>mdi-star</v-icon>
-              </v-chip>
-            </td>
-            <td>
-              <a :href="row.item.fields.url">
-                <v-btn color="primary" dark medium>
-                  <v-icon left>mdi-taco</v-icon>Visit Site
-                </v-btn>
-              </a>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
+
+      <v-fab-transition>
+        <v-data-table
+          :headers="headers"
+          :search="search"
+          :items="vendors"
+          sort-desc
+          :sort-by="'fields.rating'"
+        >
+          <template v-slot:item="row">
+            <tr>
+              <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
+                <v-row justify="start" align="center">
+                  <v-col md="auto">
+                    <v-slide-x-transition>
+                      <v-img
+                        max-height="40"
+                        max-width="40"
+                        v-if="row.item.fields['img_url']"
+                        :src="row.item.fields['img_url']"
+                      />
+                    </v-slide-x-transition>
+                  </v-col>
+                  <v-col md="auto">{{ row.item.fields.name }}</v-col>
+                </v-row>
+              </td>
+              <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
+                <v-chip :color="getRatingColour(row.item.fields.rating)">
+                  {{ row.item.fields.rating.toFixed(2) }}
+                  <v-icon right>mdi-star</v-icon>
+                </v-chip>
+              </td>
+              <td>
+                <a :href="row.item.fields.url">
+                  <v-btn color="primary" dark medium>
+                    <v-icon left>mdi-taco</v-icon>Visit Site
+                  </v-btn>
+                </a>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-fab-transition>
     </v-card>
     <BurritoInputDialog
       :dialogMode="dialogMode"
