@@ -34,7 +34,7 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-autocomplete>
             </v-col>
-            <v-col md="auto">
+            <v-col cols="1">
               <v-select
                 v-model="pageSize"
                 :items="[10,25,50]"
