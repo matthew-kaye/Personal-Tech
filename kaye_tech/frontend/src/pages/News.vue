@@ -6,6 +6,15 @@
       </v-card-title>
       <v-row justify="start">
         <v-col>
+          <v-row align="center" justify="start" md="auto">
+            <v-card-title class="ml-4">Search Criteria:</v-card-title>
+            <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
+              <v-chip
+                close
+                @click:close="searchCriteria.splice(i, 1);fetchArticles()"
+              >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
+            </v-col>
+          </v-row>
           <v-row class="ml-2" justify="start">
             <v-col cols="3">
               <v-text-field
@@ -53,15 +62,6 @@
                 color="primary"
                 @click="anythingButCovid()"
               >{{ "ABC" }}</v-btn>
-            </v-col>
-          </v-row>
-          <v-row align="center" justify="start" md="auto">
-            <v-card-title class="ml-4">Search Criteria:</v-card-title>
-            <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
-              <v-chip
-                close
-                @click:close="searchCriteria.splice(i, 1);fetchArticles()"
-              >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
             </v-col>
           </v-row>
           <br />
