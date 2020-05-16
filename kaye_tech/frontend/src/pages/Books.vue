@@ -1,7 +1,7 @@
 <template>
   <v-card class="ma-6">
     <v-card-title class="primary headline">
-      <span class="white--text">New York Times Bestsellers</span>
+      <span class="white--text">{{"New York Times Bestsellers - updated " + time +"s ago"}}</span>
     </v-card-title>
     <v-card class="ma-4" color="card">
       <v-data-table :headers="headers" :items="books">
@@ -43,11 +43,13 @@ export default {
     bookApi.fetchBooks().then(data => {
       this.books = data.results.books;
     });
+    var interval = setInterval(this.incrementTime, 1000);
   },
   data() {
     return {
       searchTerm: "",
-      books: []
+      books: [],
+      time: 0
     };
   },
   computed: {
@@ -84,6 +86,9 @@ export default {
     },
     viewBook(item) {
       this.$router.push("/book/" + item.rank);
+    },
+    incrementTime() {
+      this.time = parseInt(this.time) + 1;
     }
   }
 };

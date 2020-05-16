@@ -56,7 +56,7 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-select>
             </v-col>
-            <v-col md="auto">
+            <v-col md="auto" v-if="pageSize!=10">
               <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
             </v-col>
             <v-col>
