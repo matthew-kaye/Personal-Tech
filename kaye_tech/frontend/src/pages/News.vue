@@ -11,7 +11,7 @@
             <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
               <v-chip
                 close
-                @click:close="searchCriteria.splice(i, 1)"
+                @click:close="searchCriteria.splice(i, 1);fetchArticles()"
               >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
             </v-col>
           </v-row>
@@ -65,7 +65,7 @@
                 class="mb-2 mr-2"
                 color="primary"
                 @click="anythingButCovid()"
-              >{{ "ABC*" }}</v-btn>
+              >{{ "ABC" }}</v-btn>
             </v-col>
           </v-row>
           <br />
@@ -98,7 +98,6 @@
           <TwitterFeed />
         </v-col>
       </v-row>
-      <small class="ml-4 mb-4">* Anything but Coronavirus</small>
       <br />
     </v-card>
     <v-btn
@@ -217,6 +216,11 @@ export default {
     },
     anythingButCovid() {
       this.searchCriteria.push(this.abcFilter);
+    }
+  },
+  watch: {
+    searchCriteria: function() {
+      this.fetchArticles();
     }
   }
 };
