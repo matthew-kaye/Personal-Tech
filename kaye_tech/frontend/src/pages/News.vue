@@ -6,15 +6,6 @@
       </v-card-title>
       <v-row justify="start">
         <v-col>
-          <v-row align="center" justify="start" md="auto">
-            <v-card-title class="ml-4">Search Criteria:</v-card-title>
-            <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
-              <v-chip
-                close
-                @click:close="searchCriteria.splice(i, 1);fetchArticles()"
-              >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
-            </v-col>
-          </v-row>
           <v-row class="ml-2" justify="start">
             <v-col cols="3">
               <v-text-field
@@ -23,9 +14,11 @@
                 label="Keywords"
                 required
               ></v-text-field>
+            </v-col>
+            <v-col md="auto">
               <v-btn
                 :disabled="(!searchTerm) || keywords.includes(searchTerm)"
-                class="mb-2 mr-2"
+                class="mt-2"
                 color="primary"
                 @click="addSearch()"
               >{{ "Add" }}</v-btn>
@@ -40,12 +33,6 @@
                 attach
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-autocomplete>
-              <v-btn
-                :disabled="(!section) || sections.includes(section)"
-                class="mb-2 mr-2"
-                color="primary"
-                @click="addSection()"
-              >{{ "Add" }}</v-btn>
             </v-col>
             <v-col md="auto">
               <v-select
@@ -62,36 +49,49 @@
             <v-col>
               <v-btn
                 :disabled="searchCriteria.includes(abcFilter)"
-                class="mb-2 mr-2"
+                class="mt-2 mr-2"
                 color="primary"
                 @click="anythingButCovid()"
               >{{ "ABC" }}</v-btn>
             </v-col>
           </v-row>
+          <v-row align="center" justify="start" md="auto">
+            <v-card-title class="ml-4">Search Criteria:</v-card-title>
+            <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
+              <v-chip
+                close
+                @click:close="searchCriteria.splice(i, 1);fetchArticles()"
+              >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
+            </v-col>
+          </v-row>
           <br />
-          <v-card color="card" v-if="articles.length>0" class="ml-4" width="100%">
+          <v-card color="card" class="ml-4" width="100%">
             <v-card-title class="headline">Results</v-card-title>
-            <v-divider></v-divider>
-            <v-list>
-              <template v-for="(item, index) in articles">
-                <v-list-item :key="index">
-                  <v-list-item-content>
-                    <v-row>
-                      <v-col md="auto">
-                        {{item.webTitle}}
-                        <br />
-                        <a :href="item.webUrl">{{item.id}}</a>
-                      </v-col>
-                      <v-col md="auto">
-                        <v-btn icon :href="item.webUrl">
-                          <v-icon color="primary" large>mdi-arrow-right-circle-outline</v-icon>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-list>
+            <v-slide-x-transition>
+              <div v-if="articles.length>0">
+                <v-divider></v-divider>
+                <v-list>
+                  <template v-for="(item, index) in articles">
+                    <v-list-item :key="index">
+                      <v-list-item-content>
+                        <v-row>
+                          <v-col md="auto">
+                            {{item.webTitle}}
+                            <br />
+                            <a :href="item.webUrl">{{item.id}}</a>
+                          </v-col>
+                          <v-col md="auto">
+                            <v-btn icon :href="item.webUrl">
+                              <v-icon color="primary" large>mdi-arrow-right-circle-outline</v-icon>
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-list>
+              </div>
+            </v-slide-x-transition>
           </v-card>
         </v-col>
         <v-col cols="3" class="ma-4" md="auto">
@@ -179,6 +179,7 @@ export default {
   },
   methods: {
     fetchArticles() {
+      this.articles = [];
       if (this.searchTerm) {
         this.addSearch();
       }
@@ -212,10 +213,6 @@ export default {
       });
       this.searchTerm = "";
     },
-    addSection() {
-      this.searchCriteria.push({ text: this.section, type: "Section" });
-      this.section = "";
-    },
     fetchGuardianSections() {
       newsApi.fetchSections().then(data => {
         this.guardianSections = data.response.results;
@@ -232,6 +229,12 @@ export default {
   watch: {
     searchCriteria: function() {
       this.fetchArticles();
+    },
+    section: function() {
+      if (this.section) {
+        this.searchCriteria.push({ text: this.section, type: "Section" });
+        this.section = "";
+      }
     }
   }
 };
