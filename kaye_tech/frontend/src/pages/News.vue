@@ -69,16 +69,6 @@
                 >{{ "Add" }}</v-btn>
               </v-fab-transition>
             </v-col>
-            <v-col md="auto">
-              <v-fab-transition>
-                <v-btn
-                  class="mt-2"
-                  v-if="pageSize!=10"
-                  color="primary"
-                  @click="fetchArticles()"
-                >{{ "Search" }}</v-btn>
-              </v-fab-transition>
-            </v-col>
           </v-row>
           <br />
           <v-card color="card" class="ml-4" width="100%">
@@ -244,6 +234,9 @@ export default {
   },
   watch: {
     searchCriteria: function() {
+      this.fetchArticles();
+    },
+    pageSize: function() {
       this.fetchArticles();
     },
     section: function() {
