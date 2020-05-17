@@ -17,25 +17,10 @@
           </v-row>
           <v-row class="ml-2" justify="start">
             <v-col cols="3">
-              <v-text-field
-                v-model="searchTerm"
-                @keypress.enter="addSearch()"
-                label="Keywords"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col md="auto">
-              <v-btn
-                :disabled="(!searchTerm) || keywords.includes(searchTerm)"
-                class="mt-2"
-                color="primary"
-                @click="addSearch()"
-              >{{ "Add" }}</v-btn>
-            </v-col>
-            <v-col cols="3">
               <v-autocomplete
                 v-model="section"
                 :items="guardianSections"
+                class="mr-4"
                 item-text="webTitle"
                 item-value="id"
                 label="Section Filters"
@@ -47,6 +32,7 @@
               <v-select
                 v-model="pageSize"
                 :items="[10,25,50]"
+                class="mr-4"
                 attach
                 label="Results"
                 :menu-props="{ transition: 'slide-y-transition' }"
@@ -55,13 +41,32 @@
             <v-col md="auto" v-if="pageSize!=10">
               <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
             </v-col>
-            <v-col>
+            <v-col md="auto">
               <v-btn
                 :disabled="searchCriteria.includes(abcFilter)"
                 class="mt-2 mr-2"
                 color="primary"
                 @click="anythingButCovid()"
               >{{ "ABC" }}</v-btn>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="searchTerm"
+                @keypress.enter="addSearch()"
+                label="Keywords"
+                append-icon="mdi-magnify"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col md="auto">
+              <v-fab-transition>
+                <v-btn
+                  v-show="searchTerm && !keywords.includes(searchTerm)"
+                  class="mt-2 mr-4"
+                  color="primary"
+                  @click="addSearch()"
+                >{{ "Add" }}</v-btn>
+              </v-fab-transition>
             </v-col>
           </v-row>
           <br />
