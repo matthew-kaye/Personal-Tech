@@ -1,12 +1,12 @@
 <template>
   <v-app :style="{ background: $vuetify.theme.themes[theme].background }">
-    <v-scroll-x-reverse-transition>
+    <v-expand-transition>
       <NavigationBar />
-    </v-scroll-x-reverse-transition>
+    </v-expand-transition>
     <v-content>
-      <v-scroll-x-reverse-transition :hide-on-leave="true">
+      <v-slide-y-reverse-transition :hide-on-leave="true">
         <router-view />
-      </v-scroll-x-reverse-transition>
+      </v-slide-y-reverse-transition>
       <v-btn absolute bottom left v-if="!footer" @click="footer=true" icon>
         <v-icon>mdi-chevron-up</v-icon>
       </v-btn>

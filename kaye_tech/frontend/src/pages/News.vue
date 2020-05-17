@@ -20,7 +20,6 @@
               <v-autocomplete
                 v-model="section"
                 :items="guardianSections"
-                class="mr-4"
                 item-text="webTitle"
                 item-value="id"
                 label="Section Filters"
@@ -32,7 +31,6 @@
               <v-select
                 v-model="pageSize"
                 :items="[10,25,50]"
-                class="mr-4"
                 attach
                 label="Results"
                 :menu-props="{ transition: 'slide-y-transition' }"

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-6">
+  <v-card class="ma-6" v-if="books.length>0">
     <v-card-title class="primary headline">
       <span class="white--text">{{"New York Times Bestsellers - updated " + time +"s ago"}}</span>
     </v-card-title>
