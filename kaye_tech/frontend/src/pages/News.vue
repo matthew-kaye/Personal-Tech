@@ -41,14 +41,6 @@
             <v-col md="auto" v-if="pageSize!=10">
               <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
             </v-col>
-            <v-col md="auto">
-              <v-btn
-                :disabled="searchCriteria.includes(abcFilter)"
-                class="mt-2 mr-2"
-                color="primary"
-                @click="anythingButCovid()"
-              >{{ "ABC" }}</v-btn>
-            </v-col>
             <v-col cols="3">
               <v-text-field
                 v-model="searchTerm"
@@ -57,6 +49,18 @@
                 append-icon="mdi-magnify"
                 required
               ></v-text-field>
+            </v-col>
+            <v-col md="auto">
+              <v-btn
+                :disabled="searchCriteria.includes(abcFilter)"
+                color="primary"
+                @click="anythingButCovid()"
+                icon
+                x-large
+                append-icon="mdi-cancel"
+              >
+                <v-icon large>mdi-thermometer-minus</v-icon>
+              </v-btn>
             </v-col>
             <v-col md="auto">
               <v-fab-transition>
