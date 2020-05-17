@@ -38,18 +38,6 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-select>
             </v-col>
-            <v-col md="auto" v-if="pageSize!=10">
-              <v-btn class="mb-2 mr-2" color="primary" @click="fetchArticles()">{{ "Search" }}</v-btn>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="searchTerm"
-                @keypress.enter="addSearch()"
-                label="Keywords"
-                append-icon="mdi-magnify"
-                required
-              ></v-text-field>
-            </v-col>
             <v-col md="auto">
               <v-btn
                 :disabled="searchCriteria.includes(abcFilter)"
@@ -62,14 +50,33 @@
                 <v-icon large>mdi-thermometer-minus</v-icon>
               </v-btn>
             </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="searchTerm"
+                @keypress.enter="addSearch()"
+                label="Keywords"
+                append-icon="mdi-magnify"
+                required
+              ></v-text-field>
+            </v-col>
             <v-col md="auto">
               <v-fab-transition>
                 <v-btn
                   v-show="searchTerm && !keywords.includes(searchTerm)"
-                  class="mt-2 mr-4"
+                  class="mt-2"
                   color="primary"
                   @click="addSearch()"
                 >{{ "Add" }}</v-btn>
+              </v-fab-transition>
+            </v-col>
+            <v-col md="auto">
+              <v-fab-transition>
+                <v-btn
+                  class="mt-2"
+                  v-if="pageSize!=10"
+                  color="primary"
+                  @click="fetchArticles()"
+                >{{ "Search" }}</v-btn>
               </v-fab-transition>
             </v-col>
           </v-row>
