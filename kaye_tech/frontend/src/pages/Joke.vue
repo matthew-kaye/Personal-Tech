@@ -6,21 +6,24 @@
     <v-card-title>Search term - search for a joke by typing in a keyword:</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="6" sm="6">
+        <v-col cols="3" sm="3">
           <v-text-field
             v-model="jokeSearch"
             @keypress.enter="findJoke(jokeSearch)"
-            hint="The search term for the joke, e.g. cat"
+            append-icon="mdi-magnify"
+            label="Enter a search term for the joke, e.g. cat"
             required
           ></v-text-field>
         </v-col>
-        <v-col>
-          <v-btn
-            :disabled="jokeSearch.length == 0"
-            class="mb-2 mr-2"
-            color="primary"
-            @click="findJoke(jokeSearch)"
-          >{{ "Search" }}</v-btn>
+        <v-col md="auto">
+          <v-fab-transition>
+            <v-btn
+              v-if="jokeSearch.length > 0"
+              class="mb-2 mr-2"
+              color="primary"
+              @click="findJoke(jokeSearch)"
+            >{{ "Search" }}</v-btn>
+          </v-fab-transition>
         </v-col>
       </v-row>
     </v-card-text>
