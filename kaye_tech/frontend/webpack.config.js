@@ -61,5 +61,12 @@ module.exports = {
         contentBase: './static/bundles',
         host: '0.0.0.0',
         writeToDisk: true
+    },
+    node: {
+        fs: 'empty',
+        net: 'empty',
+    },
+    externals: {
+        uws: 'uws'
     }
 };
