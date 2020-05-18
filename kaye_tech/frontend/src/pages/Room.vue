@@ -55,8 +55,13 @@ export default {
     });
   },
   mounted() {
+    if (window.location.protocol == "http:") {
+      var type = "ws://";
+    } else {
+      var type = "wss://";
+    }
     this.chatSocket = new WebSocket(
-      "ws://" + window.location.host + "/ws/cards/" + this.roomName + "/"
+      type + window.location.host + "/ws/cards/" + this.roomName + "/"
     );
     this.chatSocket.onmessage = function(e) {
       const data = JSON.parse(e.data);
