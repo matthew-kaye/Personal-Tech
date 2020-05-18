@@ -35,16 +35,25 @@
 </template>
 
 <script>
+import CanvasSheet from "@/components/CanvasSheet.vue";
+import AccountsApi from "@/apis/AccountsApi";
+const accountsApi = new AccountsApi();
+
 export default {
   data() {
     return {
       chatMessage: "",
       chatSocket: null,
       roomName: this.$route.params.roomName,
-      messages: []
+      messages: [],
+      currentUser: null
     };
   },
-  created() {},
+  created() {
+    accountsApi.getCurrentUser().then(data => {
+      this.currentUser = data;
+    });
+  },
   mounted() {
     console.log();
     this.chatSocket = new WebSocket(
@@ -60,12 +69,12 @@ export default {
   },
   methods: {
     submitMessage(chatMessage) {
+      chatMessage = `${this.currentUser.first_name}:  ${chatMessage}`;
       this.chatSocket.send(
         JSON.stringify({
           message: chatMessage
         })
       );
-      this.$emit("chatMessage", chatMessage);
       this.chatMessage = "";
     }
   },
