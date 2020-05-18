@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
 import vuetify from "./plugins/vuetify";
 import App from "./App.vue";
 import Home from "./pages/Home.vue"
@@ -11,8 +10,8 @@ import News from "./pages/News.vue";
 import Books from "./pages/Books.vue";
 import BookDetailPage from "./pages/BookDetailPage.vue";
 import Burritos from "./pages/Burritos.vue";
-import BurritoDetailPage from "./pages/Burritos.vue";
-
+import Cards from "./pages/Cards.vue";
+import Room from "./pages/Room.vue";
 
 Vue.use(VueRouter);
 
@@ -26,10 +25,16 @@ const routes = [
     name: "BookDetailPage",
     component: BookDetailPage
   },
+  {
+    path: "/cards/:roomName",
+    name: "room",
+    component: Room
+  },
   { path: "/burritos", name: "burritos", component: Burritos },
   { path: "/canvas", name: "canvas", component: Canvas },
   { path: "/jokes", name: "jokes", component: Joke },
   { path: "/tabletop", name: "tabletop", component: Tabletop },
+  { path: "/cards", name: "cards", component: Cards },
 ];
 
 const router = new VueRouter({

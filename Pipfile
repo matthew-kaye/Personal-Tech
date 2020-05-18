@@ -13,6 +13,11 @@ social-auth-app-django = "*"
 pyyaml = "*"
 django-extensions = "*"
 uwsgi = "*"
+channels = "*"
+channels-redis = "*"
 
 [requires]
 python_version = "3"
+
+[pipenv]
+allow_prereleases = true
