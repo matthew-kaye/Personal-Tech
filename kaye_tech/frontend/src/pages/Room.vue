@@ -55,7 +55,6 @@ export default {
     });
   },
   mounted() {
-    console.log();
     this.chatSocket = new WebSocket(
       "ws://" + window.location.host + "/ws/cards/" + this.roomName + "/"
     );
@@ -77,10 +76,6 @@ export default {
       );
       this.chatMessage = "";
     }
-  },
-  socketFuntion(e) {
-    console.log(e);
-    console.log("me");
   }
 };
 </script>

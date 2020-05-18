@@ -39,8 +39,6 @@ export default {
       roomName: ""
     };
   },
-  created() {},
-  mounted() {},
   methods: {
     joinRoom(roomName) {
       window.location.pathname = "/cards/" + roomName + "/";
