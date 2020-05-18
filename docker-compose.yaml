@@ -16,3 +16,12 @@ services:
     restart: on-failure
     depends_on:
       - db
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
