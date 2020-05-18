@@ -2,7 +2,7 @@
   <div>
     <v-card class="ma-6">
       <v-card-title class="primary headline">
-        <span class="white--text">Messages</span>
+        <span class="white--text ml-4">{{roomName}}</span>
       </v-card-title>
       <v-card-title class="ml-4 mt-2">Send a message to the chat:</v-card-title>
       <v-card-text class="ml-4">
@@ -40,12 +40,13 @@ export default {
     return {
       chatMessage: "",
       chatSocket: null,
-      roomName: "Agratia",
+      roomName: this.$route.params.roomName,
       messages: []
     };
   },
   created() {},
   mounted() {
+    console.log();
     this.chatSocket = new WebSocket(
       "ws://" + window.location.host + "/ws/cards/" + this.roomName + "/"
     );

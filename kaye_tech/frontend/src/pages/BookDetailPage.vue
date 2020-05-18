@@ -64,7 +64,6 @@ export default {
     bookApi.fetchBooks().then(data => {
       this.books = data.results.books;
       this.getBookFromRank();
-      console.log(this.book);
       bookApi.fetchReviews(this.book.isbns[0].isbn13).then(data => {
         this.reviews = data.num_results > 0 ? data.results : null;
       });
@@ -74,7 +73,7 @@ export default {
     return {
       book: null,
       books: [],
-      rank: parseInt(this.$route.path.split("/").pop()),
+      rank: parseInt(this.$route.params.bookRank),
       reviews: null
     };
   },
