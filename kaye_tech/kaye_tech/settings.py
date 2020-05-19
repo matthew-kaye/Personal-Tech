@@ -87,24 +87,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "kaye_tech.wsgi.application"
 ASGI_APPLICATION = "kaye_tech.routing.application"
-if DEBUG:
-    CHANNEL_LAYERS = {
-        'default': {
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                "hosts": [('localhost', 6379)],
-            },
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6379)],
         },
-    }
-else:
-    CHANNEL_LAYERS = {
-        'default': {
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                "hosts": [('redis', 6379)],
-            },
-        },
-    }
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
