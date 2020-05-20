@@ -2,7 +2,7 @@
   <v-fab-transition>
     <div @click="overlay = false">
       <CanvasSheet class="homeCanvas"></CanvasSheet>
-      <v-overlay v-if="currentUser.first_name" width="100%" height="100%" :value="overlay">
+      <v-overlay width="100%" height="100%" :value="overlay">
         <span style="font-size:64pt">{{welcomeMessage}}</span>
         <br />
         <span>*Click and drag to generate animations</span>
@@ -24,12 +24,13 @@ export default {
   created() {
     accountsApi.getCurrentUser().then(data => {
       this.currentUser = data;
+      this.overlay = true;
     });
     window.activeGui = false;
   },
   data() {
     return {
-      overlay: true,
+      overlay: false,
       currentUser: ""
     };
   },
