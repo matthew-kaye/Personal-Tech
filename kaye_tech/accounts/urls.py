@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 
 def logout_view(request):
     logout(request)
-    return redirect(settings.LOGOUT_REDIRECT_URL)
+    return redirect(request.GET.get('next'))
 
 
 urlpatterns = [

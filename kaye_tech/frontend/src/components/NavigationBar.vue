@@ -44,10 +44,21 @@
       <v-avatar class="ml-2" size="40" v-if="currentUser.profile.avatar">
         <img :src="currentUser.profile.avatar" />
       </v-avatar>
-      <v-btn class="ml-2 mr-1" icon text href="/accounts/logout/" v-if="currentUser.id">
+      <v-btn
+        class="ml-2 mr-1"
+        icon
+        text
+        :href="'/accounts/logout/?next='+redirect"
+        v-if="currentUser.id"
+      >
         <v-icon dark>mdi-logout</v-icon>
       </v-btn>
-      <v-btn class="ml-2 mr-1" text href="/accounts/splash/" v-if="!currentUser.id">Sign In</v-btn>
+      <v-btn
+        class="ml-2 mr-1"
+        text
+        :href="'/accounts/splash/?next='+redirect"
+        v-if="!currentUser.id"
+      >Sign In</v-btn>
     </v-app-bar>
   </div>
 </template>
@@ -126,6 +137,11 @@ export default {
       if (window.gui && !location.href.includes("canvas")) {
         window.gui.close();
       }
+    }
+  },
+  computed: {
+    redirect() {
+      return location.pathname;
     }
   }
 };
