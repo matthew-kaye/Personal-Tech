@@ -48,7 +48,7 @@
         class="ml-2 mr-1"
         icon
         text
-        :href="'/accounts/logout/?next='+redirect"
+        :href="'/accounts/logout/?next='+$route.path"
         v-if="currentUser.id"
       >
         <v-icon dark>mdi-logout</v-icon>
@@ -56,7 +56,7 @@
       <v-btn
         class="ml-2 mr-1"
         text
-        :href="'/accounts/splash/?next='+redirect"
+        :href="'/accounts/splash/?next='+$route.path"
         v-if="!currentUser.id"
       >Sign In</v-btn>
     </v-app-bar>
@@ -137,11 +137,6 @@ export default {
       if (window.gui && !location.href.includes("canvas")) {
         window.gui.close();
       }
-    }
-  },
-  computed: {
-    redirect() {
-      return location.pathname;
     }
   }
 };
