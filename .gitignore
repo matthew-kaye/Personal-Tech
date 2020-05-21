@@ -8,6 +8,8 @@ google.json
 google.json
 app-env
 .DS_Store
+**/migrations
+app.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
