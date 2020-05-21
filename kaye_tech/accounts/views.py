@@ -1,6 +1,6 @@
 from rest_framework import generics
 from django.views.generic import TemplateView
-
+from django.shortcuts import redirect
 from .serializers import UserSerializer
 
 

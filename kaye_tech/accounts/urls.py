@@ -10,8 +10,14 @@ def logout_view(request):
     return redirect(request.GET.get('next'))
 
 
+def login_view(request):
+    next = request.GET['next'] if request.GET else "/home"
+    return redirect(next)
+
+
 urlpatterns = [
     path("", include("social_django.urls", namespace="social")),
     path("logout/", logout_view, name="logout"),
     path("splash/", SplashView.as_view(), name="splash"),
+    path("profile/", login_view, name="login_complete"),
 ]

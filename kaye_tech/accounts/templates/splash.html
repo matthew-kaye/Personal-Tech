@@ -9,9 +9,9 @@
 </head>
 
 <body class="text-center">
-    <form class="form-signin" action="/accounts/login/google-oauth2/" method="post">
-        {% csrf_token %} {% if next %}
-        <input type="hidden" name="next" value="{{ next }}" /> {% endif %}
+    <form class="form-signin" action="/accounts/login/google-oauth2/?{{request.META.QUERY_STRING}}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="?{{ request.META.QUERY_STRING }}" />
         <img src="{% static 'frontend/k-logo.jpg' %}" class="img-fluid p-3" alt="My Tech Tools">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in with Google</button>
         <span style="padding-top: 10px">© Matthew Kaye 2020</span>
