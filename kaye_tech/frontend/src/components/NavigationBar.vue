@@ -8,7 +8,7 @@
           </v-list-item-icon>
           <v-list-item-title>{{ item.label }}</v-list-item-title>
         </v-list-item>
-        <v-list-item href="/accounts/logout/">
+        <v-list-item :href="'/accounts/logout/?next='+$route.path">
           <v-list-item-icon>
             <v-icon color="secondary">mdi-logout</v-icon>
           </v-list-item-icon>

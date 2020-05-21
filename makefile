@@ -13,12 +13,12 @@ migrate:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py migrate
 
 local:
-	make build; make up; make migrate; make frontend-dev;
+	cd kaye_tech && pipenv run py manage.py runserver 0.0.0.0:8000
 
 check-migrations:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py makemigrations --check
 
-make-migrations:
+makemigrations:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py makemigrations
 
 create-superuser:
