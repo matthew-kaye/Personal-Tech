@@ -21,17 +21,11 @@ check-migrations:
 makemigrations:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py makemigrations
 
-create-superuser:
+superuser:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py createsuperuser
 
 restart-django:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml up --no-deps --force-recreate -d django
-
-enums:
-	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py runscript enum_setup
-
-db-backup:
-	bash db_backup_development.sh
 
 npm-install:
 	cd kaye_tech/frontend; npm install
@@ -59,7 +53,4 @@ migrate-production:
 
 down-production:
 	docker-compose -f docker-compose.yaml -f docker-compose.production.yaml down
-
-db-backup-production:
-	bash db_backup_production.sh
 
