@@ -10,6 +10,9 @@ services:
       - ./kaye_tech/backend/fixtures:/kaye_tech/backend/fixtures
     depends_on:
       - nginx
+      - redis
+    links:
+      - redis
 
   nginx:
     build:
@@ -21,3 +24,8 @@ services:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     ports:
       - 2901:80
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
