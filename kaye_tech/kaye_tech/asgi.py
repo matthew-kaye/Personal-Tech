@@ -14,4 +14,4 @@ from django.core.asgi import get_asgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kaye_tech.settings")
 
 application = get_asgi_application()
-daphne - p 8001 kaye_tech.asgi: application
+daphne - p 2901 kaye_tech.asgi: application
