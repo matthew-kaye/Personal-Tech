@@ -9,9 +9,10 @@ export default {
   name: "CanvasSheet",
   data() {
     var background = this.$vuetify.theme.dark ? 0 : 255;
+    var homePage = location.pathname.includes("home");
     return {
       gui: {},
-      animateOnHover: location.pathname.includes("home"),
+      animateOnHover: homePage,
       params: {
         alpha: true,
         depth: false,
@@ -27,7 +28,7 @@ export default {
         VELOCITY_DISSIPATION: 0.2,
         PRESSURE: 0.8,
         PRESSURE_ITERATIONS: 20,
-        CURL: 30,
+        CURL: homePage ? 0 : 30,
         SPLAT_RADIUS: 0.25,
         SPLAT_FORCE: 6000,
         SHADING: true,
@@ -36,7 +37,7 @@ export default {
         PAUSED: false,
         BACK_COLOR: { r: background, g: background, b: background },
         TRANSPARENT: false,
-        BLOOM: true,
+        BLOOM: !homePage,
         BLOOM_ITERATIONS: 8,
         BLOOM_RESOLUTION: 256,
         BLOOM_INTENSITY: 0.8,
@@ -44,7 +45,10 @@ export default {
         BLOOM_SOFT_KNEE: 0.7,
         SUNRAYS: true,
         SUNRAYS_RESOLUTION: 196,
-        SUNRAYS_WEIGHT: 1.0
+        SUNRAYS_WEIGHT: 1.0,
+        AUTOSPLAT_ENABLED: homePage,
+        AUTOSPLAT_DELAY: 2,
+        AUTOSPLAT_COUNT: 2
       }
     };
   },
@@ -1011,6 +1015,15 @@ export default {
     updateKeywords();
     initFramebuffers();
     multipleSplats(parseInt(Math.random() * 20) + 5);
+    var autosplat = function() {
+      if (config.AUTOSPLAT_ENABLED && !config.PAUSED) {
+        splatStack.push(config.AUTOSPLAT_COUNT);
+      }
+
+      setTimeout(autosplat, config.AUTOSPLAT_DELAY * 1000);
+    };
+
+    setTimeout(autosplat, config.AUTOSPLAT_DELAY * 1000);
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
     update();
@@ -1586,6 +1599,18 @@ export default {
           "fun"
         )
         .name("Random splats");
+
+      let autosplatFolder = gui.addFolder("Auto-splat");
+      autosplatFolder
+        .add(config, "AUTOSPLAT_ENABLED")
+        .name("enable auto-splat")
+        .listen();
+      autosplatFolder
+        .add(config, "AUTOSPLAT_DELAY", 0.1, 30.0)
+        .name("auto-splat interval seconds");
+      autosplatFolder
+        .add(config, "AUTOSPLAT_COUNT", 1, 10, 1)
+        .name("number of auto-splats");
 
       let bloomFolder = gui.addFolder("Bloom");
       bloomFolder

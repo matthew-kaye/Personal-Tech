@@ -5,7 +5,7 @@
       <v-overlay width="100%" height="100%" :value="overlay">
         <span style="font-size:64pt">{{welcomeMessage}}</span>
         <br />
-        <span>*Click and drag to generate animations</span>
+        <span>Click and drag to generate animations</span>
         <v-btn top right absolute fab icon class="mr-n12 mx-auto" @click="overlay = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -40,8 +40,8 @@ export default {
     },
     welcomeMessage() {
       return this.currentUser.first_name
-        ? `Hello ${this.currentUser.first_name}!*`
-        : `Hello!*`;
+        ? `Hello ${this.currentUser.first_name}!`
+        : `Hello!`;
     }
   },
   methods: {}
