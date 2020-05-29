@@ -45,8 +45,7 @@ export default {
   },
   created() {
     if (window.location.href.includes("dark")) {
-      this.$vuetify.theme.dark =
-        window.location.href.split("dark=").pop() == "true";
+      this.$vuetify.theme.dark = location.search.includes("dark=true");
     } else {
       this.$vuetify.theme.dark = true;
     }
