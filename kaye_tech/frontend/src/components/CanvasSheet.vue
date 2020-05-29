@@ -29,7 +29,7 @@ export default {
         PRESSURE: 0.8,
         PRESSURE_ITERATIONS: 20,
         CURL: homePage ? 0 : 30,
-        SPLAT_RADIUS: 0.3, //0.25
+        SPLAT_RADIUS: homePage ? 0.4 : 0.25,
         SPLAT_FORCE: 6000,
         SHADING: true,
         COLORFUL: true,
