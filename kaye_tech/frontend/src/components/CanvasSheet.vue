@@ -29,7 +29,7 @@ export default {
         PRESSURE: 0.8,
         PRESSURE_ITERATIONS: 20,
         CURL: homePage ? 0 : 30,
-        SPLAT_RADIUS: 0.25,
+        SPLAT_RADIUS: 0.3, //0.25
         SPLAT_FORCE: 6000,
         SHADING: true,
         COLORFUL: true,
@@ -47,8 +47,8 @@ export default {
         SUNRAYS_RESOLUTION: 196,
         SUNRAYS_WEIGHT: 1.0,
         AUTOSPLAT_ENABLED: homePage,
-        AUTOSPLAT_DELAY: 2,
-        AUTOSPLAT_COUNT: 2
+        AUTOSPLAT_DELAY: 4,
+        AUTOSPLAT_COUNT: 12
       }
     };
   },
