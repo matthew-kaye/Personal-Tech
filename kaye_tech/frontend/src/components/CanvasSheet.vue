@@ -11,6 +11,7 @@ export default {
     var background = this.$vuetify.theme.dark ? 0 : 255;
     return {
       gui: {},
+      animateOnHover: location.pathname.includes("home"),
       params: {
         alpha: true,
         depth: false,
@@ -52,6 +53,11 @@ export default {
       location.href = location.href + "?dark=" + this.$vuetify.theme.dark;
     }
     window.needsRefresh = true;
+    window.addEventListener("keydown", function(e) {
+      if (e.key === " " && e.target == document.body) {
+        e.preventDefault();
+      }
+    });
   },
   mounted() {
     const canvas = document.getElementsByTagName("canvas")[0];
@@ -1355,11 +1361,6 @@ export default {
       if (aspectRatio > 1) radius *= aspectRatio;
       return radius;
     }
-    window.addEventListener("keydown", function(e) {
-      if (e.key === " " && e.target == document.body) {
-        e.preventDefault();
-      }
-    });
     window.addEventListener("keydown", e => {
       if (e.code === "KeyP") config.PAUSED = !config.PAUSED;
       if (e.key === " ") splatStack.push(parseInt(Math.random() * 20) + 5);
@@ -1381,7 +1382,7 @@ export default {
     });
     canvas.addEventListener("mousemove", e => {
       let pointer = pointers[0];
-      if (!pointer.down) return;
+      if (!pointer.down) return; // comment out to animate on hover
       let posX = scaleByPixelRatio(e.offsetX);
       let posY = scaleByPixelRatio(e.offsetY);
       updatePointerMoveData(pointer, posX, posY);
