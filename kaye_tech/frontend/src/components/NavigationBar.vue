@@ -18,12 +18,12 @@
     </v-navigation-drawer>
     <v-app-bar dark color="primary">
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <router-link to="/" tag="span" style="cursor: pointer; display: flex;">
+      <span @click="goHome()" tag="span" style="cursor: pointer; display: flex;">
         <v-img class="ml-2 mt-1" max-height="46" max-width="50" src="/static/frontend/k-logo.jpg" />
         <v-toolbar-title class="ma-3">
           <b class="headline font-weight-bold">Matt's Tech</b>
         </v-toolbar-title>
-      </router-link>
+      </span>
       <v-spacer></v-spacer>
       <v-tooltip bottom color="tooltip">
         <template v-slot:activator="{ on }">
@@ -137,6 +137,10 @@ export default {
       if (window.gui && !location.href.includes("canvas")) {
         window.gui.close();
       }
+    },
+    goHome() {
+      this.$router.push("/home" + location.search);
+      location.reload();
     }
   }
 };
