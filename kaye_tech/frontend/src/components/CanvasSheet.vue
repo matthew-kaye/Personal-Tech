@@ -69,7 +69,6 @@ export default {
     if (this.activateGui && !window.gui) {
       this.gui = new dat.GUI({ width: 300 });
       startGUI(this.gui);
-      window.gui = true;
     }
 
     let pointers = [];
@@ -1446,7 +1445,7 @@ export default {
     );
     window.addEventListener("mouseup", () => {
       updatePointerUpData(pointers[0]);
-      document.documentElement.style.overflow = "auto";
+      document.documentElement.style.overflow = "visible";
     });
     function updatePointerDownData(pointer, id, posX, posY) {
       pointer.id = id;
