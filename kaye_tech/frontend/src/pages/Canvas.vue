@@ -5,7 +5,7 @@
         <span class="white--text">Canvas</span>
         <v-btn class="ml-12" primary @click="toggleGui">Toggle Controls</v-btn>
       </v-card-title>
-      <div class="ma-10">
+      <div class="ma-10" @mousedown="closeGui()" @mouseup="openGui()">
         <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
         <v-divider />
         <br />
@@ -32,8 +32,7 @@ export default {
   },
   data() {
     return {
-      showGui: true,
-      gui: {}
+      showGui: true
     };
   },
   mounted() {
@@ -41,12 +40,15 @@ export default {
   },
   methods: {
     toggleGui() {
+      this.showGui = !this.showGui;
+      this.showGui ? this.openGui() : this.closeGui();
+    },
+    closeGui() {
+      window.gui.close();
+    },
+    openGui() {
       if (this.showGui) {
-        window.gui.close();
-        this.showGui = false;
-      } else {
         window.gui.open();
-        this.showGui = true;
       }
     }
   }
@@ -58,5 +60,9 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+}
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
 }
 </style>
