@@ -30,6 +30,8 @@
           >
             <v-icon>mdi-linkedin</v-icon>
           </v-btn>
+          <v-btn class="mb-2 mr-4" @click="$refs.aboutDialog.dialog=true">About</v-btn>
+          <AboutDialog ref="aboutDialog" />
         </div>
       </v-card>
     </v-footer>
@@ -37,11 +39,13 @@
 </template>
 <script>
 import NavigationBar from "./components/NavigationBar.vue";
+import AboutDialog from "@/components/AboutDialog";
 
 export default {
   name: "app",
   components: {
-    NavigationBar
+    NavigationBar,
+    AboutDialog
   },
   created() {
     if (window.location.href.includes("dark")) {
