@@ -1,14 +1,11 @@
 <template>
   <v-fab-transition>
-    <div @click="overlay = false">
+    <div @click="overlay = false" class="text-center">
       <CanvasSheet class="homeCanvas"></CanvasSheet>
-      <v-overlay width="100%" height="100%" :value="overlay">
+      <v-overlay width="100%" height="100%" :value="overlay" style="cursor: pointer;">
         <span style="font-size:64pt">{{welcomeMessage}}</span>
         <br />
-        <span>Click and drag to generate animations</span>
-        <v-btn top right absolute fab icon class="mr-n12 mx-auto" @click="overlay = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+        <span>Click me.</span>
       </v-overlay>
     </div>
   </v-fab-transition>
