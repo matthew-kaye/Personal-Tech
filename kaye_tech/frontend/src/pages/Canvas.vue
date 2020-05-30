@@ -15,7 +15,7 @@
           <v-card-text
             style="font-size:12pt"
             class="secondary--text"
-          >Press 'p' to pause, and space bar to generate more swirls. Currently broken on Chrome v83.</v-card-text>
+          >Click and drag to generate animations, press 'p' to pause, and space bar to generate more swirls</v-card-text>
         </v-card>
         <br />
       </div>

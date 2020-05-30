@@ -1391,6 +1391,7 @@ export default {
       }
     });
     canvas.addEventListener("mousedown", e => {
+      document.documentElement.style.overflow = "hidden";
       let posX = scaleByPixelRatio(e.offsetX);
       let posY = scaleByPixelRatio(e.offsetY);
       let pointer = pointers.find(p => p.id == -1);
@@ -1445,6 +1446,7 @@ export default {
     );
     window.addEventListener("mouseup", () => {
       updatePointerUpData(pointers[0]);
+      document.documentElement.style.overflow = "auto";
     });
     function updatePointerDownData(pointer, id, posX, posY) {
       pointer.id = id;
