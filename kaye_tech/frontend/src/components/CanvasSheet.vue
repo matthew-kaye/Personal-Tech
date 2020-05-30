@@ -1398,11 +1398,19 @@ export default {
       updatePointerDownData(pointer, -1, posX, posY);
     });
     canvas.addEventListener("mousemove", e => {
-      let pointer = pointers[0];
-      if (!pointer.down) return; // comment out to animate on hover
       let posX = scaleByPixelRatio(e.offsetX);
       let posY = scaleByPixelRatio(e.offsetY);
-      updatePointerMoveData(pointer, posX, posY);
+      let pointer = pointers[0];
+      if (this.animateOnHover) {
+        if (pointer == null) pointer = new pointerPrototype();
+        if (!pointer.down) {
+          updatePointerDownData(pointer, -1, posX, posY);
+        }
+        updatePointerMoveData(pointer, posX, posY);
+      } else {
+        if (!pointer.down) return;
+        updatePointerMoveData(pointer, posX, posY);
+      }
     });
     canvas.addEventListener("touchstart", e => {
       e.preventDefault();
