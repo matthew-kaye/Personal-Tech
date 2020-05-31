@@ -46,8 +46,9 @@ export default {
       function restart() {
         swal({
           title: "Final Score: " + Math.max(snake.cells.length - 4, 0),
-          text: "Press the space bar to start/stop.",
-          buttons: "Close"
+          text: "Press any key to resume, and p to pause.",
+          buttons: "Close",
+          timer: 2500
         });
         snake.x = 40;
         snake.y = 40;
@@ -106,6 +107,11 @@ export default {
         e.preventDefault();
         active = !active;
         requestAnimationFrame(loop);
+      } else {
+        if (!active) {
+          active = true;
+          requestAnimationFrame(loop);
+        }
       }
       if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
