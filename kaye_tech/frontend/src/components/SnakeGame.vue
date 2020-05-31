@@ -9,6 +9,8 @@
 
 <script>
 import swal from "sweetalert";
+import SnakeApi from "@/apis/SnakeApi";
+const snakeApi = new SnakeApi();
 
 export default {
   data() {
@@ -23,6 +25,7 @@ export default {
     var grid = 8;
     var count = 0;
     var active = true;
+    var freezeOverride = false;
 
     var snake = {
       x: 40,
@@ -44,11 +47,24 @@ export default {
         requestAnimationFrame(loop);
       }
       function restart() {
+        freezeOverride = true;
+        var finalScore = Math.max(snake.cells.length - 4, 0);
         swal({
-          title: "Final Score: " + Math.max(snake.cells.length - 4, 0),
-          text: "Press any key to resume, and p to pause.",
-          buttons: "Close",
-          timer: 2500
+          title: "Final Score: " + finalScore,
+          text: "Press any key to resume, and space to pause.",
+          content: "input",
+          button: {
+            text: "Submit Score"
+          }
+        }).then(value => {
+          freezeOverride = false;
+          if (value) {
+            snakeApi.submitScore({
+              name: value,
+              score: finalScore
+            });
+          }
+          return;
         });
         snake.x = 40;
         snake.y = 40;
@@ -103,15 +119,13 @@ export default {
       if ([38, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
       }
-      if (e.key === " ") {
+      if ((e.key === " ") & !freezeOverride) {
         e.preventDefault();
         active = !active;
         requestAnimationFrame(loop);
-      } else {
-        if (!active) {
-          active = true;
-          requestAnimationFrame(loop);
-        }
+      } else if (!active && !freezeOverride) {
+        active = true;
+        requestAnimationFrame(loop);
       }
       if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
