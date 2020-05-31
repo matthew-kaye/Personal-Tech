@@ -79,7 +79,9 @@ export default {
       });
     }
     document.addEventListener("keydown", function(e) {
-      e.preventDefault();
+      if ([38, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+      }
       if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
         snake.dy = 0;
