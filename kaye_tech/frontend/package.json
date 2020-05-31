@@ -40,6 +40,7 @@
   "dependencies": {
     "@vue/cli-service-global": "^4.1.2",
     "moment": "^2.24.0",
+    "sweetalert": "^2.1.2",
     "vue-router": "^3.1.5",
     "vuetify": "^2.2.27"
   }

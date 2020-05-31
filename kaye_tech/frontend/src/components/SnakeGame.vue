@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import swal from "sweetalert";
+
 export default {
   mounted() {
     var canvas = document.getElementById("game");
@@ -67,6 +69,10 @@ export default {
         }
         for (var i = index + 1; i < snake.cells.length; i++) {
           if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+            swal({
+              title: "Final Score: " + Math.max(snake.cells.length - 4, 0),
+              buttons: "Close"
+            });
             snake.x = 160;
             snake.y = 160;
             snake.cells = [];
@@ -108,5 +114,21 @@ export default {
   border: 1px solid white;
   width: 50%;
   height: 50%;
+}
+.swal-modal {
+  background-color: rgb(31, 124, 7);
+  border: 3px solid white;
+}
+.swal-title {
+  margin: 0px;
+  font-size: 40px;
+  margin-bottom: 28px;
+  color: white;
+}
+.swal-button {
+  padding: 7px 19px;
+  border-radius: 2px;
+  background-color: #471111;
+  font-size: 20px;
 }
 </style>

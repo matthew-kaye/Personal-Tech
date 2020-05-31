@@ -38,9 +38,9 @@
         >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
       </v-col>
       <v-col>
-        <v-fab-transition>
+        <v-slide-y-transition>
           <SnakeGame v-if="snakeGame" class="pb-6" />
-        </v-fab-transition>
+        </v-slide-y-transition>
       </v-col>
     </v-row>
   </div>
@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       roomName: "",
-      snakeGame: false
+      snakeGame: true
     };
   },
   methods: {
