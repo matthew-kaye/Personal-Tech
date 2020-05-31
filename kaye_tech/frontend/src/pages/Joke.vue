@@ -104,7 +104,6 @@ export default {
         .then(response => response.data)
         .catch(error => console.log(error));
       jokeResponse.then(data => {
-        console.log(data);
         if (data.type == "single") {
           this.joke = data.joke;
         } else if (data.type == "twopart") {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas></canvas>
+    <canvas id="fluids"></canvas>
   </div>
 </template>
 
@@ -64,7 +64,7 @@ export default {
     });
   },
   mounted() {
-    const canvas = document.getElementsByTagName("canvas")[0];
+    const canvas = document.getElementById("fluids");
     let config = this.config;
     if (this.activateGui && !window.gui) {
       this.gui = new dat.GUI({ width: 300 });
