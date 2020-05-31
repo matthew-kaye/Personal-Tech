@@ -3,7 +3,7 @@
     <v-card class="ma-6" height="100%">
       <v-card-title class="primary headline">
         <span class="white--text">Canvas</span>
-        <v-btn class="ml-12" primary @click="toggleGui">Toggle Controls</v-btn>
+        <v-btn class="ml-12" primary @click="toggleGui">{{showGui?"Hide Controls":"Show Controls"}}</v-btn>
       </v-card-title>
       <div class="ma-10" @mousedown="closeGui()" @mouseup="openGui()">
         <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
@@ -41,7 +41,7 @@ export default {
   methods: {
     toggleGui() {
       this.showGui = !this.showGui;
-      this.showGui ? this.openGui() : this.closeGui();
+      this.showGui ? window.gui.open() : this.closeGui();
     },
     closeGui() {
       window.gui.close();
