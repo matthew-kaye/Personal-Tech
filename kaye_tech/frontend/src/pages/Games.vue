@@ -29,14 +29,20 @@
         </v-row>
       </v-card-text>
     </v-card>
-    <v-fab-transition>
-      <SnakeGame v-if="snakeGame" class="pa-6" />
-    </v-fab-transition>
-    <v-btn
-      color="primary"
-      class="ml-6 mb-6"
-      @click="snakeGame=!snakeGame"
-    >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
+    <v-row>
+      <v-col md="auto">
+        <v-btn
+          color="primary"
+          class="ml-6"
+          @click="snakeGame=!snakeGame"
+        >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
+      </v-col>
+      <v-col>
+        <v-fab-transition>
+          <SnakeGame v-if="snakeGame" class="pb-6" />
+        </v-fab-transition>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
