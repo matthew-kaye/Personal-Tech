@@ -43,7 +43,7 @@ export default {
         BLOOM_INTENSITY: 0.8,
         BLOOM_THRESHOLD: 0.6,
         BLOOM_SOFT_KNEE: 0.7,
-        SUNRAYS: true,
+        SUNRAYS: this.$vuetify.theme.dark,
         SUNRAYS_RESOLUTION: 196,
         SUNRAYS_WEIGHT: 1.0,
         AUTOSPLAT_ENABLED: homePage,

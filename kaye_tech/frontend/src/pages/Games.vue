@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       roomName: "",
-      snakeGame: true
+      snakeGame: false
     };
   },
   methods: {
