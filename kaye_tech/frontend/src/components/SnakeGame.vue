@@ -79,7 +79,7 @@ export default {
       });
     }
     document.addEventListener("keydown", function(e) {
-      document.documentElement.style.overflow = "hidden";
+      e.preventDefault();
       if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
         snake.dy = 0;
