@@ -1029,10 +1029,8 @@ export default {
       if (config.AUTOSPLAT_ENABLED && !config.PAUSED) {
         splatStack.push(config.AUTOSPLAT_COUNT);
       }
-
       setTimeout(autosplat, config.AUTOSPLAT_DELAY * 1000);
     };
-
     setTimeout(autosplat, config.AUTOSPLAT_DELAY * 1000);
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;

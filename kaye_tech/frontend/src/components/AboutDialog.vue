@@ -12,9 +12,14 @@
           </v-col>
           <v-col>
             Hello! If we haven't already met, my name's Matt, and I'm currently working as a Software Engineer at Brainlabs.
-            Having generally been more comfortable with backend-focused tools, I was keen to make the most of this "unprecedented" time on furlough and improve on my frontend, so built this website!
+            Having generally been more comfortable with backend-focused tools, I was keen to make the most of this "unprecedented" time on furlough and improve my web skills, so built this website!
             It uses Vue.js/Vuetify for the frontend, and a Python/Django backend, hosted on a DigitalOcean server using Docker and Nginx.
-            If you have any suggestions for cool things to add to the site (or bugs you've found), then drop me a line!
+            If you have any suggestions for cool things to add to the site (or bugs you've found), then
+            <a
+              href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to=mattkindlekaye@gmail.com&su=Website%20Feedback&tf=1"
+              target="_blank"
+              class="white--text"
+            >let me know!</a>
           </v-col>
         </v-row>
       </v-card-text>
