@@ -3,7 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core import serializers
-from .models import Vendor
+from .models import Vendor, HighScore
 
 
 class BurritoViewSet(viewsets.ViewSet):
@@ -100,3 +100,37 @@ class BurritoViewSet(viewsets.ViewSet):
         return Response(
             {"responseType": "complete", "job_id": pk}, status=status.HTTP_200_OK
         )
+
+
+class SnakeViewSet(viewsets.ViewSet):
+    def create(self, request):
+        try:
+            data = request.data["data"]
+            highScore = HighScore(
+                name=data["name"],
+                score=data["score"],
+            )
+            highScore.save()
+        except Exception as e:
+            print(f"Error: {e}")
+            return Response(
+                {
+                    "responseType": "error",
+                    "status": f"Failed to submit data: {repr(e)}",
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return Response(
+            {"responseType": "complete", "job_id": 1}, status=status.HTTP_200_OK
+        )
+
+    def list(self, request):
+        try:
+            highScores = HighScore.objects.all()
+            data = serializers.serialize('json', highScores)
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"responseType": "error", "status": f"Failed to get items: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

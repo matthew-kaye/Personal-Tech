@@ -16,3 +16,11 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class HighScore(models.Model):
+    name = models.CharField(max_length=64)
+    score = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ('-score',)
