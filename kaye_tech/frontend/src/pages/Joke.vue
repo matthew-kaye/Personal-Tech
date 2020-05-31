@@ -16,13 +16,15 @@
           ></v-text-field>
         </v-col>
         <v-col md="auto">
+          <v-checkbox v-model="programming" label="Programming"></v-checkbox>
+        </v-col>
+        <v-col md="auto">
           <v-fab-transition>
             <v-btn
-              v-if="jokeSearch.length > 0"
-              class="mb-2 mr-2"
+              class="mr-2 mt-3"
               color="primary"
               @click="findJoke(jokeSearch)"
-            >{{ "Search" }}</v-btn>
+            >{{ jokeSearch.length>0?"Search":"Get Random" }}</v-btn>
           </v-fab-transition>
         </v-col>
       </v-row>
@@ -45,36 +47,75 @@ var MAX_JOKES_RETURNED_BY_SITE = 20;
 export default {
   components: {},
   created() {
-    this.findJoke("a");
+    this.findJoke("");
   },
   data() {
     return {
       jokeSearch: "",
-      baseUrl: "https://icanhazdadjoke.com/search",
+      dadJoke: true,
+      programming: false,
+      clean: true,
+      dadJokeUrl: "https://icanhazdadjoke.com/search",
+      jokeApiUrl: "https://sv443.net/jokeapi/v2/joke/",
       joke: null
     };
   },
-  computed: {},
+  computed: {
+    jokeType() {
+      return this.programming ? "Programming" : "Miscellaneous";
+    }
+  },
   methods: {
     findJoke(searchTerm) {
       this.joke = null;
+      this.programming
+        ? this.findJokeApiJoke(searchTerm)
+        : this.findDadJoke(searchTerm);
+    },
+    findDadJoke(searchTerm) {
+      var jokeResponse = axios
+        .get(this.dadJokeUrl, {
+          params: { term: searchTerm },
+          headers: { Accept: "application/json" }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error));
+      jokeResponse.then(data => {
+        if (data.total_jokes > 0) {
+          var max = Math.min(MAX_JOKES_RETURNED_BY_SITE, data.total_jokes);
+          this.joke = data.results[Math.floor(Math.random() * max)].joke;
+        } else {
+          this.findJokeApiJoke(searchTerm);
+        }
+      });
+    },
+    findJokeApiJoke(searchTerm) {
+      var params = {
+        blacklistFlags: "nsfw,racist,sexist,religious"
+      };
       if (searchTerm.length > 0) {
-        var jokeResponse = axios
-          .get(this.baseUrl, {
-            params: { term: searchTerm },
-            headers: { Accept: "application/json" }
-          })
-          .then(response => response.data)
-          .catch(error => console.log(error));
-        jokeResponse.then(data => {
-          if (data.total_jokes > 0) {
-            var max = Math.min(MAX_JOKES_RETURNED_BY_SITE, data.total_jokes);
-            this.joke = data.results[Math.floor(Math.random() * max)].joke;
-          } else {
-            this.joke = `Apparently ${searchTerm} is not a funny word`;
-          }
-        });
+        params.contains = searchTerm;
       }
+      var jokeResponse = axios
+        .get(this.jokeApiUrl + this.jokeType, {
+          params: params,
+          headers: { Accept: "application/json" }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error));
+      jokeResponse.then(data => {
+        console.log(data);
+        if (data.type == "single") {
+          this.joke = data.joke;
+        } else if (data.type == "twopart") {
+          this.joke = data.setup + " - " + data.delivery;
+        } else {
+          this.joke = `Apparently ${searchTerm} is not a funny word`;
+        }
+        if (data.id == 144 || data.id == 73) {
+          this.joke = null;
+        }
+      });
     }
   }
 };
