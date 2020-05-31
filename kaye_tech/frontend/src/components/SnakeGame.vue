@@ -11,16 +11,22 @@
 import swal from "sweetalert";
 
 export default {
+  data() {
+    return {
+      active: true
+    };
+  },
   mounted() {
     var canvas = document.getElementById("game");
     var context = canvas.getContext("2d");
 
     var grid = 8;
     var count = 0;
+    var active = true;
 
     var snake = {
-      x: 160,
-      y: 160,
+      x: 40,
+      y: 40,
       dx: grid,
       dy: 0,
       cells: [],
@@ -34,7 +40,25 @@ export default {
       return Math.floor(Math.random() * (max - min)) + min;
     }
     function loop() {
-      requestAnimationFrame(loop);
+      if (active) {
+        requestAnimationFrame(loop);
+      }
+      function restart() {
+        swal({
+          title: "Final Score: " + Math.max(snake.cells.length - 4, 0),
+          text: "Press the space bar to start/stop.",
+          buttons: "Close"
+        });
+        snake.x = 40;
+        snake.y = 40;
+        snake.cells = [];
+        snake.maxCells = 4;
+        snake.dx = grid;
+        snake.dy = 0;
+        apple.x = getRandomInt(0, 45) * grid;
+        apple.y = getRandomInt(0, 25) * grid;
+        active = false;
+      }
       if (++count < 4) {
         return;
       }
@@ -43,14 +67,14 @@ export default {
       snake.x += snake.dx;
       snake.y += snake.dy;
       if (snake.x < 0) {
-        snake.x = canvas.width - grid;
+        restart();
       } else if (snake.x >= canvas.width) {
-        snake.x = 0;
+        restart();
       }
       if (snake.y < 0) {
-        snake.y = canvas.height - grid;
+        restart();
       } else if (snake.y >= canvas.height) {
-        snake.y = 0;
+        restart();
       }
       snake.cells.unshift({ x: snake.x, y: snake.y });
       if (snake.cells.length > snake.maxCells) {
@@ -69,18 +93,7 @@ export default {
         }
         for (var i = index + 1; i < snake.cells.length; i++) {
           if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-            swal({
-              title: "Final Score: " + Math.max(snake.cells.length - 4, 0),
-              buttons: "Close"
-            });
-            snake.x = 160;
-            snake.y = 160;
-            snake.cells = [];
-            snake.maxCells = 4;
-            snake.dx = grid;
-            snake.dy = 0;
-            apple.x = getRandomInt(0, 45) * grid;
-            apple.y = getRandomInt(0, 25) * grid;
+            restart();
           }
         }
       });
@@ -88,6 +101,11 @@ export default {
     document.addEventListener("keydown", function(e) {
       if ([38, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
+      }
+      if (e.key === " ") {
+        e.preventDefault();
+        active = !active;
+        requestAnimationFrame(loop);
       }
       if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
@@ -118,6 +136,10 @@ export default {
 .swal-modal {
   background-color: rgb(31, 124, 7);
   border: 3px solid white;
+}
+.swal-text {
+  font-size: 24px;
+  color: white;
 }
 .swal-title {
   margin: 0px;
