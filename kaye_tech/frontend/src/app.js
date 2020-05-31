@@ -10,7 +10,7 @@ import News from "./pages/News.vue";
 import Books from "./pages/Books.vue";
 import BookDetailPage from "./pages/BookDetailPage.vue";
 import Burritos from "./pages/Burritos.vue";
-import Cards from "./pages/Cards.vue";
+import Games from "./pages/Games.vue";
 import Room from "./pages/Room.vue";
 
 Vue.use(VueRouter);
@@ -26,7 +26,7 @@ const routes = [
     component: BookDetailPage
   },
   {
-    path: "/cards/:roomName",
+    path: "/games/:roomName",
     name: "room",
     component: Room
   },
@@ -34,7 +34,7 @@ const routes = [
   { path: "/canvas", name: "canvas", component: Canvas },
   { path: "/jokes", name: "jokes", component: Joke },
   { path: "/tabletop", name: "tabletop", component: Tabletop },
-  { path: "/cards", name: "cards", component: Cards },
+  { path: "/games", name: "games", component: Games },
 ];
 
 const router = new VueRouter({

@@ -16,7 +16,6 @@
         ></v-text-field>
       </v-card-title>
       <v-divider />
-
       <v-fab-transition>
         <v-data-table
           :headers="headers"

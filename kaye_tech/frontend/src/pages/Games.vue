@@ -29,19 +29,32 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <v-fab-transition>
+      <SnakeGame v-if="snakeGame" class="pa-6" />
+    </v-fab-transition>
+    <v-btn
+      color="primary"
+      class="ml-6 mb-6"
+      @click="snakeGame=!snakeGame"
+    >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
   </div>
 </template>
 
 <script>
+import SnakeGame from "@/components/SnakeGame.vue";
 export default {
+  components: {
+    SnakeGame
+  },
   data() {
     return {
-      roomName: ""
+      roomName: "",
+      snakeGame: false
     };
   },
   methods: {
     joinRoom(roomName) {
-      window.location.pathname = "/cards/" + roomName + "/";
+      window.location.pathname = "/games/" + roomName + "/";
     }
   }
 };
