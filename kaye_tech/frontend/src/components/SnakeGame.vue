@@ -54,6 +54,7 @@ export default {
       if (snake.cells.length > snake.maxCells) {
         snake.cells.pop();
       }
+      context.fillText("Score: " + Math.max(snake.cells.length - 4, 0), 5, 10);
       context.fillStyle = "red";
       context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
       context.fillStyle = "green";
