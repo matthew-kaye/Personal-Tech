@@ -46,12 +46,12 @@ export default {
       if (active) {
         requestAnimationFrame(loop);
       }
+      var score = Math.max(snake.cells.length - 4, 0);
       function restart() {
         freezeOverride = true;
-        var finalScore = Math.max(snake.cells.length - 4, 0);
         swal({
-          title: "Final Score: " + finalScore,
-          text: "Press any key to resume, and space to pause.",
+          title: "Final Score: " + score,
+          text: "Press any key to start, and space to pause.",
           content: "input",
           button: {
             text: "Submit Score"
@@ -97,7 +97,7 @@ export default {
       if (snake.cells.length > snake.maxCells) {
         snake.cells.pop();
       }
-      context.fillText("Score: " + Math.max(snake.cells.length - 4, 0), 5, 10);
+      context.fillText("Score: " + score, 5, 10);
       context.fillStyle = "red";
       context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
       context.fillStyle = "green";

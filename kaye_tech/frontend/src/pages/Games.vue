@@ -1,5 +1,31 @@
 <template>
   <div>
+    <v-row class="mt-4">
+      <v-col md="auto">
+        <v-btn
+          color="primary"
+          class="ml-6"
+          @click="snakeGame=!snakeGame"
+        >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
+      </v-col>
+      <v-slide-y-transition>
+        <v-col md="auto" v-if="snakeGame && snakeHighScores.length>0">
+          <v-list width="400">
+            <v-list-item color="primary">Top 10 Leaderboard</v-list-item>
+            <v-divider />
+            <v-list-item v-for="item in snakeHighScores" :key="item.fields.name">
+              <v-list-item-content>{{item.fields.name}}</v-list-item-content>
+              <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-slide-y-transition>
+      <v-col>
+        <v-slide-y-transition>
+          <SnakeGame v-if="snakeGame" class="pb-6" />
+        </v-slide-y-transition>
+      </v-col>
+    </v-row>
     <v-card class="ma-6">
       <v-card-title class="primary headline">
         <span class="white--text">Join a room</span>
@@ -29,32 +55,6 @@
         </v-row>
       </v-card-text>
     </v-card>
-    <v-row>
-      <v-col md="auto">
-        <v-btn
-          color="primary"
-          class="ml-6"
-          @click="snakeGame=!snakeGame"
-        >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
-      </v-col>
-      <v-slide-y-transition>
-        <v-col md="auto" v-if="snakeGame && snakeHighScores.length>0">
-          <v-list width="400">
-            <v-list-item color="primary">Top 10 Leaderboard</v-list-item>
-            <v-divider />
-            <v-list-item v-for="item in snakeHighScores" :key="item.fields.name">
-              <v-list-item-content>{{item.fields.name}}</v-list-item-content>
-              <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-col>
-      </v-slide-y-transition>
-      <v-col>
-        <v-slide-y-transition>
-          <SnakeGame v-if="snakeGame" class="pb-6" />
-        </v-slide-y-transition>
-      </v-col>
-    </v-row>
   </div>
 </template>
 
@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       roomName: "",
-      snakeGame: true,
+      snakeGame: false,
       snakeHighScores: []
     };
   },
