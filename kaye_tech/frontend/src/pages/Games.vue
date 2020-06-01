@@ -97,7 +97,7 @@ export default {
   data() {
     return {
       roomName: "",
-      snakeGame: false,
+      snakeGame: true,
       damageCalculator: false,
       roomSelect: false,
       snakeHighScores: []

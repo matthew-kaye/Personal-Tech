@@ -66,11 +66,12 @@ export default {
                 score: score
               });
             }
+            freezeOverride = false;
             return;
           });
+        } else {
+          freezeOverride = false;
         }
-
-        freezeOverride = false;
         snake.x = 40;
         snake.y = 40;
         snake.cells = [];
@@ -152,13 +153,13 @@ export default {
             snake.dy = grid;
             snake.dx = 0;
           }
+          moved = false;
         } else {
           updatePlannedMove();
         }
       }
-      moved = false;
     });
-    requestAnimationFrame(loop);
+    if (!freezeOverride) requestAnimationFrame(loop);
   }
 };
 </script>
