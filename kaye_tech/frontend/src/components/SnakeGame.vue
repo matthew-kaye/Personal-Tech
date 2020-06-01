@@ -24,7 +24,7 @@ export default {
 
     var grid = 8;
     var count = 0;
-    var active = true;
+    var active = false;
     var freezeOverride = false;
 
     var snake = {
@@ -47,11 +47,11 @@ export default {
         requestAnimationFrame(loop);
       }
       var score = Math.max(snake.cells.length - 4, 0);
-      function restart() {
+      function die() {
         freezeOverride = true;
         swal({
           title: "Final Score: " + score,
-          text: "Press any key to start, and space to pause.",
+          text: "Submit your score for the leaderboard.",
           content: "input",
           button: {
             text: "Submit Score"
@@ -84,14 +84,14 @@ export default {
       snake.x += snake.dx;
       snake.y += snake.dy;
       if (snake.x < 0) {
-        restart();
+        die();
       } else if (snake.x >= canvas.width) {
-        restart();
+        die();
       }
       if (snake.y < 0) {
-        restart();
+        die();
       } else if (snake.y >= canvas.height) {
-        restart();
+        die();
       }
       snake.cells.unshift({ x: snake.x, y: snake.y });
       if (snake.cells.length > snake.maxCells) {
@@ -109,8 +109,12 @@ export default {
           apple.y = getRandomInt(0, 25) * grid;
         }
         for (var i = index + 1; i < snake.cells.length; i++) {
-          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-            restart();
+          if (
+            cell.x === snake.cells[i].x &&
+            cell.y === snake.cells[i].y &&
+            active
+          ) {
+            die();
           }
         }
       });

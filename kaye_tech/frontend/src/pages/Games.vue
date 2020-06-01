@@ -1,10 +1,9 @@
 <template>
   <div>
-    <v-row class="mt-4">
+    <v-row class="mt-4 ml-3">
       <v-col md="auto">
         <v-btn
           color="primary"
-          class="ml-6"
           @click="snakeGame=!snakeGame"
         >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
       </v-col>
@@ -18,11 +17,16 @@
               <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
             </v-list-item>
           </v-list>
+          <v-slide-y-transition>
+            <v-card cols="1" v-if="snakeGame">
+              <v-card-text>Press any key to start, and space bar to pause</v-card-text>
+            </v-card>
+          </v-slide-y-transition>
         </v-col>
       </v-slide-y-transition>
       <v-col>
         <v-slide-y-transition>
-          <SnakeGame v-if="snakeGame" class="pb-6" />
+          <SnakeGame v-if="snakeGame" class="pb-4" />
         </v-slide-y-transition>
       </v-col>
     </v-row>
