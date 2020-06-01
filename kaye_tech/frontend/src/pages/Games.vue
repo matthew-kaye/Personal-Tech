@@ -10,7 +10,12 @@
       <v-slide-y-transition>
         <v-col md="auto" v-if="snakeGame && snakeHighScores.length>0">
           <v-list width="400">
-            <v-list-item color="primary">Top 10 Leaderboard</v-list-item>
+            <v-list-item color="primary">
+              Top 10 Leaderboard
+              <v-btn icon @click="fetchScores" class="ml-4">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
+            </v-list-item>
             <v-divider />
             <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
               <v-list-item-content>{{item.fields.name}}</v-list-item-content>
@@ -78,13 +83,16 @@ export default {
     };
   },
   created() {
-    snakeApi.getScores({}).then(data => {
-      this.snakeHighScores = JSON.parse(data).slice(0, 10);
-    });
+    this.fetchScores();
   },
   methods: {
     joinRoom(roomName) {
       window.location.pathname = "/games/" + roomName + "/";
+    },
+    fetchScores() {
+      snakeApi.getScores({}).then(data => {
+        this.snakeHighScores = JSON.parse(data).slice(0, 10);
+      });
     }
   }
 };
