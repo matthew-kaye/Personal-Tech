@@ -49,23 +49,25 @@ export default {
       var score = Math.max(snake.cells.length - 4, 0);
       function die() {
         freezeOverride = true;
-        swal({
-          title: "Final Score: " + score,
-          text: "Submit your score for the leaderboard.",
-          content: "input",
-          button: {
-            text: "Submit Score"
-          }
-        }).then(value => {
-          freezeOverride = false;
-          if (value) {
-            snakeApi.submitScore({
-              name: value,
-              score: score
-            });
-          }
-          return;
-        });
+        if (score > 0) {
+          swal({
+            title: "Final Score: " + score,
+            text: "Submit your score for the leaderboard.",
+            content: "input",
+            button: {
+              text: "Submit Score"
+            }
+          }).then(value => {
+            freezeOverride = false;
+            if (value) {
+              snakeApi.submitScore({
+                name: value,
+                score: score
+              });
+            }
+            return;
+          });
+        }
         snake.x = 40;
         snake.y = 40;
         snake.cells = [];
