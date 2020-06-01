@@ -26,6 +26,7 @@ export default {
     var count = 0;
     var active = false;
     var freezeOverride = false;
+    var moved = true;
 
     var snake = {
       x: 40,
@@ -48,8 +49,9 @@ export default {
       }
       var score = Math.max(snake.cells.length - 4, 0);
       function die() {
+        active = false;
+        freezeOverride = true;
         if (score > 0) {
-          freezeOverride = true;
           swal({
             title: "Final Score: " + score,
             text: "Submit your score for the leaderboard.",
@@ -58,7 +60,6 @@ export default {
               text: "Submit Score"
             }
           }).then(value => {
-            freezeOverride = false;
             if (value) {
               snakeApi.submitScore({
                 name: value,
@@ -68,15 +69,16 @@ export default {
             return;
           });
         }
+
+        freezeOverride = false;
         snake.x = 40;
         snake.y = 40;
         snake.cells = [];
         snake.maxCells = 4;
-        snake.dx = grid;
+        snake.dx = 0;
         snake.dy = 0;
         apple.x = getRandomInt(0, 45) * grid;
         apple.y = getRandomInt(0, 25) * grid;
-        active = false;
       }
       if (++count < 4) {
         return;
@@ -85,6 +87,7 @@ export default {
       context.clearRect(0, 0, canvas.width, canvas.height);
       snake.x += snake.dx;
       snake.y += snake.dy;
+      moved = true;
       if (snake.x < 0) {
         die();
       } else if (snake.x >= canvas.width) {
@@ -133,19 +136,27 @@ export default {
         active = true;
         requestAnimationFrame(loop);
       }
-      if (e.which === 37 && snake.dx === 0) {
-        snake.dx = -grid;
-        snake.dy = 0;
-      } else if (e.which === 38 && snake.dy === 0) {
-        snake.dy = -grid;
-        snake.dx = 0;
-      } else if (e.which === 39 && snake.dx === 0) {
-        snake.dx = grid;
-        snake.dy = 0;
-      } else if (e.which === 40 && snake.dy === 0) {
-        snake.dy = grid;
-        snake.dx = 0;
+      updatePlannedMove();
+      function updatePlannedMove() {
+        if (moved) {
+          if (e.which === 37 && snake.dx === 0) {
+            snake.dx = -grid;
+            snake.dy = 0;
+          } else if (e.which === 38 && snake.dy === 0) {
+            snake.dy = -grid;
+            snake.dx = 0;
+          } else if (e.which === 39 && snake.dx === 0) {
+            snake.dx = grid;
+            snake.dy = 0;
+          } else if (e.which === 40 && snake.dy === 0) {
+            snake.dy = grid;
+            snake.dx = 0;
+          }
+        } else {
+          updatePlannedMove();
+        }
       }
+      moved = false;
     });
     requestAnimationFrame(loop);
   }
