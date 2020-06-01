@@ -302,7 +302,9 @@ export default {
           : 0;
       var attackDamage =
         this.averageDamageDie + extraDamage + this.attackStat + this.magicBonus;
-      return this.abilities.sharpshooter || this.abilities.greatWeaponMaster
+      return (this.abilities.sharpshooter && this.weapon.ranged) ||
+        (this.abilities.greatWeaponMaster &&
+          (this.weapon.heavy || this.weapon.versatile))
         ? attackDamage + 10
         : attackDamage;
     },
@@ -333,9 +335,10 @@ export default {
         this.fightingStyle == this.fightingStyles.archery &&
         this.weapon.ranged
       ) {
-        attackBonus = this.abilities.sharpshooter
-          ? attackBonus - 3
-          : attackBonus + 2;
+        attackBonus =
+          this.abilities.sharpshooter && this.weapon.ranged
+            ? attackBonus - 3
+            : attackBonus + 2;
       }
       return this.abilities.greatWeaponMaster &&
         (this.weapon.heavy || this.weapon.versatile)
@@ -630,7 +633,6 @@ export default {
       handler() {
         this.disableImpossibleAbilities();
         this.calculateNumberOfAttacks();
-        this.chooseWeaponFromStyle();
       }
     }
   }
