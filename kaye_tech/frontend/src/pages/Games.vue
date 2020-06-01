@@ -13,7 +13,7 @@
           <v-list width="400">
             <v-list-item color="primary">Top 10 Leaderboard</v-list-item>
             <v-divider />
-            <v-list-item v-for="item in snakeHighScores" :key="item.fields.name">
+            <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
               <v-list-item-content>{{item.fields.name}}</v-list-item-content>
               <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
             </v-list-item>
