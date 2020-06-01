@@ -30,7 +30,6 @@ urlpatterns = [
     path("burritos/", IndexView.as_view()),
     url(r"^book/?[0-9]*$", IndexView.as_view()),
     path("jokes/", IndexView.as_view()),
-    path("tabletop/", IndexView.as_view()),
     path("games/", IndexView.as_view()),
     path("games/<str:roomName>/", IndexView.as_view()),
     url(r"^$", IndexView.as_view()),
