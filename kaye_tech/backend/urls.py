@@ -4,7 +4,7 @@ from backend import views
 
 router = routers.DefaultRouter()
 router.register(
-    "burritos", views.BurritoViewSet, basename="burritos_base"
+    "burritos", views.BurritoViewSet, basename="burritos_base",
 )
 router.register("snake", views.SnakeViewSet, basename="snake_base",)
 
