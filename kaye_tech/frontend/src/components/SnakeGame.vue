@@ -61,7 +61,7 @@ export default {
           if (value) {
             snakeApi.submitScore({
               name: value,
-              score: finalScore
+              score: score
             });
           }
           return;
