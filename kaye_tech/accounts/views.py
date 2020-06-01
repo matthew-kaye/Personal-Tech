@@ -17,6 +17,7 @@ class UserDetailView(generics.RetrieveAPIView):
                 raise ("No profile")
             return self.request.user
         except Exception as e:
+            print(e)
             self.request.user.profile = {
                 "avatar": "https://winaero.com/blog/wp-content/uploads/2019/09/Chrome-Incognito-Mode-Icon-256.png"
             }
