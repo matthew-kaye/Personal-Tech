@@ -15,7 +15,7 @@ const snakeApi = new SnakeApi();
 export default {
   data() {
     return {
-      active: true
+      active: false
     };
   },
   mounted() {

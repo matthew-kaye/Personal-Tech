@@ -5,7 +5,6 @@ import App from "./App.vue";
 import Home from "./pages/Home.vue"
 import Canvas from "./pages/Canvas.vue";
 import Joke from "./pages/Joke.vue";
-import Tabletop from "./pages/Tabletop.vue";
 import News from "./pages/News.vue";
 import Books from "./pages/Books.vue";
 import BookDetailPage from "./pages/BookDetailPage.vue";
@@ -33,7 +32,6 @@ const routes = [
   { path: "/burritos", name: "burritos", component: Burritos },
   { path: "/canvas", name: "canvas", component: Canvas },
   { path: "/jokes", name: "jokes", component: Joke },
-  { path: "/tabletop", name: "tabletop", component: Tabletop },
   { path: "/games", name: "games", component: Games },
 ];
 

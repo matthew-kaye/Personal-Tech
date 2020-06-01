@@ -94,8 +94,8 @@ export default {
           icon: "mdi-brush"
         },
         {
-          label: "D&D",
-          link: "/tabletop",
+          label: "Games",
+          link: "/games",
           icon: "mdi-dice-d20"
         },
         // {
