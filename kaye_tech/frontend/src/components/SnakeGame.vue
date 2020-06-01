@@ -48,8 +48,8 @@ export default {
       }
       var score = Math.max(snake.cells.length - 4, 0);
       function die() {
-        freezeOverride = true;
         if (score > 0) {
+          freezeOverride = true;
           swal({
             title: "Final Score: " + score,
             text: "Submit your score for the leaderboard.",
