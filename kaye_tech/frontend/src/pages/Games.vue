@@ -22,9 +22,6 @@
         >{{ roomSelect?"Close Room Select":"Join Room (Unfinished)" }}</v-btn>
       </v-col>
     </v-row>
-    <v-fab-transition>
-      <Tabletop ref="calculator" v-show="damageCalculator" />
-    </v-fab-transition>
     <v-slide-y-transition>
       <v-row v-if="snakeGame" class="ml-3">
         <v-col md="auto" v-if="snakeHighScores.length>0">
@@ -50,6 +47,9 @@
         </v-col>
       </v-row>
     </v-slide-y-transition>
+    <v-fab-transition>
+      <Tabletop ref="calculator" v-show="damageCalculator" />
+    </v-fab-transition>
     <v-slide-y-transition>
       <v-card class="ma-6" v-if="roomSelect">
         <v-card-title class="primary headline">
@@ -97,7 +97,7 @@ export default {
   data() {
     return {
       roomName: "",
-      snakeGame: true,
+      snakeGame: false,
       damageCalculator: false,
       roomSelect: false,
       snakeHighScores: []
