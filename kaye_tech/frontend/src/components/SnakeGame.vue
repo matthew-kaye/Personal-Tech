@@ -129,7 +129,7 @@ export default {
       if ([38, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
       }
-      if ((e.key === " ") & !freezeOverride) {
+      if (e.key === " " && !freezeOverride) {
         e.preventDefault();
         active = !active;
         requestAnimationFrame(loop);
@@ -137,7 +137,7 @@ export default {
         active = true;
         requestAnimationFrame(loop);
       }
-      if (moved) {
+      if (moved && active) {
         if (e.which === 37 && snake.dx === 0) {
           snake.dx = -grid;
           snake.dy = 0;
