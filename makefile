@@ -39,6 +39,8 @@ rollback-backend:
 lint:
 	cd kaye_tech/frontend; npm run format
 
+db-backup:
+	cd kaye_tech/backend/fixtures/ && scp mattalexkaye:/home/projects/kaye-tech/kaye_tech/backend/fixtures/db.sqlite3 db-copy
 
 # PRODUCTION COMMANDS #
 

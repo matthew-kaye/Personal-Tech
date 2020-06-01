@@ -15,7 +15,6 @@ export default class BurritoApi {
 
     submitScore(data) {
         const scoreData = { data: data };
-        console.log(data)
         return axios
             .post(baseUrl, scoreData)
             .then((response) => response.data)

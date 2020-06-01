@@ -90,7 +90,6 @@ export default {
   created() {
     this.fetchVendors();
     accountsApi.getCurrentUser().then(data => {
-      console.log(data);
       this.currentUser = data.username;
     });
   },
@@ -156,7 +155,6 @@ export default {
     },
     fetchVendors() {
       burritoApi.getVendors({}).then(data => {
-        console.log(data);
         this.vendors = JSON.parse(data);
       });
     },
