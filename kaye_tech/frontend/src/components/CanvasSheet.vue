@@ -48,7 +48,8 @@ export default {
         SUNRAYS_WEIGHT: 1.0,
         AUTOSPLAT_ENABLED: homePage,
         AUTOSPLAT_DELAY: 4,
-        AUTOSPLAT_COUNT: 12
+        AUTOSPLAT_COUNT: 12,
+        CONTINUOUS: false
       }
     };
   },
@@ -1468,7 +1469,7 @@ export default {
         Math.abs(pointer.deltaX) > 0 || Math.abs(pointer.deltaY) > 0;
     }
     function updatePointerUpData(pointer) {
-      pointer.down = false;
+      if (!config.CONTINUOUS) pointer.down = false;
     }
     function correctDeltaX(delta) {
       let aspectRatio = canvas.width / canvas.height;
@@ -1569,7 +1570,7 @@ export default {
           low: 256,
           "very low": 128
         })
-        .name("quality")
+        .name("Quality")
         .onFinishChange(initFramebuffers);
       gui
         .add(config, "SIM_RESOLUTION", {
@@ -1578,26 +1579,30 @@ export default {
           "128": 128,
           "256": 256
         })
-        .name("sim resolution")
+        .name("Sim resolution")
         .onFinishChange(initFramebuffers);
-      gui.add(config, "DENSITY_DISSIPATION", 0, 4.0).name("density diffusion");
+      gui.add(config, "DENSITY_DISSIPATION", 0, 4.0).name("Density diffusion");
       gui
         .add(config, "VELOCITY_DISSIPATION", 0, 4.0)
-        .name("velocity diffusion");
-      gui.add(config, "PRESSURE", 0.0, 1.0).name("pressure");
+        .name("Velocity diffusion");
+      gui.add(config, "PRESSURE", 0.0, 1.0).name("Pressure");
       gui
         .add(config, "CURL", 0, 50)
-        .name("vorticity")
+        .name("Vorticity")
         .step(1);
-      gui.add(config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
+      gui.add(config, "SPLAT_RADIUS", 0.01, 1.0).name("Splat radius");
       gui
         .add(config, "SHADING")
-        .name("shading")
+        .name("Shading")
         .onFinishChange(updateKeywords);
-      gui.add(config, "COLORFUL").name("colorful");
+      gui.add(config, "COLORFUL").name("Colourful");
+      gui
+        .add(config, "CONTINUOUS")
+        .name("Continuous")
+        .listen();
       gui
         .add(config, "PAUSED")
-        .name("paused")
+        .name("Paused")
         .listen();
 
       gui
@@ -1614,36 +1619,36 @@ export default {
       let autosplatFolder = gui.addFolder("Auto-splat");
       autosplatFolder
         .add(config, "AUTOSPLAT_ENABLED")
-        .name("enable auto-splat")
+        .name("Enable Auto-splat")
         .listen();
       autosplatFolder
         .add(config, "AUTOSPLAT_DELAY", 0.1, 30.0)
-        .name("auto-splat interval seconds");
+        .name("Auto-splat interval seconds");
       autosplatFolder
         .add(config, "AUTOSPLAT_COUNT", 1, 10, 1)
-        .name("number of auto-splats");
+        .name("No. of Auto-splats");
 
       let bloomFolder = gui.addFolder("Bloom");
       bloomFolder
         .add(config, "BLOOM")
-        .name("enabled")
+        .name("Enabled")
         .onFinishChange(updateKeywords);
-      bloomFolder.add(config, "BLOOM_INTENSITY", 0.1, 2.0).name("intensity");
-      bloomFolder.add(config, "BLOOM_THRESHOLD", 0.0, 1.0).name("threshold");
+      bloomFolder.add(config, "BLOOM_INTENSITY", 0.1, 2.0).name("Intensity");
+      bloomFolder.add(config, "BLOOM_THRESHOLD", 0.0, 1.0).name("Threshold");
 
       let sunraysFolder = gui.addFolder("Sunrays");
       sunraysFolder
         .add(config, "SUNRAYS")
-        .name("enabled")
+        .name("Enabled")
         .onFinishChange(updateKeywords);
-      sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("weight");
+      sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("Weight");
 
       let captureFolder = gui.addFolder("Capture");
-      captureFolder.addColor(config, "BACK_COLOR").name("background color");
-      captureFolder.add(config, "TRANSPARENT").name("transparent");
+      captureFolder.addColor(config, "BACK_COLOR").name("Background Colour");
+      captureFolder.add(config, "TRANSPARENT").name("Transparent");
       captureFolder
         .add({ fun: captureScreenshot }, "fun")
-        .name("take screenshot");
+        .name("Take Screenshot");
 
       if (isMobile()) gui.close();
       return gui;
