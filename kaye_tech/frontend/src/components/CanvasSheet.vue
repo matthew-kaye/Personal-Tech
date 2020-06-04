@@ -12,7 +12,6 @@ export default {
     var homePage = location.pathname.includes("home");
     return {
       gui: {},
-      animateOnHover: homePage,
       params: {
         alpha: true,
         depth: false,
@@ -49,7 +48,7 @@ export default {
         AUTOSPLAT_ENABLED: homePage,
         AUTOSPLAT_DELAY: 4,
         AUTOSPLAT_COUNT: 12,
-        CONTINUOUS: false
+        CONTINUOUS: homePage
       }
     };
   },
@@ -1400,7 +1399,7 @@ export default {
       let posX = scaleByPixelRatio(e.offsetX);
       let posY = scaleByPixelRatio(e.offsetY);
       let pointer = pointers[0];
-      if (this.animateOnHover) {
+      if (this.config.CONTINUOUS) {
         if (pointer == null) pointer = new pointerPrototype();
         if (!pointer.down) {
           updatePointerDownData(pointer, -1, posX, posY);
