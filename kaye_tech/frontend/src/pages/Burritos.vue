@@ -42,7 +42,7 @@
                 </v-row>
               </td>
               <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
-                <v-chip :color="getRatingColour(row.item.fields.rating)">
+                <v-chip class="white--text" :color="getRatingColour(row.item.fields.rating)">
                   {{ row.item.fields.rating.toFixed(2) }}
                   <v-icon right>mdi-star</v-icon>
                 </v-chip>
