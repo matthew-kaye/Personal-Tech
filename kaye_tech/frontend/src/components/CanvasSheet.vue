@@ -1643,12 +1643,12 @@ export default {
         .onFinishChange(updateKeywords);
       sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("Weight");
 
-      let captureFolder = gui.addFolder("Capture");
+      let captureFolder = gui.addFolder("Create Photo");
       captureFolder.addColor(config, "BACK_COLOR").name("Background Colour");
       captureFolder.add(config, "TRANSPARENT").name("Transparent");
       captureFolder
         .add({ fun: captureScreenshot }, "fun")
-        .name("Take Screenshot");
+        .name("Download Photo");
       return gui;
     }
 
