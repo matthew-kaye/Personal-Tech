@@ -68,6 +68,9 @@ export default {
 </script>
 
 <style module lang="scss">
+a {
+  text-decoration: none;
+}
 html,
 body {
   max-width: 100% !important;
