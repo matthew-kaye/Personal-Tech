@@ -1562,6 +1562,7 @@ export default {
       return hash;
     }
     function startGUI(gui) {
+      gui.add({ Title: "" }, "Title", {}).name("Controls");
       gui
         .add(config, "DYE_RESOLUTION", {
           high: 1024,
@@ -1648,8 +1649,6 @@ export default {
       captureFolder
         .add({ fun: captureScreenshot }, "fun")
         .name("Take Screenshot");
-
-      if (isMobile()) gui.close();
       return gui;
     }
 
@@ -1808,3 +1807,17 @@ export default {
   }
 };
 </script>
+<style>
+.dg {
+  opacity: 0.9;
+}
+.property-name {
+  color: #ffffff;
+}
+.cr {
+  color: #9c9c9c;
+}
+.cr.string {
+  font-size: 130%;
+}
+</style>
