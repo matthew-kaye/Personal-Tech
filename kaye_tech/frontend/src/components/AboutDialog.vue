@@ -7,19 +7,23 @@
       <v-divider />
       <v-row>
         <v-col md="auto">
-          <v-avatar size="100" class="mt-5 ml-4">
+          <v-avatar size="100" class="mt-5 ml-6">
             <img src="/static/frontend/matt.jpg" />
           </v-avatar>
         </v-col>
-        <v-col>
+        <v-col class="n4">
           <v-card-text>
             Hello! If we haven't already met, my name's Matt, and I work as a Software Engineer at Brainlabs.
             I've generally been more comfortable with backend programming, and was keen to make the most of this "unprecedented" time on furlough and improve my web skills, so built this website!
-            If you have any ideas for cool things to add to the site (or bugs you've found), then
+            If you have any ideas for cool things to add to the site (or find a bug!), then
             <a
               href="mailto:m.kaye@outlook.com"
             >let me know!</a>
           </v-card-text>
+        </v-col>
+      </v-row>
+      <v-row class="ml-1">
+        <v-col>
           <v-card-title>
             <b>Techy Stuff</b>
           </v-card-title>
@@ -40,6 +44,16 @@
             <br />
           </v-card-text>
         </v-col>
+        <v-col>
+          <div>
+            <v-img
+              class="ml-2 mt-4 logo"
+              max-height="200"
+              max-width="200"
+              src="/static/frontend/k-logo.jpg"
+            />
+          </div>
+        </v-col>
       </v-row>
     </v-card>
   </v-dialog>
@@ -54,3 +68,44 @@ export default {
   }
 };
 </script>
+<style>
+.logo:hover {
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+}
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+</style>
