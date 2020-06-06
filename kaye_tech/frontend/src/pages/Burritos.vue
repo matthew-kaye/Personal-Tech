@@ -21,6 +21,8 @@
           :headers="headers"
           :search="search"
           :items="vendors"
+          disable-pagination
+          hide-default-footer
           sort-desc
           :sort-by="'fields.rating'"
         >
@@ -162,9 +164,9 @@ export default {
       if (rating >= 4.5) {
         return colors.green.darken1;
       } else if (rating >= 4) {
-        return colors.green.lighten1;
+        return colors.lightGreen.darken1;
       } else if (rating >= 3.5) {
-        return colors.orange.darken1;
+        return colors.orange.lighten1;
       } else if (rating >= 3) {
         return colors.orange.darken4;
       } else if (rating >= 2.5) {
