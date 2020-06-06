@@ -7,7 +7,6 @@ import Canvas from "./pages/Canvas.vue";
 import Joke from "./pages/Joke.vue";
 import News from "./pages/News.vue";
 import Books from "./pages/Books.vue";
-import BookDetailPage from "./pages/BookDetailPage.vue";
 import Burritos from "./pages/Burritos.vue";
 import Games from "./pages/Games.vue";
 import Room from "./pages/Room.vue";
@@ -19,11 +18,6 @@ const routes = [
   { path: "/home", name: "home", component: Home },
   { path: "/news", name: "news", component: News },
   { path: "/books", name: "books", component: Books },
-  {
-    path: "/book/:bookRank",
-    name: "BookDetailPage",
-    component: BookDetailPage
-  },
   {
     path: "/games/:roomName",
     name: "room",
