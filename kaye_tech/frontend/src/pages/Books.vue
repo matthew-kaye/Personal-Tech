@@ -1,37 +1,34 @@
 <template>
   <div>
-    <v-card class="ma-6" v-if="books.length>0">
+    <v-card class="ma-4" v-if="books.length>0">
       <v-card-title class="primary headline">
         <span class="white--text">{{"New York Times Bestsellers - updated " + time +"s ago"}}</span>
       </v-card-title>
-      <v-card class="ma-4" color="card">
-        <v-data-table :headers="headers" :items="books">
-          <template v-slot:item="row">
-            <tr v-bind:style="{ cursor: 'pointer' }" @click="viewBook(row.item)">
-              <td>
-                <p>{{ row.item.rank }}</p>
-              </td>
-              <td>
-                <v-row justify="start" align="center">
-                  <v-col md="auto">
-                    <v-img max-height="40" max-width="25" :src="row.item.book_image" />
-                  </v-col>
-                  <v-col md="auto">
-                    <p>{{ toTitleCase(row.item.title) }}</p>
-                  </v-col>
-                </v-row>
-              </td>
-              <td>
-                <p>{{ row.item.author }}</p>
-              </td>
-              <td>
-                <p>{{ row.item.weeks_on_list }}</p>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-card>
-      <br />
+      <v-data-table :headers="headers" :items="books">
+        <template v-slot:item="row">
+          <tr v-bind:style="{ cursor: 'pointer' }" @click="viewBook(row.item)">
+            <td>
+              <p>{{ row.item.rank }}</p>
+            </td>
+            <td>
+              <v-row justify="start" align="center">
+                <v-col md="auto">
+                  <v-img max-height="40" max-width="25" :src="row.item.book_image" />
+                </v-col>
+                <v-col md="auto">
+                  <p>{{ toTitleCase(row.item.title) }}</p>
+                </v-col>
+              </v-row>
+            </td>
+            <td>
+              <p>{{ row.item.author }}</p>
+            </td>
+            <td>
+              <p>{{ row.item.weeks_on_list }}</p>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
     </v-card>
     <BookDialog ref="bookDialog" />
   </div>
