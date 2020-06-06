@@ -219,7 +219,27 @@ export default {
     },
     fetchGuardianSections() {
       newsApi.fetchSections().then(data => {
-        this.guardianSections = data.response.results;
+        this.guardianSections = data.response.results.filter(function(section) {
+          var excludedSections = [
+            "About",
+            "Extra",
+            "Help",
+            "Info",
+            "Katine",
+            "Membership",
+            "Search",
+            "From the Observer",
+            "Local",
+            "Leeds",
+            "Edinburgh",
+            "Cardiff"
+          ];
+          return (
+            !excludedSections.includes(section.webTitle) &&
+            !section.webTitle.toLowerCase().includes("network") &&
+            !section.webTitle.includes("Guardian")
+          );
+        });
         this.guardianSections.push({ id: null, webTitle: "None" });
       });
     },
