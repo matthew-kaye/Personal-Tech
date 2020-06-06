@@ -107,16 +107,16 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="2" sm="2">
+      <v-col md="auto">
         <v-switch v-model="bonuses.advantage" class="ma-2" label="Advantage"></v-switch>
       </v-col>
-      <v-col cols="2" sm="2">
+      <v-col md="auto">
         <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
       </v-col>
     </v-row>
     <v-card-title>Feats/Abilities</v-card-title>
     <v-row class="ml-2">
-      <v-col cols="2" sm="2" v-if="subclass=='Battle Master'">
+      <v-col md="auto" v-if="subclass=='Battle Master'">
         <v-switch
           :disabled="characterLevel<3"
           v-model="bonuses.superiorityDie"
@@ -124,7 +124,7 @@
           label="Superiority Dmg"
         ></v-switch>
       </v-col>
-      <v-col cols="2" sm="2" v-if="subclass=='Eldritch Knight'">
+      <v-col md="auto" v-if="subclass=='Eldritch Knight'">
         <v-switch
           :disabled="characterLevel<7"
           v-model="abilities.warMagic"
@@ -132,11 +132,7 @@
           label="War Magic"
         ></v-switch>
       </v-col>
-      <v-col
-        cols="2"
-        sm="2"
-        v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery"
-      >
+      <v-col md="auto" v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery">
         <v-switch
           :disabled="characterLevel<7"
           v-model="abilities.shadowBlade"
@@ -144,7 +140,7 @@
           label="Shadow Blade"
         ></v-switch>
       </v-col>
-      <v-col cols="2" sm="2" v-if="characterClass==classes.ranger">
+      <v-col md="auto" v-if="characterClass==classes.ranger">
         <v-switch
           :disabled="characterLevel==1"
           v-model="abilities.huntersMark"
@@ -152,7 +148,7 @@
           label="Hunter's Mark"
         ></v-switch>
       </v-col>
-      <v-col cols="2" sm="2" v-if="subclass=='Hunter'">
+      <v-col md="auto" v-if="subclass=='Hunter'">
         <v-switch
           :disabled="characterLevel<3"
           v-model="abilities.colossusSlayer"
@@ -160,7 +156,7 @@
           label="Colossus Slayer"
         ></v-switch>
       </v-col>
-      <v-col cols="1" sm="1" v-if="subclass=='Beast Master'">
+      <v-col md="auto" v-if="subclass=='Beast Master'">
         <v-switch
           :disabled="characterLevel<3"
           v-model="abilities.wolfAttack"
@@ -168,20 +164,19 @@
           label="Wolf"
         ></v-switch>
       </v-col>
-      <v-col cols="2" sm="2" v-if="fightingStyle==fightingStyles.archery">
+      <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
         <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
       </v-col>
-      <v-col cols="2" sm="2" v-if="fightingStyle==fightingStyles.archery">
+      <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
         <v-switch v-model="abilities.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
       </v-col>
       <v-col
-        cols="2"
-        sm="2"
+        md="auto"
         v-if="fightingStyle==fightingStyles.twoHanded || fightingStyle==fightingStyles.defence"
       >
         <v-switch v-model="abilities.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
       </v-col>
-      <v-col cols="2" sm="2" v-if="fightingStyle==fightingStyles.twoWeapon">
+      <v-col md="auto" v-if="fightingStyle==fightingStyles.twoWeapon">
         <v-switch v-model="abilities.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
       </v-col>
     </v-row>
