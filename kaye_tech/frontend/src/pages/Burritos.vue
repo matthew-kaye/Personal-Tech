@@ -28,6 +28,7 @@
         >
           <template v-slot:item="row">
             <tr>
+              <td>{{vendors.indexOf(row.item)+1}}</td>
               <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
                 <v-row justify="start" align="center">
                   <v-col md="auto">
@@ -108,9 +109,10 @@ export default {
   computed: {
     headers() {
       return [
+        { text: "Rank", align: "start", sortable: false },
         { text: "Name", align: "start", value: "fields.name" },
         { text: "Rating", align: "start", value: "fields.rating" },
-        { text: "Actions", align: "start" }
+        { text: "Actions", align: "start", sortable: false }
       ];
     },
     vendorData() {
@@ -157,7 +159,9 @@ export default {
     },
     fetchVendors() {
       burritoApi.getVendors({}).then(data => {
-        this.vendors = JSON.parse(data);
+        this.vendors = JSON.parse(data).sort(function(a, b) {
+          return b.fields.rating - a.fields.rating;
+        });
       });
     },
     getRatingColour(rating) {
