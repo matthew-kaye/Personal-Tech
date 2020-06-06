@@ -51,18 +51,6 @@ export default {
     return {
       dialog: false
     };
-  },
-  computed: {},
-  props: {
-    dialogMode: String
-  },
-  methods: {
-    open() {
-      this.dialog = true;
-    },
-    close() {
-      this.dialog = false;
-    }
   }
 };
 </script>
