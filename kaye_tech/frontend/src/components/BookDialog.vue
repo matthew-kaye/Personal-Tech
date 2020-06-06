@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="1000" content-class="card" @click:outside="book=null">
     <v-scale-transition>
-      <v-card v-if="book" color="card">
+      <v-card flat v-if="book" color="card">
         <v-card-title class="primary headline">
           <span class="white--text">{{toTitleCase(book.title) + ", " + book.contributor}}</span>
         </v-card-title>
