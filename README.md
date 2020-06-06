@@ -43,6 +43,8 @@ Run `make down`
 
 ## Server deployment
 
-The nginx config to be used in `/etc/nginx/sites-available` is available [here](nginx-static-sites-available.conf). Rename this file to the site name when actually deploying (here, mattalexkaye.com).
+The nginx config to be used in `/etc/nginx/sites-available` is available [here](nginx-sites-available.conf). Rename this file to the site name when actually deploying (here, mattalexkaye.com).
 
 When on the server, run the `deploy.sh` script to deploy.
+
+If docker starts taking up too much memory, run either `docker volume prune` or `docker system prune` to resolve.
