@@ -11,14 +11,16 @@
             <img src="/static/frontend/matt.jpg" />
           </v-avatar>
         </v-col>
-        <v-col class="ml-n4">
+        <v-col class="ml-n4 mr-4">
           <v-card-text style="text-align:justify;">
             Hello! If we haven't already met, my name's Matt, and I work as a Software Engineer at Brainlabs.
             I've generally been more comfortable with backend programming, and was keen to make the most of this "unprecedented" time on furlough and improve my web skills, so built this website!
             If you have any ideas for cool things to add to the site (or find a bug!), then
             <a
               href="mailto:m.kaye@outlook.com"
-            >let me know!</a>
+            >
+              <b>let me know!</b>
+            </a>
           </v-card-text>
         </v-col>
       </v-row>

@@ -3,20 +3,24 @@
     <v-card class="ma-6" height="100%">
       <v-card-title class="primary headline">
         <span class="white--text">Canvas</span>
-        <v-btn class="ml-12" primary @click="toggleGui">{{showGui?"Hide Controls":"Show Controls"}}</v-btn>
+        <v-btn icon color="white" class="ml-6" primary @click="toggleGui">
+          <v-icon v-if="showGui">mdi-eye-off</v-icon>
+          <v-icon v-if="!showGui">mdi-eye</v-icon>
+        </v-btn>
+        <v-tooltip max-width="350" v-model="showTooltip" right>
+          <template v-slot:activator="{ on }">
+            <v-btn icon color="white" class="ml-4" v-on="on">
+              <v-icon>mdi-information-outline</v-icon>
+            </v-btn>
+          </template>
+          <span>
+            Click and drag to generate animations, and space bar to generate more swirls.
+            When satisfied, press 'p' to pause, and click 'Create Photo'. It will download as fluid.png.
+          </span>
+        </v-tooltip>
       </v-card-title>
       <div class="ma-10" @mousedown="closeGui()" @mouseup="openGui()">
         <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
-        <v-divider />
-        <br />
-        <v-card md="auto" elevation="10" width="30%">
-          <v-card-title class="primary headline white--text">Instructions</v-card-title>
-          <v-divider />
-          <v-card-text
-            style="font-size:12pt"
-            class="secondary--text"
-          >Click and drag to generate animations, press 'p' to pause, and space bar to generate more swirls</v-card-text>
-        </v-card>
         <br />
       </div>
     </v-card>
@@ -32,7 +36,8 @@ export default {
   },
   data() {
     return {
-      showGui: true
+      showGui: true,
+      showTooltip: false
     };
   },
   mounted() {
