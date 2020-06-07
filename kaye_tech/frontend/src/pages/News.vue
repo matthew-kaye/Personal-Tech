@@ -23,12 +23,18 @@
                 item-text="webTitle"
                 item-value="id"
                 label="Section Filters"
+                round
+                outlined
+                hint
                 attach
+                placeholder="Section"
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-autocomplete>
             </v-col>
             <v-col cols="2">
               <v-select
+                round
+                outlined
                 v-model="pageSize"
                 :items="[10,25,50]"
                 attach
@@ -41,6 +47,7 @@
                 :disabled="searchCriteria.includes(abcFilter)"
                 color="primary"
                 @click="anythingButCovid()"
+                outlined
                 icon
                 x-large
                 append-icon="mdi-cancel"
@@ -50,6 +57,8 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
+                round
+                outlined
                 v-model="searchTerm"
                 @keypress.enter="addSearch()"
                 label="Keywords"
@@ -240,7 +249,6 @@ export default {
             !section.webTitle.includes("Guardian")
           );
         });
-        this.guardianSections.push({ id: null, webTitle: "None" });
       });
     },
     anythingButCovid() {
