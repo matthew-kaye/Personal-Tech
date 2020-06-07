@@ -2,27 +2,26 @@
   <div>
     <v-row class="mt-4 ml-3">
       <v-col md="auto">
-        <v-btn
-          color="primary"
-          @click="snakeGame=!snakeGame"
-        >{{ snakeGame?"Close Snake Game":"Open Snake Game" }}</v-btn>
+        <v-btn color="primary" @click="snakeGame=!snakeGame">
+          <v-icon class="mr-2">mdi-gamepad</v-icon>
+          {{ snakeGame?"Close Snake Game":"Open Snake Game" }}
+        </v-btn>
       </v-col>
       <v-col md="auto">
-        <v-btn
-          class="ml-6"
-          color="primary"
-          @click="damageCalculator=!damageCalculator"
-        >{{ damageCalculator?"Close Calculator":"Open D&D Calculator" }}</v-btn>
+        <v-btn class="ml-6" color="primary" @click="damageCalculator=!damageCalculator">
+          <v-icon class="mr-2">mdi-dice-d20</v-icon>
+          {{ damageCalculator?"Close Calculator":"Open D&D Calculator" }}
+        </v-btn>
       </v-col>
-      <v-col>
+      <!-- <v-col>
         <v-btn
           class="ml-6"
           color="primary"
           @click="roomSelect=!roomSelect"
         >{{ roomSelect?"Close Room Select":"Join Room (Unfinished)" }}</v-btn>
-      </v-col>
+      </v-col>-->
     </v-row>
-    <v-slide-y-transition>
+    <v-fade-transition>
       <v-row v-if="snakeGame" class="ml-3">
         <v-col md="auto" v-if="snakeHighScores.length>0">
           <v-list width="400">
@@ -46,10 +45,12 @@
           <SnakeGame class="pb-4" />
         </v-col>
       </v-row>
-    </v-slide-y-transition>
-    <v-fab-transition>
-      <Tabletop ref="calculator" v-show="damageCalculator" />
-    </v-fab-transition>
+    </v-fade-transition>
+    <v-fade-transition>
+      <div v-if="damageCalculator">
+        <Tabletop ref="calculator" />
+      </div>
+    </v-fade-transition>
     <v-slide-y-transition>
       <v-card class="ma-6" v-if="roomSelect">
         <v-card-title class="primary headline">
