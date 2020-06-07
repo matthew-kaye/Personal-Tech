@@ -38,7 +38,13 @@
                         max-width="40"
                         v-if="row.item.fields['img_url']"
                         :src="row.item.fields['img_url']"
-                      />
+                      >
+                        <template v-slot:placeholder>
+                          <v-row class="fill-height ma-0" align="center" justify="center">
+                            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                          </v-row>
+                        </template>
+                      </v-img>
                     </v-slide-x-transition>
                   </v-col>
                   <v-col md="auto">{{ row.item.fields.name }}</v-col>

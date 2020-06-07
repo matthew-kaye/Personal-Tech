@@ -13,7 +13,13 @@
             <td>
               <v-row justify="start" align="center">
                 <v-col md="auto">
-                  <v-img max-height="40" max-width="25" :src="row.item.book_image" />
+                  <v-img max-height="40" max-width="25" :src="row.item.book_image">
+                    <template v-slot:placeholder>
+                      <v-row class="fill-height ma-0" align="center" justify="center">
+                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                      </v-row>
+                    </template>
+                  </v-img>
                 </v-col>
                 <v-col md="auto">
                   <p>{{ toTitleCase(row.item.title) }}</p>

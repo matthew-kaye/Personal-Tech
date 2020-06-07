@@ -1,4 +1,4 @@
-# Django-Vue-Template
+# Personal Tech Website
 
 ## Environment variables
 

@@ -5,14 +5,14 @@
         <b>About</b>
       </v-card-title>
       <v-divider />
-      <v-row>
+      <v-row justify="space-around">
         <v-col md="auto">
-          <v-avatar size="100" class="mt-5 ml-6">
+          <v-avatar left size="100" class="mt-5 ml-6">
             <img src="/static/frontend/matt.jpg" />
           </v-avatar>
         </v-col>
-        <v-col class="n4">
-          <v-card-text>
+        <v-col class="ml-n4">
+          <v-card-text style="text-align:justify;">
             Hello! If we haven't already met, my name's Matt, and I work as a Software Engineer at Brainlabs.
             I've generally been more comfortable with backend programming, and was keen to make the most of this "unprecedented" time on furlough and improve my web skills, so built this website!
             If you have any ideas for cool things to add to the site (or find a bug!), then
@@ -23,11 +23,12 @@
         </v-col>
       </v-row>
       <v-row class="ml-1">
-        <v-col>
-          <v-card-title>
-            <b>Techy Stuff</b>
-          </v-card-title>
+        <v-col style="text-align: center;">
           <v-card-text>
+            <span class="headline">
+              <b>Details</b>
+            </span>
+            <br />
             <b>Web Frameworks:</b> Vue.js, Django
             <br />
             <b>Frontend Libraries:</b> Vuetify
@@ -47,7 +48,7 @@
         <v-col>
           <div>
             <v-img
-              class="ml-2 mt-4 logo"
+              class="ml-12 mt-2 logo"
               max-height="200"
               max-width="200"
               src="/static/frontend/k-logo.jpg"
