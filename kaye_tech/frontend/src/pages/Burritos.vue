@@ -8,7 +8,8 @@
         </v-btn>
         <v-spacer />
         <v-text-field
-          class="ml-5"
+          outlined
+          class="ml-5 mb-n8"
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
@@ -32,20 +33,19 @@
               <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
                 <v-row justify="start" align="center">
                   <v-col md="auto">
-                    <v-slide-x-transition>
-                      <v-img
-                        max-height="40"
-                        max-width="40"
-                        v-if="row.item.fields['img_url']"
-                        :src="row.item.fields['img_url']"
-                      >
-                        <template v-slot:placeholder>
-                          <v-row class="fill-height ma-0" align="center" justify="center">
-                            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                          </v-row>
-                        </template>
-                      </v-img>
-                    </v-slide-x-transition>
+                    <v-img
+                      contain
+                      height="45"
+                      max-width="45"
+                      v-if="row.item.fields['img_url']"
+                      :src="row.item.fields['img_url']"
+                    >
+                      <template v-slot:placeholder>
+                        <v-row class="fill-height ma-0" align="center" justify="center">
+                          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                        </v-row>
+                      </template>
+                    </v-img>
                   </v-col>
                   <v-col md="auto">{{ row.item.fields.name }}</v-col>
                 </v-row>

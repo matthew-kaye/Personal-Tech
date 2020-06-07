@@ -7,17 +7,19 @@
     <v-row class="ml-2">
       <v-col cols="1" sm="1">
         <v-select
+          outlined
           v-model="characterLevel"
           :rules="requiredField"
           :items="getNumberArray(1, 20)"
           required
           attach
-          label="Character Level"
+          label="Level"
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
       <v-col cols="2" sm="2">
         <v-select
+          outlined
           v-model="characterClass"
           :rules="requiredField"
           :items="classList"
@@ -29,6 +31,7 @@
       </v-col>
       <v-col cols="2" sm="2">
         <v-select
+          outlined
           v-model="subclass"
           :rules="requiredField"
           :items="subclasses[characterClass]"
@@ -40,6 +43,7 @@
       </v-col>
       <v-col cols="2" sm="2">
         <v-select
+          outlined
           v-model="fightingStyle"
           :rules="requiredField"
           :items="fightingStyleList"
@@ -68,6 +72,7 @@
     <v-row class="ml-2">
       <v-col cols="1" sm="1">
         <v-select
+          outlined
           v-model="proficiencyBonus"
           :items="getNumberArray(2, 6)"
           attach
@@ -77,6 +82,7 @@
       </v-col>
       <v-col cols="1" sm="1">
         <v-select
+          outlined
           v-model="attackStat"
           :items="getNumberArray(1, 5)"
           attach
@@ -86,6 +92,7 @@
       </v-col>
       <v-col cols="2" sm="2">
         <v-select
+          outlined
           v-model="weapon"
           :items="weaponList"
           item-text="name"
@@ -96,10 +103,11 @@
         ></v-select>
       </v-col>
       <v-col cols="1" sm="1">
-        <v-text-field v-model="averageAC" label="Enemy AC" required></v-text-field>
+        <v-text-field outlined v-model="averageAC" label="Enemy AC" required></v-text-field>
       </v-col>
       <v-col cols="1" sm="1">
         <v-select
+          outlined
           v-model="numberOfAttacks"
           :items="getNumberArray(1,5)"
           attach

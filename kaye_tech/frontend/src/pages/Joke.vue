@@ -8,6 +8,8 @@
       <v-row>
         <v-col cols="3" sm="3">
           <v-text-field
+            class="mt-1"
+            outlined
             v-model="jokeSearch"
             @keypress.enter="findJoke(jokeSearch)"
             append-icon="mdi-magnify"
