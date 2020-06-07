@@ -1,17 +1,25 @@
 <template>
   <v-dialog v-model="dialog" max-width="700px">
     <v-card>
+      <v-card-title v-if="dialogMode!='View'">
+        <span class="headline">Add Burrito Vendor</span>
+      </v-card-title>
+      <v-divider class="mb-n2" v-if="dialogMode!='View'" />
       <v-card-title>
-        <v-row justify="start">
-          <v-col md="auto" v-if="vendorData.imageUrl">
-            <v-img max-height="50" max-width="50" :src="vendorData.imageUrl" />
+        <v-row justify="start" align="center">
+          <v-col md="auto" v-show="vendorData.imageUrl">
+            <v-img contain max-height="50" max-width="50" :src="vendorData.imageUrl" />
           </v-col>
-          <v-col class="mt-1" md="auto">
-            <h2 v-if="dialogMode!='View'">Add Burrito Vendor</h2>
+          <v-col md="auto">
             <h2 v-if="dialogMode=='View' && !editable">{{vendorData.name}}</h2>
-            <v-text-field v-if="editable" v-model="vendorData.name" label="Vendor name" required>
-              <br />
-            </v-text-field>
+            <v-text-field
+              outlined
+              class="mt-2 mb-n6"
+              v-if="editable"
+              v-model="vendorData.name"
+              label="Vendor name"
+              required
+            ></v-text-field>
           </v-col>
           <v-col md="auto">
             <v-btn
@@ -33,7 +41,7 @@
       <v-divider />
       <br />
       <v-card-text>
-        <v-textarea v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
+        <v-textarea outlined v-if="editable" v-model="vendorData.review" label="Review" required></v-textarea>
         <v-card v-if="!editable" elevation="12">
           <v-card-title @click="toggleEditMode()" class="primary headline white--text">
             <span style="font-size:14pt">Review</span>
@@ -44,9 +52,10 @@
           </v-card-text>
         </v-card>
         <br />
-        <v-text-field :readonly="!editable" v-model="vendorData.url" label="Url" required></v-text-field>
+        <v-text-field outlined :readonly="!editable" v-model="vendorData.url" label="Url" required></v-text-field>
         <br />
         <v-text-field
+          outlined
           v-if="editable"
           :readonly="!editable"
           v-model="vendorData.imageUrl"
