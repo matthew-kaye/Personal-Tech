@@ -47,7 +47,6 @@ export default {
       if (active) {
         requestAnimationFrame(loop);
       }
-      var score = Math.max(snake.cells.length - 4, 0);
       function die() {
         active = false;
         freezeOverride = true;
@@ -80,6 +79,7 @@ export default {
         snake.dy = 0;
         apple.x = getRandomInt(0, 45) * grid;
         apple.y = getRandomInt(0, 25) * grid;
+        var score = Math.max(snake.cells.length - 4, 0);
       }
       if (++count < 4) {
         return;
