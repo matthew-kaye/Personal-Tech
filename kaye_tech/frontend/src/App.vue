@@ -23,12 +23,15 @@
               - {{ new Date().getFullYear() }}
             </strong>
           </span>
-          <v-btn
-            class="mb-2 ml-2 mr-4"
-            icon
-            href="https://www.linkedin.com/in/matthew-kaye-20332016a/"
-          >
+          <v-btn class="mb-2 ml-2" icon href="https://www.linkedin.com/in/matthew-kaye-20332016a/">
             <v-icon>mdi-linkedin</v-icon>
+          </v-btn>
+          <v-btn
+            class="mb-1 ml-1 mr-2"
+            icon
+            href="mailto:matt-website-queries@outlook.com?subject=Website Feedback"
+          >
+            <v-icon>mdi-email</v-icon>
           </v-btn>
           <v-btn class="mb-2 mr-4" @click="$refs.aboutDialog.dialog=true">About</v-btn>
           <AboutDialog ref="aboutDialog" />

@@ -17,7 +17,7 @@
             I've generally been more comfortable with backend programming, and was keen to make the most of this "unprecedented" time on furlough and improve my web skills, so built this website!
             If you have any ideas for cool things to add to the site (or find a bug!), then
             <a
-              href="mailto:m.kaye@outlook.com"
+              href="mailto:matt-website-queries@outlook.com?subject=Website Feedback"
             >
               <b>let me know!</b>
             </a>
