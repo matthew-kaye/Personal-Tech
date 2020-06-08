@@ -29,7 +29,10 @@
         >
           <template v-slot:item="row">
             <tr>
-              <td>{{vendors.indexOf(row.item)+1}}</td>
+              <td
+                @click="viewVendor(row.item)"
+                v-bind:style="{ cursor: 'pointer' }"
+              >{{vendors.indexOf(row.item)+1}}</td>
               <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
                 <v-row justify="start" align="center">
                   <v-col md="auto">
