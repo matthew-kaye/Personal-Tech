@@ -106,10 +106,11 @@ class SnakeViewSet(viewsets.ViewSet):
     def create(self, request):
         try:
             data = request.data["data"]
-            highScore = HighScore(
-                name=data["name"],
-                score=data["score"],
+            highScore, created = HighScore.objects.get_or_create(
+                name=data["name"]
             )
+            if data["score"] > highScore.score:
+                highScore.score = data["score"]
             highScore.save()
         except Exception as e:
             print(f"Error: {e}")
