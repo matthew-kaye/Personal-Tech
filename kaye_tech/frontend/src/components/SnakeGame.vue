@@ -54,7 +54,7 @@ export default {
         if (score > 0) {
           swal({
             title: "Final Score: " + score,
-            text: "Submit your score for the leaderboard.",
+            text: "Save score to leaderboard (highest only).",
             content: "input",
             button: {
               text: "Submit Score"
