@@ -3,7 +3,25 @@
     <v-card class="ma-6">
       <v-card-title class="primary headline">
         <span class="white--text">News search</span>
+        <v-btn class="ml-8" color="primary" @click="tldrTech=!tldrTech">
+          <v-icon class="mr-2">mdi-laptop</v-icon>Tech Summary
+        </v-btn>
       </v-card-title>
+      <v-dialog v-model="tldrTech" width="900">
+        <v-card>
+          <v-card-title class="mb-6 primary">
+            <span class="headline white--text">Tech Summary</span>
+          </v-card-title>
+          <v-card-text style="font-size:13pt" v-html="techNews"></v-card-text>
+          <v-row v-if="!techNews" class="fill-height ma-0" align="center" justify="center">
+            <v-progress-circular indeterminate color="grey lighten-1"></v-progress-circular>
+          </v-row>
+          <v-card-subtitle>
+            Source:
+            <a :href="tldrUrl">TLDR News</a>
+          </v-card-subtitle>
+        </v-card>
+      </v-dialog>
       <v-row justify="start">
         <v-col>
           <v-row align="center" justify="start" md="auto">
@@ -142,6 +160,7 @@ export default {
   created() {
     this.fetchGuardianSections();
     this.fetchArticles();
+    this.fetchTldrTechNews();
     window.addEventListener("scroll", this.onScroll);
   },
   destroyed() {
@@ -149,6 +168,9 @@ export default {
   },
   data() {
     return {
+      tldrUrl: "https://www.tldrnewsletter.com/latest",
+      tldrTech: false,
+      techNews: "",
       searchTerm: null,
       guardianSections: [{ webTitle: "" }],
       articles: [],
@@ -253,6 +275,22 @@ export default {
     },
     anythingButCovid() {
       this.searchCriteria.push(this.abcFilter);
+    },
+    fetchTldrTechNews() {
+      newsApi.scrapeHTML(this.tldrUrl).then(data => {
+        var span = document.createElement("span");
+        span.innerHTML = data.split("Daily Update").pop();
+        this.techNews = span.innerText
+          .split("           ")
+          .join("<br><br>")
+          .split(" sponsorship page!​​​​")
+          .pop()
+          .split("Give feedback by ")[0]
+          .split(/[(][-+]?[0-9]+ minute read[)]/g)
+          .join(" - ")
+          .split(")")
+          .join(") - ");
+      });
     },
     onScroll(e) {
       this.offsetTop = e.target.scrollingElement.scrollTop;

@@ -32,4 +32,16 @@ export default class NewsApi {
             .then((response) => response.data)
             .catch(error => console.log(error));
     }
+
+    scrapeHTML(url) {
+        const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+        return axios
+            .get(proxyUrl + url, {
+                headers: {
+                    Accept: "text/html",
+                }
+            })
+            .then((response) => response.data)
+            .catch(error => console.log(error));
+    }
 }
