@@ -56,6 +56,13 @@ export default {
     } else {
       this.$vuetify.theme.dark = true;
     }
+    window.activeTab = true;
+    window.onfocus = function() {
+      window.activeTab = true;
+    };
+    window.onblur = function() {
+      window.activeTab = false;
+    };
   },
   data() {
     return {
