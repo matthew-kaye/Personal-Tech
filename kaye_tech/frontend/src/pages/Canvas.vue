@@ -24,7 +24,8 @@
         </span>
       </v-tooltip>
     </v-card-title>
-    <div @mousedown="closeGui()" @mouseup="openGui()">
+    <v-divider />
+    <div :class="[computedMargin]" @mousedown="closeGui()" @mouseup="openGui()">
       <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
     </div>
   </div>
@@ -66,6 +67,11 @@ export default {
       if (this.showGui) {
         window.gui.open();
       }
+    }
+  },
+  computed: {
+    computedMargin() {
+      return `ma-${this.fullscreen ? 0 : 8}`;
     }
   }
 };
