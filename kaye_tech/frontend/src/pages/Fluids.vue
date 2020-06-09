@@ -14,7 +14,7 @@
       </v-btn>
       <v-tooltip max-width="350" v-model="showTooltip" right>
         <template v-slot:activator="{ on }">
-          <v-btn icon class="ml-4" v-on="on">
+          <v-btn icon class="ml-6" v-on="on">
             <v-icon>mdi-information</v-icon>
           </v-btn>
         </template>

@@ -89,8 +89,8 @@ export default {
           icon: "mdi-taco"
         },
         {
-          label: "Canvas",
-          link: "/canvas",
+          label: "Fluids",
+          link: "/fluids",
           icon: "mdi-brush"
         },
         {
@@ -134,7 +134,7 @@ export default {
       }
     },
     closeGui() {
-      if (window.gui && !location.href.includes("canvas")) {
+      if (window.gui && !location.href.includes("fluids")) {
         window.gui.close();
       }
     },
