@@ -2,7 +2,7 @@
   <div>
     <v-card-title class="headline">
       <span>
-        <b>Controls:</b>
+        <b>Options:</b>
       </span>
       <v-btn icon class="ml-6" primary @click="toggleGui">
         <v-icon v-if="showGui">mdi-eye-off</v-icon>
@@ -11,6 +11,9 @@
       <v-btn icon class="ml-6" primary @click="toggleFullscreen">
         <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
         <v-icon v-if="!fullscreen">mdi-fullscreen</v-icon>
+      </v-btn>
+      <v-btn icon class="ml-6" primary @click="refreshPage">
+        <v-icon>mdi-refresh</v-icon>
       </v-btn>
       <v-tooltip max-width="350" v-model="showTooltip" right>
         <template v-slot:activator="{ on }">
@@ -67,6 +70,9 @@ export default {
       if (this.showGui) {
         window.gui.open();
       }
+    },
+    refreshPage() {
+      location.reload();
     }
   },
   computed: {
