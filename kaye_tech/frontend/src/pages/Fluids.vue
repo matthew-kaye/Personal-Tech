@@ -38,6 +38,15 @@
         </template>
         Refresh (reset defaults)
       </v-tooltip>
+      <v-btn
+        large
+        icon
+        class="ml-6"
+        primary
+        @click="$refs.canvasSheet.config.PAUSED=!$refs.canvasSheet.config.PAUSED"
+      >
+        <v-icon>mdi-play-pause</v-icon>
+      </v-btn>
       <v-tooltip max-width="350" v-model="showTooltip" bottom>
         <template v-slot:activator="{ on }">
           <v-btn icon class="ml-6" v-on="on">
