@@ -77,6 +77,7 @@
               <v-text-field
                 round
                 outlined
+                hint="Allows single keyword as well as AND, OR, NOT operators"
                 v-model="searchTerm"
                 @keypress.enter="addSearch()"
                 label="Keywords"
