@@ -65,6 +65,28 @@ export default {
   },
   mounted() {
     const canvas = document.getElementById("fluids");
+    function openFullscreen() {
+      if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+      } else if (canvas.mozRequestFullScreen) {
+        canvas.mozRequestFullScreen();
+      } else if (canvas.webkitRequestFullscreen) {
+        canvas.webkitRequestFullscreen();
+      } else if (canvas.msRequestFullscreen) {
+        canvas.msRequestFullscreen();
+      }
+    }
+    function closeFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
     let config = this.config;
     if (this.activateGui && !window.gui) {
       this.gui = new dat.GUI({ width: 300 });

@@ -4,18 +4,41 @@
       <span>
         <b>Options:</b>
       </span>
-      <v-btn icon class="ml-6" primary @click="toggleGui">
-        <v-icon v-if="showGui">mdi-eye-off</v-icon>
-        <v-icon v-if="!showGui">mdi-eye</v-icon>
-      </v-btn>
-      <v-btn icon class="ml-6" primary @click="toggleFullscreen">
-        <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
-        <v-icon v-if="!fullscreen">mdi-fullscreen</v-icon>
-      </v-btn>
-      <v-btn icon class="ml-6" primary @click="refreshPage">
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
-      <v-tooltip max-width="350" v-model="showTooltip" right>
+      <v-tooltip v-model="showToggleGuiHint" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn large v-on="on" icon class="ml-6" primary @click="toggleGui">
+            <v-icon v-if="showGui">mdi-eye-off</v-icon>
+            <v-icon v-if="!showGui">mdi-eye</v-icon>
+          </v-btn>
+        </template>
+        Toggle Controls
+      </v-tooltip>
+      <v-tooltip v-model="showFullscreenHint" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn label="Fullscreen" v-on="on" icon class="ml-6" primary @click="goFullscreen">
+            <v-icon large>mdi-fullscreen</v-icon>
+          </v-btn>
+        </template>
+        Fullscreen
+      </v-tooltip>
+      <v-tooltip v-model="showToggleWidescreenHint" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn large icon v-on="on" class="ml-6" primary @click="toggleWidescreen">
+            <v-icon v-if="fullscreen">mdi-arrow-collapse-all</v-icon>
+            <v-icon v-if="!fullscreen">mdi-arrow-expand-all</v-icon>
+          </v-btn>
+        </template>
+        Toggle Widescreen
+      </v-tooltip>
+      <v-tooltip v-model="showRefreshHint" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn depressed v-on="on" large icon class="ml-6" primary @click="refreshPage">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        Refresh (reset defaults)
+      </v-tooltip>
+      <v-tooltip max-width="350" v-model="showTooltip" bottom>
         <template v-slot:activator="{ on }">
           <v-btn icon class="ml-6" v-on="on">
             <v-icon>mdi-information</v-icon>
@@ -45,6 +68,10 @@ export default {
     return {
       showGui: true,
       showTooltip: false,
+      showFullscreenHint: false,
+      showToggleGuiHint: false,
+      showToggleWidescreenHint: false,
+      showRefreshHint: false,
       fullscreen: false
     };
   },
@@ -56,7 +83,11 @@ export default {
       this.showGui = !this.showGui;
       this.showGui ? window.gui.open() : this.closeGui();
     },
-    toggleFullscreen() {
+    goFullscreen() {
+      const canvas = document.getElementById("fluids");
+      canvas.requestFullscreen();
+    },
+    toggleWidescreen() {
       this.fullscreen = !this.fullscreen;
       this.$root.$emit("toggleFooter", this.fullscreen);
       if (this.fullscreen) {
