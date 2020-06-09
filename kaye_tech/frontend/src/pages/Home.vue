@@ -40,8 +40,7 @@ export default {
         ? `Hello ${this.currentUser.first_name}!`
         : `Hello!`;
     }
-  },
-  methods: {}
+  }
 };
 </script>
 <style module lang="scss">

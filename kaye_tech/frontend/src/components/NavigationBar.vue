@@ -2,7 +2,12 @@
   <div v-if="currentUser" @click="closeGui()">
     <v-navigation-drawer v-model="drawer" absolute temporary app>
       <v-list>
-        <v-list-item v-for="item in navigationItems" :key="item.label" :to="item.link" link>
+        <v-list-item
+          v-for="item in navigationItems"
+          :key="item.label"
+          :to="item.link +'?dark='+ $vuetify.theme.dark"
+          link
+        >
           <v-list-item-icon>
             <v-icon color="secondary">{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -35,7 +40,12 @@
       </v-tooltip>
       <v-toolbar-items class="hidden-md-and-down">
         <v-chip class="ma-4 pa-0" outlined color="white">
-          <v-btn text v-for="item in navigationItems" :key="item.label" :to="item.link">
+          <v-btn
+            text
+            v-for="item in navigationItems"
+            :key="item.label"
+            :to="item.link +'?dark=' +$vuetify.theme.dark"
+          >
             <v-icon left dark>{{ item.icon }}</v-icon>
             {{ item.label }}
           </v-btn>
@@ -139,7 +149,10 @@ export default {
       }
     },
     goHome() {
-      this.$router.push("/home" + location.search);
+      this.$router.push({
+        name: "home",
+        query: { dark: this.$vuetify.theme.dark }
+      });
       location.reload();
     }
   }

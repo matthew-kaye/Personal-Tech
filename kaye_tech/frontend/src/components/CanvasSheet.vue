@@ -5,7 +5,7 @@
 </template>
 
 <script>
-var homePage = location.pathname.includes("home");
+var homePage = !location.pathname.includes("fluids");
 export default {
   name: "CanvasSheet",
   data() {
