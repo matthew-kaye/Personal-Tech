@@ -56,6 +56,19 @@ export default {
     } else {
       this.$vuetify.theme.dark = true;
     }
+    window.activeTab = true;
+    window.onfocus = function() {
+      window.activeTab = true;
+    };
+    window.onblur = function() {
+      window.activeTab = false;
+    };
+  },
+  mounted() {
+    this.$root.$on("toggleFooter", fullscreen => {
+      console.log(fullscreen);
+      this.footer = !fullscreen;
+    });
   },
   data() {
     return {

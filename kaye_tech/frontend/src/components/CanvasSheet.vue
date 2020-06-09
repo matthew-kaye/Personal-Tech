@@ -5,11 +5,11 @@
 </template>
 
 <script>
+var homePage = location.pathname.includes("home");
 export default {
   name: "CanvasSheet",
   data() {
     var background = this.$vuetify.theme.dark ? 0 : 255;
-    var homePage = location.pathname.includes("home");
     return {
       gui: {},
       params: {
@@ -1012,7 +1012,6 @@ export default {
           image
         );
       };
-      // image.src = url;
       return obj;
     }
     function updateKeywords() {
@@ -1026,8 +1025,10 @@ export default {
     initFramebuffers();
     multipleSplats(parseInt(Math.random() * 20) + 5);
     var autosplat = function() {
-      if (config.AUTOSPLAT_ENABLED && !config.PAUSED) {
-        splatStack.push(config.AUTOSPLAT_COUNT);
+      if (window.activeTab || !homePage) {
+        if (config.AUTOSPLAT_ENABLED && !config.PAUSED) {
+          splatStack.push(config.AUTOSPLAT_COUNT);
+        }
       }
       setTimeout(autosplat, config.AUTOSPLAT_DELAY * 1000);
     };

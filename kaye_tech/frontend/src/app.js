@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import vuetify from "./plugins/vuetify";
 import App from "./App.vue";
 import Home from "./pages/Home.vue"
-import Canvas from "./pages/Canvas.vue";
+import Fluids from "./pages/Fluids.vue";
 import Joke from "./pages/Joke.vue";
 import News from "./pages/News.vue";
 import Books from "./pages/Books.vue";
@@ -24,7 +24,7 @@ const routes = [
     component: Room
   },
   { path: "/burritos", name: "burritos", component: Burritos },
-  { path: "/canvas", name: "canvas", component: Canvas },
+  { path: "/fluids", name: "fluids", component: Fluids },
   { path: "/jokes", name: "jokes", component: Joke },
   { path: "/games", name: "games", component: Games },
 ];
