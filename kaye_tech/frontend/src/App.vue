@@ -64,6 +64,11 @@ export default {
       window.activeTab = false;
     };
   },
+  mounted() {
+    this.$root.$on("toggleFooter", () => {
+      this.footer = !this.footer;
+    });
+  },
   data() {
     return {
       footer: true

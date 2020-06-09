@@ -1,29 +1,32 @@
 <template>
-  <div class="mb-4">
-    <v-card class="ma-6" height="100%">
-      <v-card-title class="primary headline">
-        <span class="white--text">Canvas</span>
-        <v-btn icon color="white" class="ml-6" primary @click="toggleGui">
-          <v-icon v-if="showGui">mdi-eye-off</v-icon>
-          <v-icon v-if="!showGui">mdi-eye</v-icon>
-        </v-btn>
-        <v-tooltip max-width="350" v-model="showTooltip" right>
-          <template v-slot:activator="{ on }">
-            <v-btn icon color="white" class="ml-4" v-on="on">
-              <v-icon>mdi-information-outline</v-icon>
-            </v-btn>
-          </template>
-          <span>
-            Click and drag to generate animations, and space bar to generate more swirls.
-            When satisfied, press 'p' to pause, and click 'Create Photo'. It will download as fluid.png.
-          </span>
-        </v-tooltip>
-      </v-card-title>
-      <div class="ma-10" @mousedown="closeGui()" @mouseup="openGui()">
-        <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
-        <br />
-      </div>
-    </v-card>
+  <div>
+    <v-card-title class="headline">
+      <span class="primary--text">
+        <b>Controls:</b>
+      </span>
+      <v-btn icon color="primary" class="ml-6" primary @click="toggleGui">
+        <v-icon v-if="showGui">mdi-eye-off</v-icon>
+        <v-icon v-if="!showGui">mdi-eye</v-icon>
+      </v-btn>
+      <v-btn icon color="primary" class="ml-6" primary @click="toggleFullscreen">
+        <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+        <v-icon v-if="!fullscreen">mdi-fullscreen</v-icon>
+      </v-btn>
+      <v-tooltip max-width="350" v-model="showTooltip" right>
+        <template v-slot:activator="{ on }">
+          <v-btn icon color="primary" class="ml-4" v-on="on">
+            <v-icon>mdi-information-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>
+          Click and drag to generate animations, and space bar to generate more swirls.
+          When satisfied, press 'p' to pause, and click 'Create Photo'. It will download as fluid.png.
+        </span>
+      </v-tooltip>
+    </v-card-title>
+    <div @mousedown="closeGui()" @mouseup="openGui()">
+      <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
+    </div>
   </div>
 </template>
 
@@ -37,7 +40,8 @@ export default {
   data() {
     return {
       showGui: true,
-      showTooltip: false
+      showTooltip: false,
+      fullscreen: false
     };
   },
   mounted() {
@@ -47,6 +51,13 @@ export default {
     toggleGui() {
       this.showGui = !this.showGui;
       this.showGui ? window.gui.open() : this.closeGui();
+    },
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+      this.$root.$emit("toggleFooter");
+      if (this.fullscreen) {
+        window.scrollTo(0, document.body.scrollHeight);
+      }
     },
     closeGui() {
       window.gui.close();
@@ -64,7 +75,7 @@ export default {
   margin: 0;
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 ::-webkit-scrollbar {
   width: 0px;
