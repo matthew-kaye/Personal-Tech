@@ -1,21 +1,21 @@
 <template>
   <div>
     <v-card-title class="headline">
-      <span class="primary--text">
+      <span>
         <b>Controls:</b>
       </span>
-      <v-btn icon color="primary" class="ml-6" primary @click="toggleGui">
+      <v-btn icon class="ml-6" primary @click="toggleGui">
         <v-icon v-if="showGui">mdi-eye-off</v-icon>
         <v-icon v-if="!showGui">mdi-eye</v-icon>
       </v-btn>
-      <v-btn icon color="primary" class="ml-6" primary @click="toggleFullscreen">
+      <v-btn icon class="ml-6" primary @click="toggleFullscreen">
         <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
         <v-icon v-if="!fullscreen">mdi-fullscreen</v-icon>
       </v-btn>
       <v-tooltip max-width="350" v-model="showTooltip" right>
         <template v-slot:activator="{ on }">
-          <v-btn icon color="primary" class="ml-4" v-on="on">
-            <v-icon>mdi-information-outline</v-icon>
+          <v-btn icon class="ml-4" v-on="on">
+            <v-icon>mdi-information</v-icon>
           </v-btn>
         </template>
         <span>
@@ -55,7 +55,7 @@ export default {
     },
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
-      this.$root.$emit("toggleFooter");
+      this.$root.$emit("toggleFooter", this.fullscreen);
       if (this.fullscreen) {
         window.scrollTo(0, document.body.scrollHeight);
       }

@@ -65,8 +65,9 @@ export default {
     };
   },
   mounted() {
-    this.$root.$on("toggleFooter", () => {
-      this.footer = !this.footer;
+    this.$root.$on("toggleFooter", fullscreen => {
+      console.log(fullscreen);
+      this.footer = !fullscreen;
     });
   },
   data() {
