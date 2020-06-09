@@ -13,8 +13,9 @@
         </v-col>
         <v-col class="ml-n4 mr-4">
           <v-card-text style="text-align:justify;">
-            Hello! If we haven't already met, my name's Matt, and I work as a Software Engineer at Brainlabs.
-            I've generally been more comfortable with backend programming, and was keen to make the most of this "unprecedented" time on furlough and improve my web skills, so built this website!
+            Hello! My name's Matt, and I work as a Software Engineer at Brainlabs.
+            During the Covid-19 lockdown I was keen to improve my web skills, so built this as a place to showcase them with a variety of interesting content (to me anyway!),
+            with everything from news to fluid simulations, games, and even my highly-debated burrito rankings.
             If you have any ideas for cool things to add to the site (or find a bug!), then
             <a
               href="mailto:matt-website-queries@outlook.com?subject=Website Feedback"
