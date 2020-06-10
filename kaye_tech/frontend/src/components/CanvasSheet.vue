@@ -1402,6 +1402,9 @@ export default {
       if (e.code === "KeyP") config.PAUSED = !config.PAUSED;
       if (e.key === " ") splatStack.push(parseInt(Math.random() * 20) + 5);
     });
+    this.$root.$on("randomSplat", () => {
+      splatStack.push(parseInt(Math.random() * 20) + 5);
+    });
     canvas.addEventListener("touchend", e => {
       const touches = e.changedTouches;
       for (let i = 0; i < touches.length; i++) {
@@ -1623,22 +1626,6 @@ export default {
         .add(config, "CONTINUOUS")
         .name("Continuous")
         .listen();
-      gui
-        .add(config, "PAUSED")
-        .name("Paused")
-        .listen();
-
-      gui
-        .add(
-          {
-            fun: () => {
-              splatStack.push(parseInt(Math.random() * 20) + 5);
-            }
-          },
-          "fun"
-        )
-        .name("Random splats");
-
       let autosplatFolder = gui.addFolder("Auto-splat");
       autosplatFolder
         .add(config, "AUTOSPLAT_ENABLED")

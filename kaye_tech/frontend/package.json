@@ -38,6 +38,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "@mdi/font": "^5.3.45",
     "@vue/cli-service-global": "^4.1.2",
     "moment": "^2.24.0",
     "sweetalert": "^2.1.2",

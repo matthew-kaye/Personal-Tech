@@ -32,30 +32,44 @@
       </v-tooltip>
       <v-tooltip v-model="showRefreshHint" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn depressed v-on="on" large icon class="ml-6" primary @click="refreshPage">
+          <v-btn v-on="on" large icon class="ml-6" primary @click="refreshPage">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </template>
         Refresh (reset defaults)
       </v-tooltip>
-      <v-btn
-        large
-        icon
-        class="ml-6"
-        primary
-        @click="$refs.canvasSheet.config.PAUSED=!$refs.canvasSheet.config.PAUSED"
-      >
-        <v-icon>mdi-play-pause</v-icon>
-      </v-btn>
-      <v-tooltip max-width="350" v-model="showTooltip" bottom>
+      <v-tooltip v-model="showPauseHint" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            large
+            v-on="on"
+            icon
+            class="ml-6"
+            primary
+            @click="$refs.canvasSheet.config.PAUSED=!$refs.canvasSheet.config.PAUSED"
+          >
+            <v-icon>mdi-play-pause</v-icon>
+          </v-btn>
+        </template>
+        Pause/Resume (also 'p')
+      </v-tooltip>
+      <v-tooltip v-model="showSplatHint" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" large icon class="ml-6" primary @click="$root.$emit('randomSplat')">
+            <v-icon>mdi-flower-poppy</v-icon>
+          </v-btn>
+        </template>
+        Splat
+      </v-tooltip>
+      <v-tooltip max-width="350" v-model="showInfoTooltip" bottom>
         <template v-slot:activator="{ on }">
           <v-btn icon class="ml-6" v-on="on">
             <v-icon>mdi-information</v-icon>
           </v-btn>
         </template>
         <span>
-          Click and drag to generate animations, and space bar to generate more swirls.
-          When satisfied, press 'p' to pause, and click 'Create Photo'. It will download as fluid.png.
+          Click and drag to generate animations, and space bar to generate more splats.
+          When satisfied, pause, and click 'Create Photo/Download Photo' to download, or right click to copy and paste.
         </span>
       </v-tooltip>
     </v-card-title>
@@ -76,11 +90,13 @@ export default {
   data() {
     return {
       showGui: true,
-      showTooltip: false,
+      showInfoTooltip: false,
       showFullscreenHint: false,
       showToggleGuiHint: false,
       showToggleWidescreenHint: false,
       showRefreshHint: false,
+      showSplatHint: false,
+      showPauseHint: false,
       fullscreen: false
     };
   },
@@ -119,6 +135,10 @@ export default {
     computedMargin() {
       return `ma-${this.fullscreen ? 0 : 8}`;
     }
+  },
+  watch: {
+    // quality: function() {
+    // }
   }
 };
 </script>

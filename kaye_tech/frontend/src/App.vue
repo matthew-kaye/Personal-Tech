@@ -66,7 +66,6 @@ export default {
   },
   mounted() {
     this.$root.$on("toggleFooter", fullscreen => {
-      console.log(fullscreen);
       this.footer = !fullscreen;
     });
   },
