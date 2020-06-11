@@ -5,11 +5,11 @@
 </template>
 
 <script>
-var homePage = !location.pathname.includes("fluids");
 export default {
   name: "CanvasSheet",
   data() {
     var background = this.$vuetify.theme.dark ? 0 : 255;
+    var homePage = !location.pathname.includes("fluids");
     return {
       gui: {},
       params: {
@@ -1047,7 +1047,7 @@ export default {
     initFramebuffers();
     multipleSplats(parseInt(Math.random() * 20) + 5);
     var autosplat = function() {
-      if (window.activeTab || !homePage) {
+      if (window.activeTab || location.pathname.includes("fluids")) {
         if (config.AUTOSPLAT_ENABLED && !config.PAUSED) {
           splatStack.push(config.AUTOSPLAT_COUNT);
         }
