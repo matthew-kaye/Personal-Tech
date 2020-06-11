@@ -32,12 +32,21 @@
       <v-spacer></v-spacer>
       <v-tooltip bottom color="tooltip">
         <template v-slot:activator="{ on }">
-          <v-btn icon text @click="toggleDark" v-on="on">
+          <v-btn class="mr-1" icon text @click="toggleDark" v-on="on">
             <v-icon>mdi-brightness-6</v-icon>
           </v-btn>
         </template>
         Toggle dark mode
       </v-tooltip>
+      <v-tooltip bottom color="tooltip">
+        <template v-slot:activator="{ on }">
+          <v-btn icon text @click="$refs.aboutDialog.dialog=true" v-on="on">
+            <v-icon>mdi-information-outline</v-icon>
+          </v-btn>
+        </template>
+        About the website
+      </v-tooltip>
+      <AboutDialog ref="aboutDialog" />
       <v-toolbar-items class="hidden-md-and-down">
         <v-chip class="ma-4 pa-0" outlined color="white">
           <v-btn
@@ -74,11 +83,15 @@
 </template>
 
 <script>
+import AboutDialog from "@/components/AboutDialog";
 import AccountsApi from "@/apis/AccountsApi";
 const accountsApi = new AccountsApi();
 
 export default {
   name: "NavigationBar",
+  components: {
+    AboutDialog
+  },
   data() {
     return {
       drawer: false,

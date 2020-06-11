@@ -27,14 +27,26 @@
             <v-icon>mdi-linkedin</v-icon>
           </v-btn>
           <v-btn
-            class="mb-1 ml-1 mr-2"
+            class="mb-1 ml-1"
             icon
             href="mailto:matt-website-queries@outlook.com?subject=Website Feedback"
           >
             <v-icon>mdi-email</v-icon>
           </v-btn>
-          <v-btn class="mb-2 mr-4" @click="$refs.aboutDialog.dialog=true">About</v-btn>
-          <AboutDialog ref="aboutDialog" />
+          <v-btn
+            color="offset"
+            fab
+            href="https://github.com/matthew-kaye"
+            height="26"
+            width="26"
+            class="mb-2 ml-2 mr-4"
+          >
+            <v-img
+              max-height="40"
+              max-width="40"
+              src="https://www.sferalabs.cc/wp-content/uploads/github-logo-white.png"
+            />
+          </v-btn>
         </div>
       </v-card>
     </v-footer>
@@ -42,13 +54,11 @@
 </template>
 <script>
 import NavigationBar from "./components/NavigationBar.vue";
-import AboutDialog from "@/components/AboutDialog";
 
 export default {
   name: "app",
   components: {
-    NavigationBar,
-    AboutDialog
+    NavigationBar
   },
   created() {
     if (window.location.href.includes("dark")) {
