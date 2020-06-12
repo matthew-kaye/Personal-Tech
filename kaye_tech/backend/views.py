@@ -45,7 +45,6 @@ class BurritoViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            print("Retrieving")
             vendor = Vendor.objects.get(pk=pk)
             response = vendor
             return Response(json.dumps(response), status=status.HTTP_200_OK)
@@ -54,18 +53,6 @@ class BurritoViewSet(viewsets.ViewSet):
                 {"responseType": "error", "status": f"Failed to retrieve item: {e}"},
                 status=status.HTTP_200_OK,
             )
-
-    def partial_update(self, request, pk=None):
-        try:
-            print(("here"))
-        except Exception as e:
-            return Response(
-                {"responseType": "error", "status": f"Failed to modify id {pk}: {e}"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        return Response(
-            {"responseType": "complete", "job_id": pk}, status=status.HTTP_200_OK
-        )
 
     def update(self, request, pk=None):
         try:
