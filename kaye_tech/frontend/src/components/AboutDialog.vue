@@ -77,6 +77,10 @@ export default {
   animation: shake 0.5s;
   animation-iteration-count: infinite;
 }
+.logo:active {
+  animation: shake 0.1s;
+  animation-iteration-count: infinite;
+}
 @keyframes shake {
   0% {
     transform: translate(1px, 1px) rotate(0deg);
