@@ -48,7 +48,7 @@
     </v-fade-transition>
     <v-fade-transition>
       <div v-if="damageCalculator">
-        <Tabletop ref="calculator" />
+        <DamageCalculator ref="calculator" />
       </div>
     </v-fade-transition>
     <v-slide-y-transition>
@@ -87,13 +87,13 @@
 
 <script>
 import SnakeGame from "@/components/SnakeGame.vue";
-import Tabletop from "@/components/Tabletop.vue";
+import DamageCalculator from "@/components/DamageCalculator.vue";
 import SnakeApi from "@/apis/SnakeApi";
 const snakeApi = new SnakeApi();
 export default {
   components: {
     SnakeGame,
-    Tabletop
+    DamageCalculator
   },
   data() {
     return {

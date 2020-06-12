@@ -71,14 +71,14 @@
         </v-data-table>
       </v-fab-transition>
     </v-card>
-    <BurritoInputDialog
+    <BurritoDialog
       :dialogMode="dialogMode"
       :vendor="vendor"
       :admin="admin"
       @save="saveData"
       @update="updateData"
       @delete="warningDialog=true"
-      ref="burritoInputDialog"
+      ref="burritoDialog"
     />
     <WarningDialog cols="3" :dialog="warningDialog" @yes="deleteData" @no="warningDialog=false" />
   </div>
@@ -86,7 +86,7 @@
 
 <script>
 import BurritoApi from "@/apis/BurritoApi";
-import BurritoInputDialog from "@/components/BurritoInputDialog";
+import BurritoDialog from "@/components/BurritoDialog";
 import WarningDialog from "@/components/WarningDialog";
 import AccountsApi from "@/apis/AccountsApi";
 const accountsApi = new AccountsApi();
@@ -96,7 +96,7 @@ const burritoApi = new BurritoApi();
 
 export default {
   components: {
-    BurritoInputDialog,
+    BurritoDialog,
     WarningDialog
   },
   created() {
@@ -142,12 +142,12 @@ export default {
     addNewVendor() {
       this.vendor = null;
       this.dialogMode = "Create";
-      this.$refs.burritoInputDialog.open();
+      this.$refs.burritoDialog.open();
     },
     viewVendor(vendor) {
       this.vendor = vendor;
       this.dialogMode = "View";
-      this.$refs.burritoInputDialog.open();
+      this.$refs.burritoDialog.open();
     },
     saveData(vendorData) {
       burritoApi.makeVendor(vendorData).then(data => {
@@ -161,7 +161,7 @@ export default {
     },
     deleteData() {
       this.warningDialog = false;
-      this.$refs.burritoInputDialog.close();
+      this.$refs.burritoDialog.close();
       burritoApi.deleteVendor(this.vendor.pk).then(data => {
         this.fetchVendors();
       });
