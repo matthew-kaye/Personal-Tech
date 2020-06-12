@@ -46,7 +46,7 @@
             icon
             class="ml-6"
             primary
-            @click="$refs.canvasSheet.config.PAUSED=!$refs.canvasSheet.config.PAUSED"
+            @click="$refs.fluidsSheet.config.PAUSED=!$refs.fluidsSheet.config.PAUSED"
           >
             <v-icon>mdi-play-pause</v-icon>
           </v-btn>
@@ -75,17 +75,17 @@
     </v-card-title>
     <v-divider />
     <div :class="[computedMargin]" @mousedown="closeGui()" @mouseup="openGui()">
-      <CanvasSheet class="canvasPlayground" ref="canvasSheet" :activateGui="true" />
+      <FluidsSheet class="canvasPlayground" ref="fluidsSheet" :activateGui="true" />
     </div>
   </div>
 </template>
 
 <script>
-import CanvasSheet from "@/components/CanvasSheet.vue";
+import FluidsSheet from "@/components/FluidsSheet.vue";
 
 export default {
   components: {
-    CanvasSheet
+    FluidsSheet
   },
   data() {
     return {
@@ -101,7 +101,7 @@ export default {
     };
   },
   mounted() {
-    window.gui = this.$refs.canvasSheet.gui;
+    window.gui = this.$refs.fluidsSheet.gui;
   },
   methods: {
     toggleGui() {

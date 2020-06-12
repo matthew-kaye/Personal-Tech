@@ -1,7 +1,7 @@
 <template>
   <v-fab-transition>
     <div @click="overlay = false" class="text-center">
-      <CanvasSheet class="homeCanvas"></CanvasSheet>
+      <FluidsSheet class="homeCanvas"></FluidsSheet>
       <v-overlay width="100%" height="100%" :value="overlay" style="cursor: pointer;">
         <span style="font-size:64pt">{{welcomeMessage}}</span>
         <br />
@@ -11,12 +11,12 @@
   </v-fab-transition>
 </template>
 <script>
-import CanvasSheet from "@/components/CanvasSheet.vue";
+import FluidsSheet from "@/components/FluidsSheet.vue";
 import AccountsApi from "@/apis/AccountsApi";
 const accountsApi = new AccountsApi();
 export default {
   components: {
-    CanvasSheet
+    FluidsSheet
   },
   created() {
     accountsApi.getCurrentUser().then(data => {

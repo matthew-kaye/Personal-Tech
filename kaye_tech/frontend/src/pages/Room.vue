@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import CanvasSheet from "@/components/CanvasSheet.vue";
 import AccountsApi from "@/apis/AccountsApi";
 const accountsApi = new AccountsApi();
 

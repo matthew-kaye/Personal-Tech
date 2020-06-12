@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "CanvasSheet",
+  name: "FluidsSheet",
   data() {
     var background = this.$vuetify.theme.dark ? 0 : 255;
     var homePage = !location.pathname.includes("fluids");
