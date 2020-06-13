@@ -25,7 +25,7 @@
           </v-card-text>
         </v-col>
       </v-row>
-      <v-row class="ml-1">
+      <v-row class="ml-1 mt-n6">
         <v-col style="text-align: center;">
           <v-card-text>
             <span class="headline">
@@ -59,6 +59,15 @@
           </div>
         </v-col>
       </v-row>
+      <iframe
+        class="ml-10"
+        width="624"
+        height="351"
+        src="https://www.youtube.com/embed/CSUGQmDaGto"
+        frameborder="0"
+        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
     </v-card>
   </v-dialog>
 </template>
