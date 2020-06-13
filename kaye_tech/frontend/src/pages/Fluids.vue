@@ -136,10 +136,6 @@ export default {
       return `ma-${this.fullscreen ? 0 : 8}`;
     }
   },
-  watch: {
-    // quality: function() {
-    // }
-  }
 };
 </script>
 <style module lang="scss">

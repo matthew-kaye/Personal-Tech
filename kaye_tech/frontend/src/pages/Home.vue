@@ -1,7 +1,7 @@
 <template>
   <v-fab-transition>
     <div @click="overlay = false" class="text-center">
-      <FluidsSheet class="homeCanvas"></FluidsSheet>
+      <FluidsSheet :homePage="true" class="homeCanvas"></FluidsSheet>
       <v-overlay width="100%" height="100%" :value="overlay" style="cursor: pointer;">
         <span style="font-size:64pt">{{welcomeMessage}}</span>
         <br />

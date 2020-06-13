@@ -9,7 +9,6 @@ export default {
   name: "FluidsSheet",
   data() {
     var background = this.$vuetify.theme.dark ? 0 : 255;
-    var homePage = !location.pathname.includes("fluids");
     return {
       gui: {},
       params: {
@@ -27,8 +26,8 @@ export default {
         VELOCITY_DISSIPATION: 0.2,
         PRESSURE: 0.8,
         PRESSURE_ITERATIONS: 20,
-        CURL: homePage ? 0 : 30,
-        SPLAT_RADIUS: homePage ? 0.4 : 0.25,
+        CURL: this.homePage ? 0 : 30,
+        SPLAT_RADIUS: this.homePage ? 0.4 : 0.25,
         SPLAT_FORCE: 6000,
         SHADING: true,
         COLORFUL: true,
@@ -36,7 +35,7 @@ export default {
         PAUSED: false,
         BACK_COLOR: { r: background, g: background, b: background },
         TRANSPARENT: false,
-        BLOOM: !homePage,
+        BLOOM: !this.homePage,
         BLOOM_ITERATIONS: 8,
         BLOOM_RESOLUTION: 256,
         BLOOM_INTENSITY: 0.8,
@@ -45,10 +44,10 @@ export default {
         SUNRAYS: this.$vuetify.theme.dark,
         SUNRAYS_RESOLUTION: 196,
         SUNRAYS_WEIGHT: 1.0,
-        AUTOSPLAT_ENABLED: homePage,
+        AUTOSPLAT_ENABLED: this.homePage,
         AUTOSPLAT_DELAY: 4,
         AUTOSPLAT_COUNT: 12,
-        CONTINUOUS: homePage
+        CONTINUOUS: this.homePage
       }
     };
   },
@@ -1813,7 +1812,8 @@ export default {
     }
   },
   props: {
-    activateGui: Boolean
+    activateGui: Boolean,
+    homePage: Boolean
   }
 };
 </script>
