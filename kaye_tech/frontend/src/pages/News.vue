@@ -68,9 +68,8 @@
                 outlined
                 icon
                 x-large
-                append-icon="mdi-cancel"
               >
-                <v-icon large>mdi-thermometer-minus</v-icon>
+                <v-icon>fas fa-user-md</v-icon>
               </v-btn>
             </v-col>
             <v-col cols="3">

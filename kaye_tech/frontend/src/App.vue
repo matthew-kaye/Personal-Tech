@@ -33,19 +33,8 @@
           >
             <v-icon>mdi-email</v-icon>
           </v-btn>
-          <v-btn
-            color="offset"
-            fab
-            href="https://github.com/matthew-kaye"
-            height="26"
-            width="26"
-            class="mb-2 ml-2 mr-4"
-          >
-            <v-img
-              max-height="40"
-              max-width="40"
-              src="https://www.sferalabs.cc/wp-content/uploads/github-logo-white.png"
-            />
+          <v-btn icon href="https://github.com/matthew-kaye" class="mb-2 ml-2 mr-4">
+            <v-icon>fab fa-github</v-icon>
           </v-btn>
         </div>
       </v-card>
