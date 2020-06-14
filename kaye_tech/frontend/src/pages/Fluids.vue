@@ -100,6 +100,16 @@
         ></v-color-picker>
         <v-btn width="300" large @click="splatRgb={ r: 0, g: 0, b: 0 }">Reset</v-btn>
       </v-menu>
+      <v-tooltip v-model="toggleDragButtonhint" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" large icon class="ml-6" @click="toggleContinuous">
+            <v-icon v-if="continuous">mdi-cursor-default-click</v-icon>
+            <v-icon v-if="!continuous">mdi-cursor-default-click-outline</v-icon>
+          </v-btn>
+        </template>
+        Toggle Animating on Mouse Hover
+        <span></span>
+      </v-tooltip>
       <v-tooltip max-width="350" v-model="showInfoTooltip" bottom>
         <template v-slot:activator="{ on }">
           <v-btn icon class="ml-6" v-on="on">
@@ -141,7 +151,9 @@ export default {
       colourPicker: false,
       backgroundColourHint: false,
       splatColourHint: false,
-      fullscreen: false
+      toggleDragButtonhint: false,
+      fullscreen: false,
+      continuous: false
     };
   },
   mounted() {
@@ -162,6 +174,10 @@ export default {
       if (this.fullscreen) {
         window.scrollTo(0, document.body.scrollHeight);
       }
+    },
+    toggleContinuous() {
+      this.continuous = !this.continuous;
+      this.$refs.fluidsSheet.config.CONTINUOUS = this.continuous;
     },
     closeGui() {
       window.gui.close();

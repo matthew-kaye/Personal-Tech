@@ -1507,7 +1507,7 @@ export default {
         Math.abs(pointer.deltaX) > 0 || Math.abs(pointer.deltaY) > 0;
     }
     function updatePointerUpData(pointer) {
-      if (!config.CONTINUOUS) pointer.down = false;
+      pointer.down = false;
     }
     function correctDeltaX(delta) {
       let aspectRatio = canvas.width / canvas.height;
@@ -1640,10 +1640,6 @@ export default {
         .add(config, "SHADING")
         .name("Shading")
         .onFinishChange(updateKeywords);
-      gui
-        .add(config, "CONTINUOUS")
-        .name("Continuous")
-        .listen();
       let autosplatFolder = gui.addFolder("Auto-splat");
       autosplatFolder
         .add(config, "AUTOSPLAT_ENABLED")
