@@ -1404,6 +1404,10 @@ export default {
     this.$root.$on("randomSplat", () => {
       splatStack.push(parseInt(Math.random() * 20) + 5);
     });
+    this.$root.$on("changeBackground", darkMode => {
+      var background = darkMode ? 0 : 255;
+      this.config.BACK_COLOR = { r: background, g: background, b: background };
+    });
     canvas.addEventListener("touchend", e => {
       const touches = e.changedTouches;
       for (let i = 0; i < touches.length; i++) {

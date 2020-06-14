@@ -153,7 +153,7 @@ export default {
       var newUrl = location.pathname + "?dark=" + this.$vuetify.theme.dark;
       window.history.pushState("string", "Title", newUrl);
       if (window.needsRefresh) {
-        location.reload();
+        this.$root.$emit("changeBackground", this.$vuetify.theme.dark);
       }
     },
     closeGui() {
