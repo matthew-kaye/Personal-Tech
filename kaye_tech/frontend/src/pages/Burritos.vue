@@ -36,13 +36,7 @@
               <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
                 <v-row justify="start" align="center" class="ma-n2">
                   <v-col md="auto">
-                    <v-img
-                      contain
-                      height="45"
-                      max-width="45"
-                      v-if="row.item.fields['img_url']"
-                      :src="row.item.fields['img_url']"
-                    >
+                    <v-img contain height="45" max-width="45" :src="row.item.fields['img_url']">
                       <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center">
                           <v-progress-circular indeterminate color="grey lighten-1"></v-progress-circular>

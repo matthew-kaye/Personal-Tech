@@ -7,13 +7,11 @@
       <v-data-table :headers="headers" :items="books">
         <template v-slot:item="row">
           <tr v-bind:style="{ cursor: 'pointer' }" @click="viewBook(row.item)">
+            <td>{{ row.item.rank }}</td>
             <td>
-              <p>{{ row.item.rank }}</p>
-            </td>
-            <td>
-              <v-row justify="start" align="center">
+              <v-row justify="start" align="center" class="ma-n1">
                 <v-col md="auto">
-                  <v-img max-height="40" max-width="25" :src="row.item.book_image">
+                  <v-img contain height="40" max-width="25" :src="row.item.book_image">
                     <template v-slot:placeholder>
                       <v-row class="fill-height ma-0" align="center" justify="center">
                         <v-progress-circular indeterminate color="grey lighten-1"></v-progress-circular>
@@ -21,17 +19,11 @@
                     </template>
                   </v-img>
                 </v-col>
-                <v-col md="auto">
-                  <p>{{ toTitleCase(row.item.title) }}</p>
-                </v-col>
+                <v-col md="auto">{{ toTitleCase(row.item.title) }}</v-col>
               </v-row>
             </td>
-            <td>
-              <p>{{ row.item.author }}</p>
-            </td>
-            <td>
-              <p>{{ row.item.weeks_on_list }}</p>
-            </td>
+            <td>{{ row.item.author }}</td>
+            <td>{{ row.item.weeks_on_list }}</td>
           </tr>
         </template>
       </v-data-table>
