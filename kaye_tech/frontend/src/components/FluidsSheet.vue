@@ -47,7 +47,8 @@ export default {
         AUTOSPLAT_ENABLED: this.homePage,
         AUTOSPLAT_DELAY: 4,
         AUTOSPLAT_COUNT: 12,
-        CONTINUOUS: this.homePage
+        CONTINUOUS: this.homePage,
+        SPLAT_COLOR_OVERRIDE: null
       }
     };
   },
@@ -1407,6 +1408,16 @@ export default {
     this.$root.$on("changeBackground", colour => {
       this.config.BACK_COLOR = { r: colour.r, g: colour.g, b: colour.b };
     });
+    this.$root.$on("overrideSplatColour", colour => {
+      this.config.SPLAT_COLOR_OVERRIDE =
+        colour.r + colour.g + colour.b > 0
+          ? {
+              r: colour.r,
+              g: colour.g,
+              b: colour.b
+            }
+          : false;
+    });
     canvas.addEventListener("touchend", e => {
       const touches = e.changedTouches;
       for (let i = 0; i < touches.length; i++) {
@@ -1513,6 +1524,12 @@ export default {
       c.r *= 0.15;
       c.g *= 0.15;
       c.b *= 0.15;
+      if (config.SPLAT_COLOR_OVERRIDE) {
+        var colour = config.SPLAT_COLOR_OVERRIDE;
+        c.r = (colour.r * 0.15) / 255;
+        c.g = (colour.g * 0.15) / 255;
+        c.b = (colour.b * 0.15) / 255;
+      }
       return c;
     }
     function HSVtoRGB(h, s, v) {
@@ -1623,7 +1640,6 @@ export default {
         .add(config, "SHADING")
         .name("Shading")
         .onFinishChange(updateKeywords);
-      gui.add(config, "COLORFUL").name("Colourful");
       gui
         .add(config, "CONTINUOUS")
         .name("Continuous")

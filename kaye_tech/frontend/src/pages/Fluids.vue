@@ -74,10 +74,31 @@
         </template>
         <v-color-picker
           swatches-max-height="10"
+          width="300"
           canvas-height="180"
           hide-mode-switch
           v-model="backgroundColour"
         ></v-color-picker>
+      </v-menu>
+      <v-menu bottom :close-on-content-click="false">
+        <template v-slot:activator="{ on: menu, attrs }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on: tooltip }">
+              <v-btn large class="ml-6" icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
+                <v-icon large>mdi-brush</v-icon>
+              </v-btn>
+            </template>
+            <span>Override Splat Colour</span>
+          </v-tooltip>
+        </template>
+        <v-color-picker
+          swatches-max-height="10"
+          canvas-height="180"
+          width="300"
+          hide-mode-switch
+          v-model="splatColour"
+        ></v-color-picker>
+        <v-btn width="300" large @click="splatRgb={ r: 0, g: 0, b: 0 }">Reset</v-btn>
       </v-menu>
       <v-tooltip max-width="350" v-model="showInfoTooltip" bottom>
         <template v-slot:activator="{ on }">
@@ -115,9 +136,11 @@ export default {
       showRefreshHint: false,
       showSplatHint: false,
       showPauseHint: false,
-      rgb: { r: 59, g: 0, b: 64 },
+      rgb: { r: 0, g: 0, b: 0 },
+      splatRgb: { r: 0, g: 0, b: 0 },
       colourPicker: false,
       backgroundColourHint: false,
+      splatColourHint: false,
       fullscreen: false
     };
   },
@@ -163,11 +186,22 @@ export default {
       set(v) {
         this.rgb = v;
       }
+    },
+    splatColour: {
+      get() {
+        return this.splatRgb;
+      },
+      set(v) {
+        this.splatRgb = v;
+      }
     }
   },
   watch: {
     rgb: function() {
       this.$root.$emit("changeBackground", this.rgb);
+    },
+    splatRgb: function() {
+      this.$root.$emit("overrideSplatColour", this.splatRgb);
     }
   }
 };
