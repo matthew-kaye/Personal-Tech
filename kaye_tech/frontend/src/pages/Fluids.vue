@@ -61,7 +61,7 @@
         </template>
         Splat
       </v-tooltip>
-      <v-menu bottom>
+      <v-menu bottom :close-on-content-click="false">
         <template v-slot:activator="{ on: menu, attrs }">
           <v-tooltip bottom>
             <template v-slot:activator="{ on: tooltip }">
