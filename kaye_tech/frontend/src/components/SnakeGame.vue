@@ -162,7 +162,7 @@ export default {
 
 <style>
 .snakeGame {
-  border: 1px solid white;
+  border: 1px solid rgb(85, 6, 52);
   width: 50%;
   height: 50%;
 }

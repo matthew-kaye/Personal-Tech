@@ -24,21 +24,22 @@
     <v-fade-transition>
       <v-row v-if="snakeGame" class="ml-3">
         <v-col md="auto" v-if="snakeHighScores.length>0">
-          <v-list width="400">
-            <v-list-item color="primary">
-              Top 10 Leaderboard
-              <v-btn icon @click="fetchScores" class="ml-4">
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-            </v-list-item>
+          <v-card cols="1" width="400">
+            <v-list>
+              <v-list-item color="primary">
+                Top 10 Leaderboard
+                <v-btn icon @click="fetchScores" class="ml-4">
+                  <v-icon>mdi-refresh</v-icon>
+                </v-btn>
+              </v-list-item>
+              <v-divider />
+              <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
+                <v-list-item-content>{{item.fields.name}}</v-list-item-content>
+                <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
+              </v-list-item>
+            </v-list>
             <v-divider />
-            <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
-              <v-list-item-content>{{item.fields.name}}</v-list-item-content>
-              <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-card cols="1">
-            <v-card-text>Press any key to start, and space bar to pause</v-card-text>
+            <v-card-text>Direct the snake to eat the apple using the arrow keys, and press space bar to pause. Press any key to begin.</v-card-text>
           </v-card>
         </v-col>
         <v-col>
