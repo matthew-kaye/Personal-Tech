@@ -1404,9 +1404,8 @@ export default {
     this.$root.$on("randomSplat", () => {
       splatStack.push(parseInt(Math.random() * 20) + 5);
     });
-    this.$root.$on("changeBackground", darkMode => {
-      var background = darkMode ? 0 : 255;
-      this.config.BACK_COLOR = { r: background, g: background, b: background };
+    this.$root.$on("changeBackground", colour => {
+      this.config.BACK_COLOR = { r: colour.r, g: colour.g, b: colour.b };
     });
     canvas.addEventListener("touchend", e => {
       const touches = e.changedTouches;
@@ -1657,7 +1656,6 @@ export default {
       sunraysFolder.add(config, "SUNRAYS_WEIGHT", 0.3, 1.0).name("Weight");
 
       let captureFolder = gui.addFolder("Create Photo");
-      captureFolder.addColor(config, "BACK_COLOR").name("Background Colour");
       captureFolder.add(config, "TRANSPARENT").name("Transparent");
       captureFolder
         .add({ fun: captureScreenshot }, "fun")

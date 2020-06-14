@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card-title class="headline">
+    <v-card-title class="headline" align="start">
       <span>
         <b>Options:</b>
       </span>
@@ -61,6 +61,24 @@
         </template>
         Splat
       </v-tooltip>
+      <v-menu bottom>
+        <template v-slot:activator="{ on: menu, attrs }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on: tooltip }">
+              <v-btn large class="ml-6" icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
+                <v-icon class="mt-1" large>mdi-format-color-fill</v-icon>
+              </v-btn>
+            </template>
+            <span>Adjust Background Colour</span>
+          </v-tooltip>
+        </template>
+        <v-color-picker
+          swatches-max-height="10"
+          canvas-height="180"
+          hide-mode-switch
+          v-model="backgroundColour"
+        ></v-color-picker>
+      </v-menu>
       <v-tooltip max-width="350" v-model="showInfoTooltip" bottom>
         <template v-slot:activator="{ on }">
           <v-btn icon class="ml-6" v-on="on">
@@ -97,6 +115,9 @@ export default {
       showRefreshHint: false,
       showSplatHint: false,
       showPauseHint: false,
+      rgb: { r: 59, g: 0, b: 64 },
+      colourPicker: false,
+      backgroundColourHint: false,
       fullscreen: false
     };
   },
@@ -134,8 +155,21 @@ export default {
   computed: {
     computedMargin() {
       return `ma-${this.fullscreen ? 0 : 8}`;
+    },
+    backgroundColour: {
+      get() {
+        return this.rgb;
+      },
+      set(v) {
+        this.rgb = v;
+      }
     }
   },
+  watch: {
+    rgb: function() {
+      this.$root.$emit("changeBackground", this.rgb);
+    }
+  }
 };
 </script>
 <style module lang="scss">
