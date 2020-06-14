@@ -17,7 +17,7 @@
           <v-btn @click="footer=false" icon bottom left absolute>
             <v-icon>mdi-chevron-down</v-icon>
           </v-btn>
-          <span class="secondary--text">
+          <span>
             <strong>
               Matthew Kaye
               - {{ new Date().getFullYear() }}

@@ -2,7 +2,7 @@
   <div>
     <v-card class="ma-6">
       <v-card-title class="headline">
-        <span class="white--text">Burrito Rankings</span>
+        <span>Burrito Rankings</span>
         <v-btn class="ml-6" v-if="admin" color="primary" medium @click="addNewVendor()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>

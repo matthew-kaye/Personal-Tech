@@ -61,16 +61,22 @@
               ></v-select>
             </v-col>
             <v-col md="auto">
-              <v-btn
-                :disabled="searchCriteria.includes(abcFilter)"
-                color="primary"
-                @click="anythingButCovid()"
-                outlined
-                icon
-                x-large
-              >
-                <v-icon>fas fa-user-md</v-icon>
-              </v-btn>
+              <v-tooltip v-model="showABCHint" bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    :disabled="searchCriteria.includes(abcFilter)"
+                    color="primary"
+                    @click="anythingButCovid()"
+                    outlined
+                    icon
+                    x-large
+                    v-on="on"
+                  >
+                    <v-icon>fas fa-user-md</v-icon>
+                  </v-btn>
+                </template>
+                Anything But Coronavirus
+              </v-tooltip>
             </v-col>
             <v-col cols="3">
               <v-text-field
@@ -185,7 +191,8 @@ export default {
         type: "ABC",
         text: "Anything But Coronavirus"
       },
-      offsetTop: 0
+      offsetTop: 0,
+      showABCHint: false
     };
   },
   computed: {
