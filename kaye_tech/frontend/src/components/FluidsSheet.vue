@@ -1417,6 +1417,7 @@ export default {
               b: colour.b
             }
           : false;
+      this.config.COLORFUL = this.config.SPLAT_COLOR_OVERRIDE ? false : true;
     });
     canvas.addEventListener("touchend", e => {
       const touches = e.changedTouches;
@@ -1640,6 +1641,7 @@ export default {
         .add(config, "SHADING")
         .name("Shading")
         .onFinishChange(updateKeywords);
+      gui.add(config, "COLORFUL").name("Colourful");
       let autosplatFolder = gui.addFolder("Auto-splat");
       autosplatFolder
         .add(config, "AUTOSPLAT_ENABLED")
