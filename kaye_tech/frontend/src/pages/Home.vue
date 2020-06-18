@@ -51,6 +51,7 @@ canvas {
 }
 .homeCanvas {
   position: absolute;
+  cursor: none;
   width: 100%;
   height: 100%;
 }

@@ -228,6 +228,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100vh;
+  cursor: pointer;
 }
 ::-webkit-scrollbar {
   width: 0px;
