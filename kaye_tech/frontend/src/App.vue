@@ -12,7 +12,7 @@
       </v-btn>
     </v-content>
     <v-footer padless height="52" v-show="footer" class="text-right">
-      <v-card width="100%" height="52">
+      <v-card width="100%" height="52" tile>
         <div class="mt-2" color="card">
           <v-btn @click="footer=false" icon bottom left absolute>
             <v-icon>mdi-chevron-down</v-icon>

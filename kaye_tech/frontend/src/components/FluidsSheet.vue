@@ -1629,7 +1629,7 @@ export default {
         .onFinishChange(initFramebuffers);
       gui.add(config, "DENSITY_DISSIPATION", 0, 4.0).name("Density diffusion");
       gui
-        .add(config, "VELOCITY_DISSIPATION", 0, 4.0)
+        .add(config, "VELOCITY_DISSIPATION", 0, 5.0)
         .name("Velocity diffusion");
       gui.add(config, "PRESSURE", 0.0, 1.0).name("Pressure");
       gui
@@ -1651,7 +1651,7 @@ export default {
         .add(config, "AUTOSPLAT_DELAY", 0.1, 30.0)
         .name("Auto-splat interval seconds");
       autosplatFolder
-        .add(config, "AUTOSPLAT_COUNT", 1, 10, 1)
+        .add(config, "AUTOSPLAT_COUNT", 1, 20, 1)
         .name("No. of Auto-splats");
 
       let bloomFolder = gui.addFolder("Bloom");
