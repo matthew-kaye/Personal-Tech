@@ -12,7 +12,7 @@
           </v-avatar>
         </v-col>
         <v-col class="ml-n4 mr-4">
-          <v-card-text style="text-align:justify;">
+          <v-card-text>
             Hello! My name's Matt, and I work as a Software Engineer at Brainlabs.
             During the Covid-19 lockdown I was keen to improve my web skills, so built this as a place to showcase them with a variety of interesting content (to me anyway!),
             with everything from news to fluid simulations, games, and even my highly-debated burrito rankings.
