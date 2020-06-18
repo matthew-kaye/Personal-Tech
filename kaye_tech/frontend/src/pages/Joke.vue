@@ -106,15 +106,19 @@ export default {
         .then(response => response.data)
         .catch(error => console.log(error));
       jokeResponse.then(data => {
-        if (data.type == "single") {
-          this.joke = data.joke;
-        } else if (data.type == "twopart") {
-          this.joke = data.setup + " - " + data.delivery;
-        } else {
-          this.joke = `Apparently ${searchTerm} is not a funny word`;
-        }
-        if (data.id == 144 || data.id == 73) {
-          this.joke = null;
+        try {
+          if (data.type == "single") {
+            this.joke = data.joke;
+          } else if (data.type == "twopart") {
+            this.joke = data.setup + " - " + data.delivery;
+          } else {
+            this.joke = `Apparently ${searchTerm} is not a funny word`;
+          }
+          if (data.id == 144 || data.id == 73) {
+            this.joke = null;
+          }
+        } catch (error) {
+          this.joke = "Api call rate exceeded - try again later.";
         }
       });
     }
