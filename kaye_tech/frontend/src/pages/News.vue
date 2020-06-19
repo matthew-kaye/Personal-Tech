@@ -182,7 +182,7 @@ export default {
       articles: [],
       currentUser: "",
       section: null,
-      pageSize: 10,
+      pageSize: 25,
       searchCriteria: [],
       searchParameter: "",
       keywordParams: [],
@@ -270,7 +270,8 @@ export default {
             "Local",
             "Leeds",
             "Edinburgh",
-            "Cardiff"
+            "Cardiff",
+            "Better Business"
           ];
           return (
             !excludedSections.includes(section.webTitle) &&

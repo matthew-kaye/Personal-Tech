@@ -17,13 +17,13 @@
           <v-col cols="6">
             <v-card class="ma-4">
               <v-card-title class="primary headline">
-                <span class="white--text">Description</span>
+                <span class="white--text ml-2">Description</span>
               </v-card-title>
-              <div class="text--primary ma-4">{{book.description}}</div>
+              <div class="text--primary ml-6 mb-4 mr-4 mt-4">{{book.description}}</div>
               <v-row justify="start">
                 <v-col md="auto">
                   <v-btn
-                    class="ml-4 mb-4"
+                    class="ml-6 mb-4"
                     color="primary"
                     :href="book.amazon_product_url"
                   >{{ "Amazon (US)" }}</v-btn>

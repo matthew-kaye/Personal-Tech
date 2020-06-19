@@ -1521,17 +1521,17 @@ export default {
       return delta;
     }
     function generateColor() {
-      let c = HSVtoRGB(Math.random(), 1.0, 1.0);
-      c.r *= 0.15;
-      c.g *= 0.15;
-      c.b *= 0.15;
+      let splatColour = HSVtoRGB(Math.random(), 1.0, 1.0);
+      splatColour.r *= 0.15;
+      splatColour.g *= 0.15;
+      splatColour.b *= 0.15;
       if (config.SPLAT_COLOR_OVERRIDE) {
         var colour = config.SPLAT_COLOR_OVERRIDE;
-        c.r = (colour.r * 0.15) / 255;
-        c.g = (colour.g * 0.15) / 255;
-        c.b = (colour.b * 0.15) / 255;
+        splatColour.r = (colour.r * 0.15) / 255;
+        splatColour.g = (colour.g * 0.15) / 255;
+        splatColour.b = (colour.b * 0.15) / 255;
       }
-      return c;
+      return splatColour;
     }
     function HSVtoRGB(h, s, v) {
       let r, g, b, i, f, p, q, t;

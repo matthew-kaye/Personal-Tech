@@ -85,10 +85,12 @@ export default {
 .logo:hover {
   animation: shake 0.5s;
   animation-iteration-count: infinite;
+  cursor: grab;
 }
 .logo:active {
   animation: shake 0.1s;
   animation-iteration-count: infinite;
+  cursor: grabbing;
 }
 @keyframes shake {
   0% {

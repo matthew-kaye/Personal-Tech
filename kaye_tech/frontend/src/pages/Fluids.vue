@@ -59,7 +59,7 @@
             <v-icon>mdi-flower-poppy</v-icon>
           </v-btn>
         </template>
-        Splat
+        Splat (Also space bar)
       </v-tooltip>
       <v-menu bottom :close-on-content-click="false">
         <template v-slot:activator="{ on: menu, attrs }">
@@ -107,7 +107,7 @@
             <v-icon v-if="!continuous">mdi-cursor-default-click-outline</v-icon>
           </v-btn>
         </template>
-        Toggle Animating on Mouse Hover
+        Toggle drawing with mouse hover
         <span></span>
       </v-tooltip>
       <v-tooltip max-width="350" v-model="showInfoTooltip" bottom>
@@ -118,7 +118,7 @@
         </template>
         <span>
           Click and drag to generate animations, and space bar to generate more splats.
-          When satisfied, pause, and click 'Create Photo/Download Photo' to download, or right click to copy and paste.
+          To make a photo, pause when satisfied, and click 'Create Photo/Download Photo' to download, or right click to copy and paste.
         </span>
       </v-tooltip>
     </v-card-title>
