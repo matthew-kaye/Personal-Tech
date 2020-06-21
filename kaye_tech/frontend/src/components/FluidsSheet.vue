@@ -1846,4 +1846,7 @@ export default {
 .cr.string {
   font-size: 130%;
 }
+canvas:active {
+  cursor: none;
+}
 </style>

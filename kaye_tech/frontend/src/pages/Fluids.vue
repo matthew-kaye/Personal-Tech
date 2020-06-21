@@ -124,7 +124,12 @@
     </v-card-title>
     <v-divider />
     <div :class="[computedMargin]" @mousedown="closeGui()" @mouseup="openGui()">
-      <FluidsSheet class="canvasPlayground" ref="fluidsSheet" :activateGui="true" />
+      <FluidsSheet
+        v-bind:style="{cursor: continuous?'none':'pointer'}"
+        class="canvasPlayground"
+        ref="fluidsSheet"
+        :activateGui="true"
+      />
     </div>
   </div>
 </template>
@@ -228,10 +233,6 @@ export default {
   position: relative;
   width: 100%;
   height: 100vh;
-  cursor: grab;
-}
-.canvasPlayground:active {
-  cursor: none;
 }
 ::-webkit-scrollbar {
   width: 0px;
