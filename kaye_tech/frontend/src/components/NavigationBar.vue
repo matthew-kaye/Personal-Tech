@@ -121,11 +121,6 @@ export default {
           link: "/games",
           icon: "mdi-dice-d20"
         },
-        // {
-        //   label: "Cards",
-        //   link: "/cards",
-        //   icon: "mdi-cards"
-        // },
         {
           label: "Jokes",
           link: "/jokes",
