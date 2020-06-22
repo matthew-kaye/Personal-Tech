@@ -85,10 +85,10 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on: tooltip }">
               <v-btn large class="ml-6" icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                <v-icon large>mdi-brush</v-icon>
+                <v-icon>fas fa-palette</v-icon>
               </v-btn>
             </template>
-            <span>Override Splat Colour</span>
+            <span>Pick Splat Colour</span>
           </v-tooltip>
         </template>
         <v-color-picker
@@ -125,7 +125,7 @@
     <v-divider />
     <div :class="[computedMargin]" @mousedown="closeGui()" @mouseup="openGui()">
       <FluidsSheet
-        v-bind:style="{cursor: continuous?'none':'pointer'}"
+        v-bind:style="{cursor: continuous?'none':'grab'}"
         class="canvasPlayground"
         ref="fluidsSheet"
         :activateGui="true"

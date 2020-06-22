@@ -39,7 +39,7 @@
               </v-list-item>
             </v-list>
             <v-divider />
-            <v-card-text>Direct the snake to eat the apple using the arrow keys, and press space bar to pause. Press any key to begin.</v-card-text>
+            <v-card-text>Direct the snake to eat the apple using the arrow keys, and press space bar to pause. Press any key to begin. Avoid hitting the walls!</v-card-text>
           </v-card>
         </v-col>
         <v-col>
