@@ -54,7 +54,7 @@
                 </v-chip>
               </td>
               <td>
-                <a :href="row.item.fields.url">
+                <a :href="row.item.fields.url" target="_blank">
                   <v-btn color="primary" dark medium>
                     <v-icon left>mdi-taco</v-icon>Visit Site
                   </v-btn>

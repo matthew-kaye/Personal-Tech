@@ -13,13 +13,13 @@
           {{ damageCalculator?"Close Calculator":"Open D&D Calculator" }}
         </v-btn>
       </v-col>
-      <!-- <v-col>
+      <v-col>
         <v-btn
           class="ml-6"
           color="primary"
           @click="roomSelect=!roomSelect"
         >{{ roomSelect?"Close Room Select":"Join Room (Unfinished)" }}</v-btn>
-      </v-col>-->
+      </v-col>
     </v-row>
     <v-fade-transition>
       <v-row v-if="snakeGame" class="ml-3">
