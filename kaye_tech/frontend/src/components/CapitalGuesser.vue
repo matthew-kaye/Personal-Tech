@@ -30,14 +30,13 @@
       </v-row>
     </v-card-text>
     <v-fab-transition>
-      <v-card-title v-if="result">{{result + " - score: " +score +"/"+guesses}}</v-card-title>
+      <v-card-title v-if="result">{{result + " - score: " + score + "/" + guesses}}</v-card-title>
     </v-fab-transition>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
@@ -51,7 +50,6 @@ export default {
       country: null,
       capitalGuess: null,
       countryCapitalUrl: "https://restcountries.eu/rest/v2/all",
-      countryCapitalPair: null,
       countryCapitalList: [],
       result: null,
       guesses: 0,
