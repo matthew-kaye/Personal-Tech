@@ -8,18 +8,24 @@
         </v-btn>
       </v-col>
       <v-col md="auto">
+        <v-btn class="ml-6" color="primary" @click="capitalGame=!capitalGame">
+          <v-icon class="mr-2">mdi-earth</v-icon>
+          {{ capitalGame?"Close Capital Game":"Open Capital Game" }}
+        </v-btn>
+      </v-col>
+      <v-col md="auto">
         <v-btn class="ml-6" color="primary" @click="damageCalculator=!damageCalculator">
           <v-icon class="mr-2">mdi-dice-d20</v-icon>
           {{ damageCalculator?"Close Calculator":"Open D&D Calculator" }}
         </v-btn>
       </v-col>
-      <v-col>
+      <!-- <v-col>
         <v-btn
           class="ml-6"
           color="primary"
           @click="roomSelect=!roomSelect"
         >{{ roomSelect?"Close Room Select":"Join Room (Unfinished)" }}</v-btn>
-      </v-col>
+      </v-col>-->
     </v-row>
     <v-fade-transition>
       <v-row v-if="snakeGame" class="ml-3">
@@ -46,6 +52,11 @@
           <SnakeGame class="pb-4" />
         </v-col>
       </v-row>
+    </v-fade-transition>
+    <v-fade-transition>
+      <div v-if="capitalGame">
+        <CapitalGuesser />
+      </div>
     </v-fade-transition>
     <v-fade-transition>
       <div v-if="damageCalculator">
@@ -88,18 +99,21 @@
 
 <script>
 import SnakeGame from "@/components/SnakeGame.vue";
+import CapitalGuesser from "@/components/CapitalGuesser.vue";
 import DamageCalculator from "@/components/DamageCalculator.vue";
 import SnakeApi from "@/apis/SnakeApi";
 const snakeApi = new SnakeApi();
 export default {
   components: {
     SnakeGame,
+    CapitalGuesser,
     DamageCalculator
   },
   data() {
     return {
       roomName: "",
       snakeGame: false,
+      capitalGame: false,
       damageCalculator: false,
       roomSelect: false,
       snakeHighScores: []
