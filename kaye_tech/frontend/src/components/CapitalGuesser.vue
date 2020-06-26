@@ -6,20 +6,25 @@
     <v-card-title v-if="country" class="mt-2">{{"Country: " + country.name}}</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="3" sm="3">
+        <v-col cols="4" sm="4">
           <v-text-field
             class="mt-1"
             outlined
             v-model="capitalGuess"
             @keypress.enter="checkGuess(capitalGuess)"
             append-icon="mdi-magnify"
-            label="Enter the country capital (accents unnecessary)"
+            label="Enter the country capital (no accents needed)"
             required
           ></v-text-field>
         </v-col>
         <v-col md="auto">
           <v-fab-transition>
-            <v-btn class="mr-2 mt-3" color="primary" @click="checkGuess(capitalGuess)">{{"Guess" }}</v-btn>
+            <v-btn
+              class="mr-2 mt-3"
+              color="primary"
+              v-if="capitalGuess"
+              @click="checkGuess(capitalGuess)"
+            >{{"Guess" }}</v-btn>
           </v-fab-transition>
         </v-col>
       </v-row>
@@ -98,6 +103,10 @@ export default {
             this.country.capital;
         }
         this.country = this.pickNewPair();
+      } else if (!this.country.capital) {
+        this.guesses += 1;
+        this.score += 1;
+        this.result = "You guessed correctly, it has no capital!";
       }
     }
   }
