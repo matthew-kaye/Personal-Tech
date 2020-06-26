@@ -88,8 +88,9 @@ export default {
       var country = this.countryCapitalList[
         Math.floor(Math.random() * this.countryCapitalList.length)
       ];
-      console.log(country);
-      return country.capital ? country : this.pickNewPair();
+      return country.capital && country.population > 100000
+        ? country
+        : this.pickNewPair();
     },
     checkGuess(capitalGuess) {
       if (capitalGuess) {
