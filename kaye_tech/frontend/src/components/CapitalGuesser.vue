@@ -3,7 +3,14 @@
     <v-card-title class="primary headline">
       <span class="white--text">Guess the capital!</span>
     </v-card-title>
-    <v-card-title v-if="country" class="mt-2">{{"Country: " + country.name}}</v-card-title>
+    <v-row v-if="country" class="mt-2">
+      <v-col md="auto">
+        <v-card-title>{{"Country: " + country.name}}</v-card-title>
+      </v-col>
+      <v-col class="mt-4">
+        <v-img contain max-width="50" :src="country.flag"></v-img>
+      </v-col>
+    </v-row>
     <v-card-text>
       <v-row>
         <v-col cols="4" sm="4">
@@ -81,6 +88,7 @@ export default {
       var country = this.countryCapitalList[
         Math.floor(Math.random() * this.countryCapitalList.length)
       ];
+      console.log(country);
       return country.capital ? country : this.pickNewPair();
     },
     checkGuess(capitalGuess) {
