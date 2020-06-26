@@ -80,9 +80,10 @@ export default {
     },
     pickNewPair() {
       this.capitalGuess = null;
-      return this.countryCapitalList[
+      var country = this.countryCapitalList[
         Math.floor(Math.random() * this.countryCapitalList.length)
       ];
+      return country.capital ? country : this.pickNewPair();
     },
     checkGuess(capitalGuess) {
       if (capitalGuess) {
@@ -103,10 +104,6 @@ export default {
             this.country.capital;
         }
         this.country = this.pickNewPair();
-      } else if (!this.country.capital) {
-        this.guesses += 1;
-        this.score += 1;
-        this.result = "You guessed correctly, it has no capital!";
       }
     }
   }
