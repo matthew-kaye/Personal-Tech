@@ -92,7 +92,7 @@ export default {
           [
             this.country.capital.toLowerCase(),
             this.deaccentedCapital.toLowerCase()
-          ].includes(capitalGuess.toLowerCase())
+          ].includes(capitalGuess.toLowerCase().trim())
         ) {
           this.score += 1;
           this.result = "You guessed correctly!";
