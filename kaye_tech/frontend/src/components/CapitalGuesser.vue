@@ -2,6 +2,9 @@
   <v-card class="ma-6">
     <v-card-title class="primary headline">
       <span class="white--text">Guess the capital!</span>
+      <v-btn icon @click="resetScores" class="ml-4">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
     </v-card-title>
     <v-row v-if="country" class="mt-2">
       <v-col md="auto">
@@ -79,7 +82,64 @@ export default {
         .then(response => response.data)
         .catch(error => console.log(error));
       countryApiResponse.then(data => {
-        this.countryCapitalList = data;
+        this.countryCapitalList = data.filter(function(country) {
+          var alpha2CodesToExclude = [
+            "AX",
+            "AS",
+            "AI",
+            "AQ",
+            "AW",
+            "BM",
+            "BQ",
+            "BV",
+            "IO",
+            "UM",
+            "VG",
+            "VI",
+            "KY",
+            "CX",
+            "CC",
+            "CK",
+            "CW",
+            "FK",
+            "FA",
+            "GF",
+            "PF",
+            "TF",
+            "GI",
+            "GL",
+            "GP",
+            "GU",
+            "GG",
+            "HM",
+            "VA",
+            "HK",
+            "IM",
+            "JE",
+            "MO",
+            "MQ",
+            "YT",
+            "MS",
+            "NC",
+            "NU",
+            "NF",
+            "MP",
+            "PN",
+            "PR",
+            "BL",
+            "SH",
+            "MF",
+            "PM",
+            "SX",
+            "GS",
+            "SJ",
+            "TK",
+            "TC",
+            "WF",
+            "EH"
+          ];
+          return !alpha2CodesToExclude.includes(country.alpha2Code);
+        });
         this.country = this.pickNewPair();
       });
     },
@@ -88,9 +148,7 @@ export default {
       var country = this.countryCapitalList[
         Math.floor(Math.random() * this.countryCapitalList.length)
       ];
-      return country.capital && country.population > 100000
-        ? country
-        : this.pickNewPair();
+      return country.capital ? country : this.pickNewPair();
     },
     checkGuess(capitalGuess) {
       if (capitalGuess) {
@@ -112,6 +170,12 @@ export default {
         }
         this.country = this.pickNewPair();
       }
+    },
+    resetScores() {
+      this.result = null;
+      this.score = 0;
+      this.guesses = 0;
+      this.country = this.pickNewPair();
     }
   }
 };
