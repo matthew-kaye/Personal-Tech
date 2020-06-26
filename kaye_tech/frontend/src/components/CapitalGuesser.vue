@@ -41,6 +41,7 @@
     </v-card-text>
     <v-fab-transition>
       <v-card-title v-if="result">{{result + " - score: " + score + "/" + guesses}}</v-card-title>
+      <v-card-title v-if="!result">Error: Failed to retrieve data - max api calls likely reached</v-card-title>
     </v-fab-transition>
   </v-card>
 </template>
@@ -140,15 +141,17 @@ export default {
           ];
           return !alpha2CodesToExclude.includes(country.alpha2Code);
         });
-        this.country = this.pickNewPair();
+        this.country = this.pickNewCountry();
       });
     },
-    pickNewPair() {
+    pickNewCountry() {
       this.capitalGuess = null;
       var country = this.countryCapitalList[
         Math.floor(Math.random() * this.countryCapitalList.length)
       ];
-      return country.capital ? country : this.pickNewPair();
+      return country.capital && !this.country == country
+        ? country
+        : this.pickNewCountry();
     },
     checkGuess(capitalGuess) {
       if (capitalGuess) {
@@ -168,14 +171,14 @@ export default {
             " is: " +
             this.country.capital;
         }
-        this.country = this.pickNewPair();
+        this.country = this.pickNewCountry();
       }
     },
     resetScores() {
       this.result = null;
       this.score = 0;
       this.guesses = 0;
-      this.country = this.pickNewPair();
+      this.country = this.pickNewCountry();
     }
   }
 };
