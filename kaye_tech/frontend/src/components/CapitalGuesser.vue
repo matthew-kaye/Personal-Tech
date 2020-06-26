@@ -10,8 +10,8 @@
       <v-col md="auto">
         <v-card-title>{{"Country: " + country.name}}</v-card-title>
       </v-col>
-      <v-col class="mt-4">
-        <v-img contain max-width="50" :src="country.flag"></v-img>
+      <v-col class="mt-3">
+        <v-img contain max-height="50" max-width="60" :src="country.flag"></v-img>
       </v-col>
     </v-row>
     <v-card-text>
@@ -41,7 +41,6 @@
     </v-card-text>
     <v-fab-transition>
       <v-card-title v-if="result">{{result + " - score: " + score + "/" + guesses}}</v-card-title>
-      <v-card-title v-if="!result">Error: Failed to retrieve data - max api calls likely reached</v-card-title>
     </v-fab-transition>
   </v-card>
 </template>
@@ -149,7 +148,7 @@ export default {
       var country = this.countryCapitalList[
         Math.floor(Math.random() * this.countryCapitalList.length)
       ];
-      return country.capital && !this.country == country
+      return country.capital && this.country != country
         ? country
         : this.pickNewCountry();
     },
