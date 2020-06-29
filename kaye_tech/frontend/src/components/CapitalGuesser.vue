@@ -6,11 +6,11 @@
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
     </v-card-title>
-    <v-row v-if="country" class="mt-2">
+    <v-row v-if="country" align="center" class="mt-2">
       <v-col md="auto">
         <v-card-title>{{"Country: " + country.name}}</v-card-title>
       </v-col>
-      <v-col class="mt-3">
+      <v-col>
         <v-img contain max-height="50" max-width="60" :src="country.flag"></v-img>
       </v-col>
     </v-row>
