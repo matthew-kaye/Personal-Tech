@@ -136,7 +136,8 @@ export default {
             "TK",
             "TC",
             "WF",
-            "EH"
+            "EH",
+            "RE"
           ];
           return !alpha2CodesToExclude.includes(country.alpha2Code);
         });
