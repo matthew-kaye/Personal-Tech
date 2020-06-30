@@ -20,7 +20,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=project_client_secret
 ### Before:
 
 Install npm.
-`brew install npm`
+On Mac: `brew install npm`
+On Windows: https://nodejs.org/en/
 
 To set up locally, run the following:
 1. `make build`
@@ -33,9 +34,9 @@ If you want to log in to the django admin page (will be at `127.0.0.1:8000/admin
 
 ### During:
 
-- run `make build && make up` after making changes to the `Pipfile`/`Pipfile.lock`
+- Run `make build && make up` after making changes to the `Pipfile`/`Pipfile.lock`
 - If you make changes to `app-env`/update the django settings/etc run `make restart-django`
-- kill the webpack process then run `make npm-install` after updating `package.json`
+- Kill the webpack process then run `make npm-install` after updating `package.json`
 
 ### After:
 
@@ -43,7 +44,7 @@ Run `make down`
 
 ## Server deployment
 
-The nginx config to be used in `/etc/nginx/sites-available` is available [here](nginx-sites-available.conf). Rename this file to the site name when actually deploying (here, mattalexkaye.com).
+The nginx config to be used in `/etc/nginx/sites-available` is available [here](nginx-sites-available.conf). Rename this file to the site name when actually deploying (e.g. mattalexkaye.com).
 
 When on the server, run the `deploy.sh` script to deploy.
 
