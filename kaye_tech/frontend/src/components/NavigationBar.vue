@@ -136,6 +136,8 @@ export default {
     const darkTheme = localStorage.getItem("dark_theme");
     if (darkTheme) {
       this.$vuetify.theme.dark = darkTheme === "true";
+    } else {
+      this.$vuetify.theme.dark = true;
     }
   },
   methods: {

@@ -50,11 +50,6 @@ export default {
     NavigationBar
   },
   created() {
-    if (window.location.href.includes("dark")) {
-      this.$vuetify.theme.dark = location.search.includes("dark=true");
-    } else {
-      this.$vuetify.theme.dark = true;
-    }
     window.activeTab = true;
     window.onfocus = function() {
       window.activeTab = true;
