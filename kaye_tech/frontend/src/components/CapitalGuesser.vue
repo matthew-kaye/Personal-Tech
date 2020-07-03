@@ -2,7 +2,7 @@
   <v-card class="ma-6">
     <v-card-title class="primary headline">
       <span class="white--text">Guess the capital!</span>
-      <v-btn icon @click="resetScores" class="ml-4">
+      <v-btn icon @click="resetScores" color="white" class="ml-4">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
     </v-card-title>
@@ -10,8 +10,8 @@
       <v-col md="auto">
         <v-card-title>{{"Country: " + country.name}}</v-card-title>
       </v-col>
-      <v-col>
-        <v-img contain max-height="50" max-width="60" :src="country.flag"></v-img>
+      <v-col md="auto">
+        <v-img class="elevation-5" contain max-height="50" max-width="60" :src="country.flag"></v-img>
       </v-col>
     </v-row>
     <v-card-text>
