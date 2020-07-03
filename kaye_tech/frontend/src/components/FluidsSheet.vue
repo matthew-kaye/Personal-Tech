@@ -8,6 +8,10 @@
 export default {
   name: "FluidsSheet",
   data() {
+    const darkTheme = localStorage.getItem("dark_theme");
+    if (darkTheme) {
+      this.$vuetify.theme.dark = darkTheme === "true";
+    }
     var background = this.$vuetify.theme.dark ? 0 : 255;
     return {
       gui: {},
@@ -54,7 +58,7 @@ export default {
   },
   created() {
     if (window.needsRefresh) {
-      location.href = location.href + "?dark=" + this.$vuetify.theme.dark;
+      location.reload();
     }
     window.needsRefresh = true;
     window.addEventListener("keydown", function(e) {

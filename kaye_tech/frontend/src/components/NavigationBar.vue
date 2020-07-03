@@ -2,12 +2,7 @@
   <div v-if="currentUser" @click="closeGui()">
     <v-navigation-drawer v-model="drawer" absolute temporary app>
       <v-list>
-        <v-list-item
-          v-for="item in navigationItems"
-          :key="item.label"
-          :to="item.link +'?dark='+ $vuetify.theme.dark"
-          link
-        >
+        <v-list-item v-for="item in navigationItems" :key="item.label" :to="item.link" link>
           <v-list-item-icon>
             <v-icon color="secondary">{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -49,12 +44,7 @@
       <AboutDialog ref="aboutDialog" />
       <v-toolbar-items class="hidden-md-and-down">
         <v-chip class="ma-4 pa-0" outlined color="white">
-          <v-btn
-            text
-            v-for="item in navigationItems"
-            :key="item.label"
-            :to="item.link +'?dark=' +$vuetify.theme.dark"
-          >
+          <v-btn text v-for="item in navigationItems" :key="item.label" :to="item.link">
             <v-icon left dark>{{ item.icon }}</v-icon>
             {{ item.label }}
           </v-btn>
@@ -142,11 +132,16 @@ export default {
       this.currentUser = data;
     });
   },
+  mounted() {
+    const darkTheme = localStorage.getItem("dark_theme");
+    if (darkTheme) {
+      this.$vuetify.theme.dark = darkTheme === "true";
+    }
+  },
   methods: {
     toggleDark() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      var newUrl = location.pathname + "?dark=" + this.$vuetify.theme.dark;
-      window.history.pushState("string", "Title", newUrl);
+      localStorage.setItem("dark_theme", this.$vuetify.theme.dark.toString());
       if (window.needsRefresh) {
         var background = this.$vuetify.theme.dark ? 0 : 255;
         var colour = { r: background, g: background, b: background };
@@ -160,8 +155,7 @@ export default {
     },
     goHome() {
       this.$router.push({
-        name: "home",
-        query: { dark: this.$vuetify.theme.dark }
+        name: "home"
       });
       location.reload();
     }

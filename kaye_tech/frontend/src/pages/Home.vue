@@ -32,9 +32,6 @@ export default {
     };
   },
   computed: {
-    dark() {
-      return this.$vuetify.theme.dark ? "dark" : "light";
-    },
     welcomeMessage() {
       return this.currentUser.first_name
         ? `Hello ${this.currentUser.first_name}!`
