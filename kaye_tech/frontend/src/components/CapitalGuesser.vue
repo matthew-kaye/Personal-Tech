@@ -60,7 +60,8 @@ export default {
       country: null,
       capitalGuess: null,
       countryCapitalUrl: "https://restcountries.eu/rest/v2/all",
-      countryCapitalList: [],
+      fullCountrylist: [],
+      unusedCountryList: [],
       result: null,
       guesses: 0,
       score: 0
@@ -82,7 +83,7 @@ export default {
         .then(response => response.data)
         .catch(error => console.log(error));
       countryApiResponse.then(data => {
-        this.countryCapitalList = data.filter(function(country) {
+        this.fullCountrylist = data.filter(function(country) {
           var alpha2CodesToExclude = [
             "AX",
             "AS",
@@ -103,6 +104,7 @@ export default {
             "CW",
             "FK",
             "FA",
+            "FO",
             "GF",
             "PF",
             "TF",
@@ -141,17 +143,20 @@ export default {
           ];
           return !alpha2CodesToExclude.includes(country.alpha2Code);
         });
+        this.unusedCountryList = this.fullCountrylist;
         this.country = this.pickNewCountry();
       });
     },
     pickNewCountry() {
       this.capitalGuess = null;
-      var country = this.countryCapitalList[
-        Math.floor(Math.random() * this.countryCapitalList.length)
+      var country = this.unusedCountryList[
+        Math.floor(Math.random() * this.unusedCountryList.length)
       ];
-      return country.capital && this.country != country
-        ? country
-        : this.pickNewCountry();
+      this.unusedCountryList =
+        this.unusedCountryList.length == 1
+          ? this.fullCountrylist
+          : this.unusedCountryList.filter(x => x !== country);
+      return country;
     },
     checkGuess(capitalGuess) {
       if (capitalGuess) {
@@ -178,6 +183,7 @@ export default {
       this.result = null;
       this.score = 0;
       this.guesses = 0;
+      this.unusedCountryList = this.fullCountrylist;
       this.country = this.pickNewCountry();
     }
   }
