@@ -103,7 +103,7 @@ body {
   width: 100%;
   p {
     color: color(text, muted);
-    font-size: 11;
+    font-size: 0.688em;
   }
 }
 .header,

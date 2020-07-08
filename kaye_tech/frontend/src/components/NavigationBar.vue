@@ -167,6 +167,6 @@ export default {
 
 <style>
 .v-chip .v-icon {
-  font-size: 16px;
+  font-size: 1em;
 }
 </style>

@@ -12,7 +12,7 @@
           <v-card-title class="mb-6 primary">
             <span class="headline white--text">Daily Tech Summary</span>
           </v-card-title>
-          <v-card-text style="font-size:13pt" v-html="techNews"></v-card-text>
+          <v-card-text style="font-size:1.063em" v-html="techNews"></v-card-text>
           <v-row v-if="!techNews" class="fill-height ma-0" align="center" justify="center">
             <v-progress-circular indeterminate color="grey lighten-1"></v-progress-circular>
           </v-row>
