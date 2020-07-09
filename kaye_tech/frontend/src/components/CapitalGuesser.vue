@@ -21,7 +21,7 @@
             class="mt-1"
             outlined
             v-model="capitalGuess"
-            @keypress.enter="checkGuess(capitalGuess)"
+            @keypress.enter="guessCapital()"
             append-icon="mdi-magnify"
             label="Enter the country capital (no accents needed)"
             required
@@ -33,7 +33,7 @@
               class="mr-2 mt-3"
               color="primary"
               v-if="capitalGuess"
-              @click="checkGuess(capitalGuess)"
+              @click="guessCapital()"
             >{{"Guess" }}</v-btn>
           </v-fab-transition>
         </v-col>
@@ -72,6 +72,12 @@ export default {
       return this.country.capital
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
+    },
+    capitalMatch() {
+      return [
+        this.country.capital.toLowerCase(),
+        this.deaccentedCapital.toLowerCase()
+      ].includes(this.capitalGuess.toLowerCase().trim());
     }
   },
   methods: {
@@ -148,7 +154,7 @@ export default {
       });
     },
     pickNewCountry() {
-      this.capitalGuess = null;
+      this.capitalGuess = "";
       var country = this.unusedCountryList[
         Math.floor(Math.random() * this.unusedCountryList.length)
       ];
@@ -158,15 +164,10 @@ export default {
           : this.unusedCountryList.filter(x => x !== country);
       return country;
     },
-    checkGuess(capitalGuess) {
-      if (capitalGuess) {
+    guessCapital() {
+      if (this.capitalGuess) {
         this.guesses += 1;
-        if (
-          [
-            this.country.capital.toLowerCase(),
-            this.deaccentedCapital.toLowerCase()
-          ].includes(capitalGuess.toLowerCase().trim())
-        ) {
+        if (this.capitalMatch) {
           this.score += 1;
           this.result = "You guessed correctly!";
         } else {
@@ -185,6 +186,13 @@ export default {
       this.guesses = 0;
       this.unusedCountryList = this.fullCountrylist;
       this.country = this.pickNewCountry();
+    }
+  },
+  watch: {
+    capitalGuess: function() {
+      if (this.capitalMatch) {
+        this.guessCapital();
+      }
     }
   }
 };
