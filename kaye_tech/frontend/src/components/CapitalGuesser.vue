@@ -21,7 +21,7 @@
             class="mt-1"
             outlined
             v-model="capitalGuess"
-            @keypress.enter="guessCapital()"
+            @keyup.enter="guessCapital()"
             append-icon="mdi-magnify"
             label="Enter the country capital (no accents needed)"
             required
@@ -34,7 +34,7 @@
               color="primary"
               v-if="capitalGuess"
               @click="guessCapital()"
-            >{{"Guess" }}</v-btn>
+            >{{"Pass" }}</v-btn>
           </v-fab-transition>
         </v-col>
       </v-row>
@@ -120,7 +120,6 @@ export default {
             "GU",
             "GG",
             "HM",
-            "VA",
             "HK",
             "IM",
             "JE",
@@ -165,20 +164,18 @@ export default {
       return country;
     },
     guessCapital() {
-      if (this.capitalGuess) {
-        this.guesses += 1;
-        if (this.capitalMatch) {
-          this.score += 1;
-          this.result = "You guessed correctly!";
-        } else {
-          this.result =
-            "Incorrect, the capital of " +
-            this.country.name +
-            " is: " +
-            this.country.capital;
-        }
-        this.country = this.pickNewCountry();
+      this.guesses += 1;
+      if (this.capitalMatch) {
+        this.score += 1;
+        this.result = "You guessed correctly!";
+      } else {
+        this.result =
+          "Bad luck, the capital of " +
+          this.country.name +
+          " is: " +
+          this.country.capital;
       }
+      this.country = this.pickNewCountry();
     },
     resetScores() {
       this.result = null;
