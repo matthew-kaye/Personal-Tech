@@ -1,17 +1,36 @@
 <template>
   <v-card class="ma-6">
     <v-card-title class="primary headline">
-      <span class="white--text">Guess the capital!</span>
+      <span class="white--text">{{`Guess the ${gameMode.headerText}!`}}</span>
       <v-btn icon @click="resetScores" color="white" class="ml-4">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
+      <div>
+        <v-select
+          class="mx-4 mb-n7"
+          md="auto"
+          color="white"
+          dark
+          round
+          outlined
+          v-model="gameMode"
+          item-text="displayText"
+          :items="modes"
+          attach
+          label="Game Mode"
+          :menu-props="{ transition: 'slide-y-transition' }"
+        ></v-select>
+      </div>
     </v-card-title>
     <v-row v-if="country" align="center" class="mt-2">
-      <v-col md="auto">
+      <v-col md="auto" v-if="gameMode.capitalGame">
         <v-card-title>{{"Country: " + country.name}}</v-card-title>
       </v-col>
+      <v-col md="auto" v-if="!gameMode.capitalGame">
+        <v-card-title>{{"Flag: "}}</v-card-title>
+      </v-col>
       <v-col md="auto">
-        <v-img class="elevation-5" contain max-height="50" max-width="60" :src="country.flag"></v-img>
+        <v-img class="elevation-5" contain max-width="60" :src="country.flag"></v-img>
       </v-col>
     </v-row>
     <v-card-text>
@@ -20,10 +39,10 @@
           <v-text-field
             class="mt-1"
             outlined
-            v-model="capitalGuess"
-            @keyup.enter="guessCapital()"
+            v-model="userGuess"
+            @keyup.enter="validateGuess()"
             append-icon="mdi-magnify"
-            label="Enter the country capital (no accents needed)"
+            :label="gameMode.instruction"
             required
           ></v-text-field>
         </v-col>
@@ -32,8 +51,8 @@
             <v-btn
               class="mr-2 mt-3"
               color="primary"
-              v-if="capitalGuess"
-              @click="guessCapital()"
+              v-if="userGuess"
+              @click="validateGuess()"
             >{{"Pass" }}</v-btn>
           </v-fab-transition>
         </v-col>
@@ -53,34 +72,81 @@ axios.defaults.xsrfHeaderName = "X-CSRFToken";
 export default {
   components: {},
   created() {
+    this.gameMode = this.modes[0].value;
     this.getCountryCapitals();
   },
   data() {
     return {
       country: null,
-      capitalGuess: null,
+      userGuess: null,
       countryCapitalUrl: "https://restcountries.eu/rest/v2/all",
       fullCountrylist: [],
       unusedCountryList: [],
       result: null,
       guesses: 0,
-      score: 0
+      score: 0,
+      modes: [
+        {
+          displayText: "Capitals",
+          value: {
+            capitalGame: true,
+            headerText: "capital",
+            instruction: "What's the country's capital?"
+          }
+        },
+        {
+          displayText: "Flags",
+          value: { headerText: "country", instruction: "Whose flag is that?" }
+        }
+      ],
+      gameMode: null
     };
   },
   computed: {
-    deaccentedCapital() {
-      return this.country.capital
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    },
     capitalMatch() {
-      return [
-        this.country.capital.toLowerCase(),
-        this.deaccentedCapital.toLowerCase()
-      ].includes(this.capitalGuess.toLowerCase().trim());
+      return this.country
+        ? [
+            this.country.capital.toLowerCase(),
+            this.getDeaccentedWord(this.country.capital).toLowerCase()
+          ].includes(this.userGuess.toLowerCase().trim())
+        : false;
+    },
+    countryMatch() {
+      for (var country of this.possibleCountrySpellings) {
+        console.log(country);
+        if (country.toLowerCase() == this.userGuess.toLowerCase().trim()) {
+          return true;
+        }
+      }
+      return false;
+    },
+    easiestCountryName() {
+      var name = this.country.name;
+      name = name
+        .replace("n Arab Republic", "")
+        .replace("Republic of ", "")
+        .replace("Nation of ", "")
+        .replace("Kingdom of ", "")
+        .replace("n Federation", "")
+        .replace("Darussalam", "")
+        .replace("Viet Nam", "Vietnam");
+      name =
+        name.indexOf(",") != -1 ? name.substring(0, name.indexOf(",")) : name;
+      return name.replace(/ *\([^)]*\) */g, "");
+    },
+    possibleCountrySpellings() {
+      var possibleSpellings = this.country.altSpellings;
+      possibleSpellings.shift();
+      if (this.easiestCountryName) {
+        possibleSpellings.push(this.easiestCountryName);
+      }
+      return possibleSpellings;
     }
   },
   methods: {
+    getDeaccentedWord(word) {
+      return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    },
     getCountryCapitals() {
       var countryApiResponse = axios
         .get(this.countryCapitalUrl, {
@@ -153,7 +219,7 @@ export default {
       });
     },
     pickNewCountry() {
-      this.capitalGuess = "";
+      this.userGuess = "";
       var country = this.unusedCountryList[
         Math.floor(Math.random() * this.unusedCountryList.length)
       ];
@@ -163,17 +229,26 @@ export default {
           : this.unusedCountryList.filter(x => x !== country);
       return country;
     },
-    guessCapital() {
+    validateGuess() {
       this.guesses += 1;
-      if (this.capitalMatch) {
-        this.score += 1;
-        this.result = "You guessed correctly!";
+      if (this.gameMode.capitalGame) {
+        if (this.capitalMatch) {
+          this.score += 1;
+          this.result = "You guessed correctly!";
+        } else {
+          this.result =
+            "Bad luck, the capital of " +
+            this.country.name +
+            " is: " +
+            this.country.capital;
+        }
       } else {
-        this.result =
-          "Bad luck, the capital of " +
-          this.country.name +
-          " is: " +
-          this.country.capital;
+        if (this.countryMatch) {
+          this.score += 1;
+          this.result = "You guessed correctly!";
+        } else {
+          this.result = "Bad luck, flag belonged to " + this.country.name;
+        }
       }
       this.country = this.pickNewCountry();
     },
@@ -186,10 +261,13 @@ export default {
     }
   },
   watch: {
-    capitalGuess: function() {
-      if (this.capitalMatch) {
-        this.guessCapital();
+    userGuess: function() {
+      if (this.gameMode.capitalGame ? this.capitalMatch : this.countryMatch) {
+        this.validateGuess();
       }
+    },
+    gameMode: function() {
+      this.resetScores();
     }
   }
 };

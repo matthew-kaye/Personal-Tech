@@ -55,7 +55,7 @@
     </v-fade-transition>
     <v-fade-transition>
       <div v-if="capitalGame">
-        <CapitalGuesser />
+        <GeographyGame />
       </div>
     </v-fade-transition>
     <v-fade-transition>
@@ -99,21 +99,21 @@
 
 <script>
 import SnakeGame from "@/components/SnakeGame.vue";
-import CapitalGuesser from "@/components/CapitalGuesser.vue";
+import GeographyGame from "@/components/GeographyGame.vue";
 import DamageCalculator from "@/components/DamageCalculator.vue";
 import SnakeApi from "@/apis/SnakeApi";
 const snakeApi = new SnakeApi();
 export default {
   components: {
     SnakeGame,
-    CapitalGuesser,
+    GeographyGame,
     DamageCalculator
   },
   data() {
     return {
       roomName: "",
       snakeGame: false,
-      capitalGame: false,
+      capitalGame: true,
       damageCalculator: false,
       roomSelect: false,
       snakeHighScores: []
