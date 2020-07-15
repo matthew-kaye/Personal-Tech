@@ -8,9 +8,9 @@
         </v-btn>
       </v-col>
       <v-col md="auto">
-        <v-btn class="ml-6" color="primary" @click="capitalGame=!capitalGame">
+        <v-btn class="ml-6" color="primary" @click="geograpyGame=!geograpyGame">
           <v-icon class="mr-2">mdi-earth</v-icon>
-          {{ capitalGame?"Close Capital Game":"Open Capital Game" }}
+          {{ geograpyGame?"Close Countries Game":"Open Countries Game" }}
         </v-btn>
       </v-col>
       <v-col md="auto">
@@ -54,7 +54,7 @@
       </v-row>
     </v-fade-transition>
     <v-fade-transition>
-      <div v-if="capitalGame">
+      <div v-if="geograpyGame">
         <GeographyGame />
       </div>
     </v-fade-transition>
@@ -113,7 +113,7 @@ export default {
     return {
       roomName: "",
       snakeGame: false,
-      capitalGame: true,
+      geograpyGame: false,
       damageCalculator: false,
       roomSelect: false,
       snakeHighScores: []

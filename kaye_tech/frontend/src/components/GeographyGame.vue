@@ -1,6 +1,7 @@
 <template>
   <v-card class="ma-6">
     <v-card-title class="primary headline">
+      <v-icon large class="mr-2">mdi-earth</v-icon>
       <span class="white--text">{{`Guess the ${gameMode.headerText}!`}}</span>
       <v-btn icon @click="resetScores" color="white" class="ml-4">
         <v-icon>mdi-refresh</v-icon>
@@ -113,7 +114,6 @@ export default {
     },
     countryMatch() {
       for (var country of this.possibleCountrySpellings) {
-        console.log(country);
         if (country.toLowerCase() == this.userGuess.toLowerCase().trim()) {
           return true;
         }
@@ -247,7 +247,7 @@ export default {
           this.score += 1;
           this.result = "You guessed correctly!";
         } else {
-          this.result = "Bad luck, flag belonged to " + this.country.name;
+          this.result = "Bad luck, that flag belonged to " + this.country.name;
         }
       }
       this.country = this.pickNewCountry();
