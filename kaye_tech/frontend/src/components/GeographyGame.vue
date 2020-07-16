@@ -1,7 +1,7 @@
 <template>
   <v-card class="ma-6">
     <v-card-title class="primary headline">
-      <v-icon large class="mr-2">mdi-earth</v-icon>
+      <v-icon large color="white" class="mr-2">mdi-earth</v-icon>
       <span class="white--text">{{`Guess the ${gameMode.headerText}!`}}</span>
       <v-btn icon @click="resetScores" color="white" class="ml-4">
         <v-icon>mdi-refresh</v-icon>
@@ -60,7 +60,14 @@
       </v-row>
     </v-card-text>
     <v-fab-transition>
-      <v-card-title v-if="result">{{result + " - score: " + score + "/" + guesses}}</v-card-title>
+      <v-row v-if="result" align="center">
+        <v-col md="auto" v-if="!gameMode.capitalGame">
+          <v-img class="elevation-5 mb-1 ml-6" contain max-width="50" :src="previousCountry.flag"></v-img>
+        </v-col>
+        <v-col md="auto">
+          <v-card-title>{{result + " - score: " + score + "/" + guesses}}</v-card-title>
+        </v-col>
+      </v-row>
     </v-fab-transition>
   </v-card>
 </template>
@@ -79,6 +86,7 @@ export default {
   data() {
     return {
       country: null,
+      previousCountry: null,
       userGuess: null,
       countryCapitalUrl: "https://restcountries.eu/rest/v2/all",
       fullCountrylist: [],
@@ -140,6 +148,7 @@ export default {
       if (this.easiestCountryName) {
         possibleSpellings.push(this.easiestCountryName);
       }
+      possibleSpellings.push(this.country.name);
       return possibleSpellings;
     }
   },
@@ -231,6 +240,8 @@ export default {
     },
     validateGuess() {
       this.guesses += 1;
+
+      this.previousCountry = this.country;
       if (this.gameMode.capitalGame) {
         if (this.capitalMatch) {
           this.score += 1;
