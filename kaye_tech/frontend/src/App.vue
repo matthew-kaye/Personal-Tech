@@ -3,14 +3,17 @@
     <v-expand-transition>
       <NavigationBar />
     </v-expand-transition>
-    <v-content>
-      <v-slide-y-reverse-transition :hide-on-leave="true">
-        <router-view />
-      </v-slide-y-reverse-transition>
-      <v-btn absolute bottom left v-if="!footer" @click="footer=true" icon>
-        <v-icon>mdi-chevron-up</v-icon>
-      </v-btn>
-    </v-content>
+
+    <v-slide-y-reverse-transition :hide-on-leave="true">
+      <v-content>
+        <keep-alive>
+          <router-view />
+        </keep-alive>
+        <v-btn absolute bottom left v-if="!footer" @click="footer=true" icon>
+          <v-icon>mdi-chevron-up</v-icon>
+        </v-btn>
+      </v-content>
+    </v-slide-y-reverse-transition>
     <v-footer padless height="52" v-show="footer" class="text-right">
       <v-card width="100%" height="52" tile>
         <div class="mt-2" color="card">
