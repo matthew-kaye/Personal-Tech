@@ -3,12 +3,9 @@
     <v-card-title class="primary headline">
       <v-icon large color="white" class="mr-2">mdi-earth</v-icon>
       <span class="white--text">{{`Guess the ${gameMode.headerText}!`}}</span>
-      <v-btn icon @click="resetScores" color="white" class="ml-4">
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
       <div>
         <v-select
-          class="mx-4 mb-n7"
+          class="ml-6 mb-n7"
           md="auto"
           color="white"
           dark
@@ -22,6 +19,9 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </div>
+      <v-btn icon large @click="resetScores" color="white" class="ml-4">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
     </v-card-title>
     <v-row v-if="country" align="center" class="mt-2">
       <v-col md="auto" v-if="gameMode.capitalGame">
@@ -62,7 +62,12 @@
     <v-fab-transition>
       <v-row v-if="result" align="center">
         <v-col md="auto" v-if="!gameMode.capitalGame">
-          <v-img class="elevation-5 mb-1 ml-6" contain max-width="50" :src="previousCountry.flag"></v-img>
+          <v-img
+            class="elevation-5 mb-1 ml-5 mr-n2"
+            contain
+            max-width="50"
+            :src="previousCountry.flag"
+          ></v-img>
         </v-col>
         <v-col md="auto">
           <v-card-title>{{result + " - score: " + score + "/" + guesses}}</v-card-title>
@@ -240,7 +245,6 @@ export default {
     },
     validateGuess() {
       this.guesses += 1;
-
       this.previousCountry = this.country;
       if (this.gameMode.capitalGame) {
         if (this.capitalMatch) {
