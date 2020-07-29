@@ -1,3 +1,6 @@
 class Calculator:
+    def __init__(self, data):
+        self.data = data
+
     def calculate_damage(self):
-        pass
+        return 0

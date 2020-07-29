@@ -194,11 +194,14 @@
 </template>
 
 <script>
+import CalculatorApi from "@/apis/CalculatorApi";
+const calculatorApi = new CalculatorApi();
 export default {
   components: {},
   mounted() {},
   created() {
     this.calculateFields();
+    this.playerData = this.classes;
     this.classes = {
       fighter: "Fighter",
       ranger: "Ranger"
@@ -250,6 +253,7 @@ export default {
   },
   data() {
     return {
+      playerData: {},
       characterLevel: 1,
       characterClass: "Fighter",
       subclass: "Battle Master",
@@ -603,6 +607,11 @@ export default {
     }
   },
   watch: {
+    playerData: function() {
+      calculatorApi.getDamage(this.playerData).then(data => {
+        console.log(data);
+      });
+    },
     characterLevel: {
       deep: true,
       handler() {

@@ -3,6 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Vendor, HighScore
+from .tabletop.calculator import Calculator
 
 
 class BurritoViewSet(viewsets.ViewSet):
@@ -115,5 +116,19 @@ class SnakeViewSet(viewsets.ViewSet):
         except Exception as e:
             return Response(
                 {"responseType": "error", "status": f"Failed to get items: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class CalculatorViewSet(viewsets.ViewSet):
+    def list(self, request):
+        try:
+            damage_calculator = Calculator(request.data)
+            data = damage_calculator.calculate_damage()
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response(
+                {"responseType": "error", "status": f"Failed to get damage score: {e}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
