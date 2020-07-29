@@ -145,7 +145,7 @@ export default {
         .replace("Viet Nam", "Vietnam");
       name =
         name.indexOf(",") != -1 ? name.substring(0, name.indexOf(",")) : name;
-      return name.replace(/ *\([^)]*\) */g, "");
+      return this.getDeaccentedWord(name.replace(/ *\([^)]*\) */g, ""));
     },
     possibleCountrySpellings() {
       var possibleSpellings = this.country.altSpellings;
