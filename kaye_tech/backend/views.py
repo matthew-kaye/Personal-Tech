@@ -1,13 +1,11 @@
 import json
 from rest_framework import status, viewsets
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Vendor, HighScore
 
 
 class BurritoViewSet(viewsets.ViewSet):
-
     def create(self, request):
         try:
             vendor_data = request.data["vendorData"]
@@ -16,7 +14,7 @@ class BurritoViewSet(viewsets.ViewSet):
                 description=vendor_data["review"],
                 url=vendor_data["url"],
                 img_url=vendor_data["imageUrl"],
-                rating=vendor_data["rating"]
+                rating=vendor_data["rating"],
             )
             vendor.save()
         except Exception as e:
@@ -35,7 +33,7 @@ class BurritoViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
             vendors = Vendor.objects.all()
-            data = serializers.serialize('json', vendors)
+            data = serializers.serialize("json", vendors)
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
@@ -63,7 +61,6 @@ class BurritoViewSet(viewsets.ViewSet):
             vendor.url = vendor_data["url"]
             vendor.img_url = vendor_data["imageUrl"]
             vendor.rating = vendor_data["rating"]
-            print(vendor_data["review"])
             vendor.save()
         except Exception as e:
             print(e)
@@ -93,9 +90,7 @@ class SnakeViewSet(viewsets.ViewSet):
     def create(self, request):
         try:
             data = request.data["data"]
-            highScore, created = HighScore.objects.get_or_create(
-                name=data["name"]
-            )
+            highScore, created = HighScore.objects.get_or_create(name=data["name"])
             if data["score"] > highScore.score:
                 highScore.score = data["score"]
             highScore.save()
@@ -115,7 +110,7 @@ class SnakeViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
             highScores = HighScore.objects.all()
-            data = serializers.serialize('json', highScores)
+            data = serializers.serialize("json", highScores)
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
