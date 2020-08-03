@@ -291,7 +291,7 @@ export default {
         characterClass: this.characterClass,
         subclass: this.subclass,
         fightingStyle: this.fightingStyle,
-        weapon: this.weapon,
+        weapon: this.weapon.name,
         averageAC: this.averageAC,
         attackStat: this.attackStat,
         abilities: this.abilities,
@@ -610,7 +610,6 @@ export default {
   },
   watch: {
     playerDataToProcess: function() {
-      console.log(this.playerDataToProcess);
       calculatorApi.getDamage(this.playerDataToProcess).then(data => {
         console.log(data);
       });
