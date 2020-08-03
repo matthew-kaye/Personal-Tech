@@ -9,7 +9,6 @@ export default class CalculatorApi {
     getDamage(data) {
         return axios
             .get(baseUrl, { params: data })
-            .then((response) => response.data)
-            .catch(error => console.log(error));
+            .then((response) => response.data);
     }
 }

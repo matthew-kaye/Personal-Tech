@@ -123,7 +123,7 @@ class SnakeViewSet(viewsets.ViewSet):
 class CalculatorViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
-            damage_calculator = Calculator(request.data)
+            damage_calculator = Calculator(request.query_params)
             data = damage_calculator.calculate_damage()
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:

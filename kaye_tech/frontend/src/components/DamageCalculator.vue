@@ -6,9 +6,7 @@
         <v-select
           outlined
           v-model="characterLevel"
-          :rules="requiredField"
           :items="getNumberArray(1, 20)"
-          required
           attach
           label="Level"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -18,9 +16,7 @@
         <v-select
           outlined
           v-model="characterClass"
-          :rules="requiredField"
           :items="classList"
-          required
           attach
           label="Class"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -30,9 +26,7 @@
         <v-select
           outlined
           v-model="subclass"
-          :rules="requiredField"
           :items="subclasses[characterClass]"
-          required
           attach
           label="Sublass"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -42,9 +36,7 @@
         <v-select
           outlined
           v-model="fightingStyle"
-          :rules="requiredField"
           :items="fightingStyleList"
-          required
           attach
           label="Style"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -201,7 +193,6 @@ export default {
   mounted() {},
   created() {
     this.calculateFields();
-    this.playerData = this.classes;
     this.classes = {
       fighter: "Fighter",
       ranger: "Ranger"
@@ -253,7 +244,6 @@ export default {
   },
   data() {
     return {
-      playerData: {},
       characterLevel: 1,
       characterClass: "Fighter",
       subclass: "Battle Master",
@@ -274,7 +264,6 @@ export default {
         dualWielder: false,
         shadowBlade: false
       },
-      requiredField: [v => !!v],
       classes: {},
       classList: [],
       subclasses: {},
@@ -296,6 +285,19 @@ export default {
     };
   },
   computed: {
+    playerDataToProcess() {
+      return {
+        characterLevel: this.characterLevel,
+        characterClass: this.characterClass,
+        subclass: this.subclass,
+        fightingStyle: this.fightingStyle,
+        weapon: this.weapon,
+        averageAC: this.averageAC,
+        attackStat: this.attackStat,
+        abilities: this.abilities,
+        bonuses: this.bonuses
+      };
+    },
     totalDamage() {
       var baseDamage =
         this.numberOfAttacks * this.attackDamage * this.chanceToHit;
@@ -607,8 +609,9 @@ export default {
     }
   },
   watch: {
-    playerData: function() {
-      calculatorApi.getDamage(this.playerData).then(data => {
+    playerDataToProcess: function() {
+      console.log(this.playerDataToProcess);
+      calculatorApi.getDamage(this.playerDataToProcess).then(data => {
         console.log(data);
       });
     },
