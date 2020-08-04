@@ -2,7 +2,7 @@ from django.test import TestCase
 from .tabletop.calculator import Calculator
 
 TEST_DATA = {
-    "characterLevel": 11,
+    "characterLevel": "11",
     "characterClass": "Fighter",
     "weapon": "Longsword",
     "fightingStyle": "Duelling",

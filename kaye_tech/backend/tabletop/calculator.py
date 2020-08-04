@@ -28,7 +28,7 @@ class Calculator:
 
     def calculate_number_of_attacks(self, weapon):
         characterClass = self.data["characterClass"]
-        characterLevel = self.data["characterLevel"]
+        characterLevel = int(self.data["characterLevel"])
         if characterClass == "Fighter":
             return self.calculate_fighter_attacks(characterLevel)
         elif characterClass == "Ranger":
