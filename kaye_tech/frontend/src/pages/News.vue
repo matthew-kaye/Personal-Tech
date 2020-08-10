@@ -4,7 +4,8 @@
       <v-card-title class="primary headline">
         <span class="white--text">News search</span>
         <v-btn class="ml-8" color="primary" @click="tldrTech=!tldrTech">
-          <v-icon class="mr-2">mdi-laptop</v-icon>Tech Summary
+          <v-icon>mdi-laptop</v-icon>
+          <span class="ml-2 hidden-md-and-down">Tech Summary</span>
         </v-btn>
       </v-card-title>
       <v-dialog v-model="tldrTech" width="900">
@@ -26,15 +27,21 @@
         <v-col>
           <v-row align="center" justify="start" md="auto">
             <v-card-title class="ml-4">Search Criteria:</v-card-title>
-            <v-col v-for="(searchTerm, i) in searchCriteria" :key="searchTerm.text" class="shrink">
+            <v-col
+              cols="12"
+              md="auto"
+              v-for="(searchTerm, i) in searchCriteria"
+              :key="searchTerm.text"
+              class="shrink ml-4"
+            >
               <v-chip
                 close
                 @click:close="searchCriteria.splice(i, 1);fetchArticles()"
               >{{searchTerm.type +": " +searchTerm.text }}</v-chip>
             </v-col>
           </v-row>
-          <v-row class="ml-2" justify="start">
-            <v-col cols="3">
+          <v-row class="mx-2" justify="start">
+            <v-col lg="3" md="6" cols="12">
               <v-autocomplete
                 v-model="section"
                 :items="guardianSections"
@@ -49,7 +56,7 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-autocomplete>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="9" lg="2" md="6">
               <v-select
                 round
                 outlined
@@ -60,11 +67,12 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-select>
             </v-col>
-            <v-col md="auto">
+            <v-col cols="3" md="1">
               <v-tooltip v-model="showABCHint" bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :disabled="searchCriteria.includes(abcFilter)"
+                    class="mr-2"
                     color="primary"
                     @click="anythingButCovid()"
                     outlined
@@ -78,7 +86,7 @@
                 Anything But Coronavirus
               </v-tooltip>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" lg="3">
               <v-text-field
                 round
                 outlined
@@ -90,7 +98,7 @@
                 required
               ></v-text-field>
             </v-col>
-            <v-col md="auto">
+            <v-col cols="12" md="auto">
               <v-fab-transition>
                 <v-btn
                   v-show="searchTerm && !keywords.includes(searchTerm)"
@@ -198,17 +206,17 @@ export default {
   computed: {
     keywords() {
       return this.searchCriteria
-        .filter(function(searchTerm) {
+        .filter(function (searchTerm) {
           return searchTerm.type == "Keyword";
         })
-        .map(a => a.text);
+        .map((a) => a.text);
     },
     sections() {
       return this.searchCriteria
-        .filter(function(searchTerm) {
+        .filter(function (searchTerm) {
           return searchTerm.type == "Section";
         })
-        .map(a => a.text);
+        .map((a) => a.text);
     },
     anythingButCoronavirus() {
       for (var item of this.searchCriteria) {
@@ -244,7 +252,7 @@ export default {
         "order-by": orderBy,
         "page-size": this.pageSize
       };
-      newsApi.fetchArticles(params).then(data => {
+      newsApi.fetchArticles(params).then((data) => {
         this.articles = data.response.results;
       });
     },
@@ -256,8 +264,10 @@ export default {
       this.searchTerm = "";
     },
     fetchGuardianSections() {
-      newsApi.fetchSections().then(data => {
-        this.guardianSections = data.response.results.filter(function(section) {
+      newsApi.fetchSections().then((data) => {
+        this.guardianSections = data.response.results.filter(function (
+          section
+        ) {
           var excludedSections = [
             "About",
             "Extra",
@@ -285,7 +295,7 @@ export default {
       this.searchCriteria.push(this.abcFilter);
     },
     fetchTldrTechNews() {
-      newsApi.scrapeHTML(this.tldrUrl).then(data => {
+      newsApi.scrapeHTML(this.tldrUrl).then((data) => {
         var span = document.createElement("span");
         span.innerHTML = data.split("Daily Update").pop();
         this.techNews = span.innerText
@@ -305,13 +315,13 @@ export default {
     }
   },
   watch: {
-    searchCriteria: function() {
+    searchCriteria: function () {
       this.fetchArticles();
     },
-    pageSize: function() {
+    pageSize: function () {
       this.fetchArticles();
     },
-    section: function() {
+    section: function () {
       if (this.section) {
         this.searchCriteria.push({ text: this.section, type: "Section" });
         this.section = "";

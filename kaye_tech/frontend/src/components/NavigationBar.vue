@@ -4,7 +4,7 @@
       <v-list nav>
         <v-list-item>
           <v-list-item-icon>
-            <v-img max-height="46" max-width="50" src="/static/frontend/k-logo.jpg" />
+            <v-img max-height="50" max-width="50" src="/static/frontend/k-logo.jpg" />
           </v-list-item-icon>
           <v-list-item-title class="text-h4 pl-2">
             <b class="headline font-weight-bold">Matt's Tech</b>
@@ -27,8 +27,8 @@
     <v-app-bar dark color="primary">
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
       <span @click="goHome()" tag="span" style="cursor: pointer; display: flex;">
-        <v-img class="ml-2 mt-1" max-height="46" max-width="50" src="/static/frontend/k-logo.jpg" />
-        <v-toolbar-title class="ma-3 hidden-md-and-down">
+        <v-img class="ml-1 my-2" max-height="48" max-width="50" src="/static/frontend/k-logo.jpg" />
+        <v-toolbar-title class="mx-3 mt-4 hidden-md-and-down">
           <b class="headline font-weight-bold">Matt's Tech</b>
         </v-toolbar-title>
       </span>
