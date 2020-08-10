@@ -72,7 +72,6 @@
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :disabled="searchCriteria.includes(abcFilter)"
-                    class="mr-2"
                     color="primary"
                     @click="anythingButCovid()"
                     outlined
