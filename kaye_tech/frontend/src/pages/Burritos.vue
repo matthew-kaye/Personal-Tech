@@ -1,15 +1,15 @@
 <template>
   <div>
     <v-card class="ma-6">
-      <v-card-title class="headline">
-        <span>Burrito Rankings</span>
-        <v-btn class="ml-6" v-if="admin" color="primary" medium @click="addNewVendor()">
+      <v-card-title class="primary headline">
+        <span class="mr-4 my-2" md="auto">Burrito Rankings</span>
+        <v-btn class="mr-6" v-if="admin" color="primary" medium @click="addNewVendor()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-spacer />
         <v-text-field
           outlined
-          class="ml-5 mb-n8"
+          class="mb-n8"
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
@@ -25,11 +25,13 @@
           disable-pagination
           hide-default-footer
           sort-desc
+          calculate-widths
           :sort-by="'fields.rating'"
         >
           <template v-slot:item="row">
             <tr>
               <td
+                class="hidden-sm-and-down"
                 @click="viewVendor(row.item)"
                 v-bind:style="{ cursor: 'pointer' }"
               >{{vendors.indexOf(row.item)+1}}</td>
@@ -53,7 +55,7 @@
                   <v-icon right>mdi-star</v-icon>
                 </v-chip>
               </td>
-              <td>
+              <td class="hidden-sm-and-down">
                 <a :href="row.item.fields.url" target="_blank">
                   <v-btn color="primary" dark medium>
                     <v-icon left>mdi-taco</v-icon>Visit Site
@@ -95,7 +97,7 @@ export default {
   },
   created() {
     this.fetchVendors();
-    accountsApi.getCurrentUser().then(data => {
+    accountsApi.getCurrentUser().then((data) => {
       this.currentUser = data.username;
     });
   },
@@ -112,7 +114,7 @@ export default {
   computed: {
     headers() {
       return [
-        { text: "Rank", align: "start", sortable: false },
+        { text: "Rank", align: "start", sortable: false, width: 0 },
         { text: "Name", align: "start", value: "fields.name" },
         { text: "Rating", align: "start", value: "fields.rating" },
         { text: "Actions", align: "start", sortable: false }
@@ -144,25 +146,25 @@ export default {
       this.$refs.burritoDialog.open();
     },
     saveData(vendorData) {
-      burritoApi.makeVendor(vendorData).then(data => {
+      burritoApi.makeVendor(vendorData).then((data) => {
         this.fetchVendors();
       });
     },
     updateData(vendorData) {
-      burritoApi.updateVendor(vendorData).then(data => {
+      burritoApi.updateVendor(vendorData).then((data) => {
         this.fetchVendors();
       });
     },
     deleteData() {
       this.warningDialog = false;
       this.$refs.burritoDialog.close();
-      burritoApi.deleteVendor(this.vendor.pk).then(data => {
+      burritoApi.deleteVendor(this.vendor.pk).then((data) => {
         this.fetchVendors();
       });
     },
     fetchVendors() {
-      burritoApi.getVendors({}).then(data => {
-        this.vendors = JSON.parse(data).sort(function(a, b) {
+      burritoApi.getVendors({}).then((data) => {
+        this.vendors = JSON.parse(data).sort(function (a, b) {
           return b.fields.rating - a.fields.rating;
         });
       });

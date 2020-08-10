@@ -1,20 +1,20 @@
 <template>
   <div>
     <v-row class="mt-4 ml-3">
-      <v-col md="auto">
-        <v-btn color="primary" @click="snakeGame=!snakeGame">
+      <v-col cols="12" md="auto" class="hidden-sm-and-down">
+        <v-btn class="mr-6" color="primary" @click="snakeGame=!snakeGame">
           <v-icon class="mr-2">mdi-gamepad</v-icon>
           {{ snakeGame?"Close Snake Game":"Open Snake Game" }}
         </v-btn>
       </v-col>
-      <v-col md="auto">
-        <v-btn class="ml-6" color="primary" @click="geograpyGame=!geograpyGame">
+      <v-col cols="12" md="auto">
+        <v-btn class="mr-6" color="primary" @click="geograpyGame=!geograpyGame">
           <v-icon class="mr-2">mdi-earth</v-icon>
           {{ geograpyGame?"Close Countries Game":"Open Countries Game" }}
         </v-btn>
       </v-col>
-      <v-col md="auto">
-        <v-btn class="ml-6" color="primary" @click="damageCalculator=!damageCalculator">
+      <v-col cols="12" md="auto">
+        <v-btn color="primary" @click="damageCalculator=!damageCalculator">
           <v-icon class="mr-2">mdi-dice-d20</v-icon>
           {{ damageCalculator?"Close Calculator":"Open D&D Calculator" }}
         </v-btn>
@@ -127,7 +127,7 @@ export default {
       window.location.pathname = "/games/" + roomName + "/";
     },
     fetchScores() {
-      snakeApi.getScores({}).then(data => {
+      snakeApi.getScores({}).then((data) => {
         this.snakeHighScores = JSON.parse(data).slice(0, 10);
       });
     }

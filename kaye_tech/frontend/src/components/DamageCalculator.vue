@@ -1,11 +1,11 @@
 <template>
-  <v-card class="ma-6">
+  <v-card class="ma-6-md ma-4">
     <v-card-title class="primary headline">
       <span class="white--text">Expected Damage Calculator</span>
     </v-card-title>
     <v-card-title>Character Options</v-card-title>
-    <v-row class="ml-2">
-      <v-col cols="1" sm="1">
+    <v-row class="mx-0">
+      <v-col cols="6" md="1">
         <v-select
           outlined
           v-model="characterLevel"
@@ -17,7 +17,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="2" sm="2">
+      <v-col cols="6" md="2">
         <v-select
           outlined
           v-model="characterClass"
@@ -29,7 +29,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="2" sm="2">
+      <v-col cols="12" md="2">
         <v-select
           outlined
           v-model="subclass"
@@ -41,7 +41,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="2" sm="2">
+      <v-col cols="12" md="2">
         <v-select
           outlined
           v-model="fightingStyle"
@@ -53,24 +53,10 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="2" sm="2" v-if="!abilities.warMagic" class="ml-12">
-        <v-card elevation="10">
-          <v-card-title class="primary headline">
-            <span class="white--text">{{"Damage: " + totalDamage }}</span>
-          </v-card-title>
-        </v-card>
-      </v-col>
-      <v-col cols="4" sm="4" v-if="abilities.warMagic" class="ml-12">
-        <v-card elevation="10">
-          <v-card-title class="primary headline">
-            <span class="white--text">{{`Damage (moves): ${totalDamage} (${boomingBladeDamage}) `}}</span>
-          </v-card-title>
-        </v-card>
-      </v-col>
     </v-row>
     <v-card-title>Stats</v-card-title>
-    <v-row class="ml-2">
-      <v-col cols="1" sm="1">
+    <v-row class="mx-2">
+      <v-col cols="6" md="1">
         <v-select
           outlined
           v-model="proficiencyBonus"
@@ -80,7 +66,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="1" sm="1">
+      <v-col cols="6" md="1">
         <v-select
           outlined
           v-model="attackStat"
@@ -90,7 +76,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="2" sm="2">
+      <v-col cols="6" md="2">
         <v-select
           outlined
           v-model="weapon"
@@ -102,10 +88,10 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="1" sm="1">
+      <v-col cols="6" md="1">
         <v-text-field outlined v-model="averageAC" label="Enemy AC" required></v-text-field>
       </v-col>
-      <v-col cols="1" sm="1">
+      <v-col cols="6" md="1">
         <v-select
           outlined
           v-model="numberOfAttacks"
@@ -122,70 +108,89 @@
         <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
       </v-col>
     </v-row>
-    <v-card-title>Feats/Abilities</v-card-title>
-    <v-row class="ml-2">
-      <v-col md="auto" v-if="subclass=='Battle Master'">
-        <v-switch
-          :disabled="characterLevel<3"
-          v-model="bonuses.superiorityDie"
-          class="ma-2"
-          label="Superiority Dmg"
-        ></v-switch>
+    <v-row>
+      <v-col cols="12" md="6">
+        <v-card-title>Feats/Abilities</v-card-title>
+        <v-row class="ml-2">
+          <v-col md="auto" v-if="subclass=='Battle Master'">
+            <v-switch
+              :disabled="characterLevel<3"
+              v-model="bonuses.superiorityDie"
+              class="ma-2"
+              label="Superiority Dmg"
+            ></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="subclass=='Eldritch Knight'">
+            <v-switch
+              :disabled="characterLevel<7"
+              v-model="abilities.warMagic"
+              class="ma-2"
+              label="War Magic"
+            ></v-switch>
+          </v-col>
+          <v-col
+            md="auto"
+            v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery"
+          >
+            <v-switch
+              :disabled="characterLevel<7"
+              v-model="abilities.shadowBlade"
+              class="ma-2"
+              label="Shadow Blade"
+            ></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="characterClass==classes.ranger">
+            <v-switch
+              :disabled="characterLevel==1"
+              v-model="abilities.huntersMark"
+              class="ma-2"
+              label="Hunter's Mark"
+            ></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="subclass=='Hunter'">
+            <v-switch
+              :disabled="characterLevel<3"
+              v-model="abilities.colossusSlayer"
+              class="ma-2"
+              label="Colossus Slayer"
+            ></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="subclass=='Beast Master'">
+            <v-switch
+              :disabled="characterLevel<3"
+              v-model="abilities.wolfAttack"
+              class="ma-2"
+              label="Wolf"
+            ></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
+            <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
+            <v-switch v-model="abilities.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
+          </v-col>
+          <v-col
+            md="auto"
+            v-if="fightingStyle==fightingStyles.twoHanded || fightingStyle==fightingStyles.defence"
+          >
+            <v-switch v-model="abilities.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="fightingStyle==fightingStyles.twoWeapon">
+            <v-switch v-model="abilities.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col md="auto" v-if="subclass=='Eldritch Knight'">
-        <v-switch
-          :disabled="characterLevel<7"
-          v-model="abilities.warMagic"
-          class="ma-2"
-          label="War Magic"
-        ></v-switch>
-      </v-col>
-      <v-col md="auto" v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery">
-        <v-switch
-          :disabled="characterLevel<7"
-          v-model="abilities.shadowBlade"
-          class="ma-2"
-          label="Shadow Blade"
-        ></v-switch>
-      </v-col>
-      <v-col md="auto" v-if="characterClass==classes.ranger">
-        <v-switch
-          :disabled="characterLevel==1"
-          v-model="abilities.huntersMark"
-          class="ma-2"
-          label="Hunter's Mark"
-        ></v-switch>
-      </v-col>
-      <v-col md="auto" v-if="subclass=='Hunter'">
-        <v-switch
-          :disabled="characterLevel<3"
-          v-model="abilities.colossusSlayer"
-          class="ma-2"
-          label="Colossus Slayer"
-        ></v-switch>
-      </v-col>
-      <v-col md="auto" v-if="subclass=='Beast Master'">
-        <v-switch
-          :disabled="characterLevel<3"
-          v-model="abilities.wolfAttack"
-          class="ma-2"
-          label="Wolf"
-        ></v-switch>
-      </v-col>
-      <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
-        <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
-      </v-col>
-      <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
-        <v-switch v-model="abilities.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
-      </v-col>
-      <v-col
-        md="auto"
-        v-if="fightingStyle==fightingStyles.twoHanded || fightingStyle==fightingStyles.defence"
-      >
-        <v-switch v-model="abilities.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
-      </v-col>
-      <v-col md="auto" v-if="fightingStyle==fightingStyles.twoWeapon">
-        <v-switch v-model="abilities.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
+      <v-col cols="11" md="auto" class="ml-4">
+        <v-card elevation="10" v-if="!abilities.warMagic">
+          <v-card-title class="primary headline">
+            <span class="white--text">{{"Damage: " + totalDamage }}</span>
+          </v-card-title>
+        </v-card>
+        <v-card elevation="10" v-if="abilities.warMagic">
+          <v-card-title class="primary headline">
+            <span class="white--text">{{`Damage (moves): ${totalDamage} (${boomingBladeDamage}) `}}</span>
+          </v-card-title>
+        </v-card>
       </v-col>
     </v-row>
   </v-card>
@@ -268,7 +273,7 @@ export default {
         dualWielder: false,
         shadowBlade: false
       },
-      requiredField: [v => !!v],
+      requiredField: [(v) => !!v],
       classes: {},
       classList: [],
       subclasses: {},
