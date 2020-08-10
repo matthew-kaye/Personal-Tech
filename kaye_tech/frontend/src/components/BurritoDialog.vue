@@ -7,10 +7,10 @@
       <v-divider class="mb-n2" v-if="dialogMode!='View'" />
       <v-card-title>
         <v-row justify="start" align="center">
-          <v-col md="auto" v-show="vendorData.imageUrl">
+          <v-col cols="auto" v-show="vendorData.imageUrl">
             <v-img contain max-height="50" max-width="50" :src="vendorData.imageUrl" />
           </v-col>
-          <v-col md="auto">
+          <v-col cols="auto">
             <h2 v-if="dialogMode=='View' && !editable">{{vendorData.name}}</h2>
             <v-text-field
               outlined
