@@ -46,13 +46,11 @@ export default {
     bookApi.fetchBooks().then((data) => {
       this.books = data.results.books;
     });
-    var interval = setInterval(this.incrementTime, 1000);
   },
   data() {
     return {
       searchTerm: "",
-      books: [],
-      time: 0
+      books: []
     };
   },
   computed: {
@@ -86,9 +84,6 @@ export default {
     viewBook(item) {
       this.$refs.bookDialog.book = item;
       this.$refs.bookDialog.dialog = true;
-    },
-    incrementTime() {
-      this.time = parseInt(this.time) + 1;
     }
   }
 };
