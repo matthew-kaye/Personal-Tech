@@ -2,7 +2,7 @@
   <v-card class="ma-6">
     <v-card-title class="primary headline">
       <v-row align="center" class="my-n3">
-        <v-col cols="12" class="ml-n8" md="auto" align="center" justify="center">
+        <v-col cols="12" md="auto" align="center">
           <v-icon large color="white" class="mr-2">mdi-earth</v-icon>
           <span class="white--text mr-4">{{`Guess the ${gameMode.headerText}!`}}</span>
         </v-col>

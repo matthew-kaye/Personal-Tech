@@ -113,8 +113,8 @@ export default {
     return {
       roomName: "",
       snakeGame: false,
-      geograpyGame: true,
-      damageCalculator: false,
+      geograpyGame: false,
+      damageCalculator: true,
       roomSelect: false,
       snakeHighScores: []
     };
