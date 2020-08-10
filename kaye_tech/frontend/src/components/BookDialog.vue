@@ -14,7 +14,7 @@
               :src="book.book_image"
             />
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12" md="6">
             <v-card class="ma-4">
               <v-card-title class="primary headline">
                 <span class="white--text ml-2">Description</span>
@@ -29,7 +29,7 @@
                   >{{ "Amazon (US)" }}</v-btn>
                 </v-col>
                 <v-col>
-                  <v-btn class="ml-4" color="primary" :href="ukAmazonLink">{{ "Amazon (UK)" }}</v-btn>
+                  <v-btn class="ml-6" color="primary" :href="ukAmazonLink">{{ "Amazon (UK)" }}</v-btn>
                 </v-col>
               </v-row>
             </v-card>
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     toTitleCase(string) {
-      return string.replace(/\w\S*/g, function(text) {
+      return string.replace(/\w\S*/g, function (text) {
         return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
       });
     }
@@ -88,7 +88,7 @@ export default {
       deep: true,
       handler() {
         if (this.book) {
-          bookApi.fetchReviews(this.book.isbns[0].isbn13).then(data => {
+          bookApi.fetchReviews(this.book.isbns[0].isbn13).then((data) => {
             this.reviews = data.num_results > 0 ? data.results : null;
           });
         } else {

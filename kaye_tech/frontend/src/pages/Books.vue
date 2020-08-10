@@ -2,15 +2,17 @@
   <div>
     <v-card class="ma-4" v-if="books.length>0">
       <v-card-title class="primary headline">
-        <span class="white--text">{{"New York Times Bestsellers - updated " + time +"s ago"}}</span>
+        <span
+          class="white--text"
+        >{{"New York Times Bestsellers - " + new Date().toString().substring(0,15)}}</span>
       </v-card-title>
-      <v-data-table :headers="headers" :items="books">
+      <v-data-table calculate-widths :headers="headers" :items="books">
         <template v-slot:item="row">
           <tr v-bind:style="{ cursor: 'pointer' }" @click="viewBook(row.item)">
             <td>{{ row.item.rank }}</td>
             <td>
               <v-row justify="start" align="center" class="ma-n1">
-                <v-col md="auto">
+                <v-col class="hidden-sm-and-down" md="auto">
                   <v-img contain height="40" max-width="25" :src="row.item.book_image">
                     <template v-slot:placeholder>
                       <v-row class="fill-height ma-0" align="center" justify="center">
@@ -41,7 +43,7 @@ export default {
     BookDialog
   },
   created() {
-    bookApi.fetchBooks().then(data => {
+    bookApi.fetchBooks().then((data) => {
       this.books = data.results.books;
     });
     var interval = setInterval(this.incrementTime, 1000);
@@ -58,30 +60,26 @@ export default {
       return [
         {
           text: "Rank",
-          value: "rank",
-          width: 1
+          value: "rank"
         },
         {
           text: "Title",
-          value: "title",
-          width: 2
+          value: "title"
         },
         {
           text: "Author",
-          value: "author",
-          width: 2
+          value: "author"
         },
         {
           text: "Weeks on list",
-          value: "weeks_on_list",
-          width: 2
+          value: "weeks_on_list"
         }
       ];
     }
   },
   methods: {
     toTitleCase(string) {
-      return string.replace(/\w\S*/g, function(text) {
+      return string.replace(/\w\S*/g, function (text) {
         return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
       });
     },
