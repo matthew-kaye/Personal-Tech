@@ -1,7 +1,15 @@
 <template>
   <div v-if="currentUser" @click="closeGui()">
-    <v-navigation-drawer v-model="drawer" absolute temporary app>
-      <v-list>
+    <v-navigation-drawer class="py-4" v-model="drawer" temporary app>
+      <v-list nav>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-img max-height="46" max-width="50" src="/static/frontend/k-logo.jpg" />
+          </v-list-item-icon>
+          <v-list-item-title class="text-h4 pl-2">
+            <b class="headline font-weight-bold">Matt's Tech</b>
+          </v-list-item-title>
+        </v-list-item>
         <v-list-item v-for="item in navigationItems" :key="item.label" :to="item.link" link>
           <v-list-item-icon>
             <v-icon color="secondary">{{ item.icon }}</v-icon>
@@ -20,7 +28,7 @@
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
       <span @click="goHome()" tag="span" style="cursor: pointer; display: flex;">
         <v-img class="ml-2 mt-1" max-height="46" max-width="50" src="/static/frontend/k-logo.jpg" />
-        <v-toolbar-title class="ma-3">
+        <v-toolbar-title class="ma-3 hidden-md-and-down">
           <b class="headline font-weight-bold">Matt's Tech</b>
         </v-toolbar-title>
       </span>
@@ -128,7 +136,7 @@ export default {
     };
   },
   created() {
-    accountsApi.getCurrentUser().then(data => {
+    accountsApi.getCurrentUser().then((data) => {
       this.currentUser = data;
     });
   },
