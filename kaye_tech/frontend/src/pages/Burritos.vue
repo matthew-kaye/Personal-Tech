@@ -31,13 +31,13 @@
           <template v-slot:item="row">
             <tr>
               <td
-                class="hidden-sm-and-down"
+                class="hidden-xs-only"
                 @click="viewVendor(row.item)"
                 v-bind:style="{ cursor: 'pointer' }"
               >{{vendors.indexOf(row.item)+1}}</td>
               <td @click="viewVendor(row.item)" v-bind:style="{ cursor: 'pointer' }">
                 <v-row justify="start" align="center" class="ma-n2">
-                  <v-col md="auto">
+                  <v-col cols="auto">
                     <v-img contain height="45" max-width="45" :src="row.item.fields['img_url']">
                       <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center">
@@ -55,7 +55,7 @@
                   <v-icon right>mdi-star</v-icon>
                 </v-chip>
               </td>
-              <td class="hidden-sm-and-down">
+              <td class="hidden-xs-only">
                 <a :href="row.item.fields.url" target="_blank">
                   <v-btn color="primary" dark medium>
                     <v-icon left>mdi-taco</v-icon>Visit Site

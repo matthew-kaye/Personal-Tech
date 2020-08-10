@@ -9,10 +9,10 @@
       <v-data-table calculate-widths :headers="headers" :items="books">
         <template v-slot:item="row">
           <tr v-bind:style="{ cursor: 'pointer' }" @click="viewBook(row.item)">
-            <td class="hidden-sm-and-down">{{ row.item.rank }}</td>
+            <td class="hidden-xs-only">{{ row.item.rank }}</td>
             <td>
               <v-row justify="start" align="center" class="ma-n1">
-                <v-col md="auto">
+                <v-col cols="auto">
                   <v-img contain height="40" max-width="25" :src="row.item.book_image">
                     <template v-slot:placeholder>
                       <v-row class="fill-height ma-0" align="center" justify="center">
@@ -25,7 +25,7 @@
               </v-row>
             </td>
             <td>{{ row.item.author }}</td>
-            <td class="hidden-sm-and-down">{{ row.item.weeks_on_list }}</td>
+            <td class="hidden-xs-only">{{ row.item.weeks_on_list }}</td>
           </tr>
         </template>
       </v-data-table>
