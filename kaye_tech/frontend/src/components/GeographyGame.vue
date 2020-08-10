@@ -1,42 +1,46 @@
 <template>
   <v-card class="ma-6">
     <v-card-title class="primary headline">
-      <v-icon large color="white" class="mr-2">mdi-earth</v-icon>
-      <span class="white--text">{{`Guess the ${gameMode.headerText}!`}}</span>
-      <div>
-        <v-select
-          class="ml-6 mb-n7"
-          md="auto"
-          color="white"
-          dark
-          round
-          outlined
-          v-model="gameMode"
-          item-text="displayText"
-          :items="modes"
-          attach
-          label="Game Mode"
-          :menu-props="{ transition: 'slide-y-transition' }"
-        ></v-select>
-      </div>
-      <v-btn icon large @click="resetScores" color="white" class="ml-4">
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-row align="center" class="my-n3">
+        <v-col cols="12" class="ml-n8" md="auto" align="center" justify="center">
+          <v-icon large color="white" class="mr-2">mdi-earth</v-icon>
+          <span class="white--text mr-4">{{`Guess the ${gameMode.headerText}!`}}</span>
+        </v-col>
+        <v-col cols="8" class="mb-n8" md="auto">
+          <v-select
+            color="white"
+            dark
+            round
+            outlined
+            v-model="gameMode"
+            item-text="displayText"
+            :items="modes"
+            attach
+            label="Game Mode"
+            :menu-props="{ transition: 'slide-y-transition' }"
+          ></v-select>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn icon large @click="resetScores" color="white">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-card-title>
     <v-row v-if="country" align="center" class="mt-2">
-      <v-col md="auto" v-if="gameMode.capitalGame">
-        <v-card-title>{{"Country: " + country.name}}</v-card-title>
+      <v-col cols="8" md="auto" v-if="gameMode.capitalGame">
+        <v-card-text style="font-size:1.4em">{{"Country: " + country.name}}</v-card-text>
       </v-col>
-      <v-col md="auto" v-if="!gameMode.capitalGame">
+      <v-col cols="4" md="auto" v-if="!gameMode.capitalGame">
         <v-card-title>{{"Flag: "}}</v-card-title>
       </v-col>
-      <v-col md="auto">
+      <v-col cols="4" md="auto">
         <v-img class="elevation-5" contain max-width="60" :src="country.flag"></v-img>
       </v-col>
     </v-row>
     <v-card-text>
       <v-row>
-        <v-col cols="4" sm="4">
+        <v-col cols="9" md="4">
           <v-text-field
             class="mt-1"
             outlined
@@ -47,10 +51,10 @@
             required
           ></v-text-field>
         </v-col>
-        <v-col md="auto">
+        <v-col cols="3" md="auto">
           <v-fab-transition>
             <v-btn
-              class="mr-2 mt-3"
+              class="mr-2 ml-n1 mt-3"
               color="primary"
               v-if="userGuess"
               @click="validateGuess()"
@@ -61,7 +65,7 @@
     </v-card-text>
     <v-fab-transition>
       <v-row v-if="result" align="center">
-        <v-col md="auto" v-if="!gameMode.capitalGame">
+        <v-col cols="2" md="auto" v-if="!gameMode.capitalGame">
           <v-img
             class="elevation-5 mb-1 ml-5 mr-n2"
             contain
@@ -69,8 +73,8 @@
             :src="previousCountry.flag"
           ></v-img>
         </v-col>
-        <v-col md="auto">
-          <v-card-title>{{result + " - score: " + score + "/" + guesses}}</v-card-title>
+        <v-col cols="10" md="auto">
+          <v-card-text style="font-size:1.4em">{{result + " - score: " + score + "/" + guesses}}</v-card-text>
         </v-col>
       </v-row>
     </v-fab-transition>
@@ -166,10 +170,10 @@ export default {
         .get(this.countryCapitalUrl, {
           headers: { Accept: "application/json" }
         })
-        .then(response => response.data)
-        .catch(error => console.log(error));
-      countryApiResponse.then(data => {
-        this.fullCountrylist = data.filter(function(country) {
+        .then((response) => response.data)
+        .catch((error) => console.log(error));
+      countryApiResponse.then((data) => {
+        this.fullCountrylist = data.filter(function (country) {
           var alpha2CodesToExclude = [
             "AX",
             "AS",
@@ -240,7 +244,7 @@ export default {
       this.unusedCountryList =
         this.unusedCountryList.length == 1
           ? this.fullCountrylist
-          : this.unusedCountryList.filter(x => x !== country);
+          : this.unusedCountryList.filter((x) => x !== country);
       return country;
     },
     validateGuess() {
@@ -276,12 +280,12 @@ export default {
     }
   },
   watch: {
-    userGuess: function() {
+    userGuess: function () {
       if (this.gameMode.capitalGame ? this.capitalMatch : this.countryMatch) {
         this.validateGuess();
       }
     },
-    gameMode: function() {
+    gameMode: function () {
       this.resetScores();
     }
   }
