@@ -5,7 +5,7 @@
         <span class="white--text">News search</span>
         <v-btn class="ml-8" color="primary" @click="tldrTech=!tldrTech">
           <v-icon>mdi-laptop</v-icon>
-          <span class="ml-2 hidden-md-and-down">Tech Summary</span>
+          <span class="ml-2 hidden-sm-and-down">Tech Summary</span>
         </v-btn>
       </v-card-title>
       <v-dialog v-model="tldrTech" width="900">

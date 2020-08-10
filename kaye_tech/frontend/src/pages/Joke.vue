@@ -6,7 +6,7 @@
     <v-card-title>Search term - search for a joke by typing in a keyword:</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="3" sm="3">
+        <v-col cols="12" md="3">
           <v-text-field
             class="mt-1"
             outlined
@@ -30,12 +30,10 @@
           </v-fab-transition>
         </v-col>
       </v-row>
-    </v-card-text>
-    <v-card class="my-4" color="card">
-      <v-fab-transition>
-        <v-card-title v-if="joke">{{"Your Joke: " + joke}}</v-card-title>
+      <v-fab-transition class="my-4">
+        <div class="white--text" style="font-size:1.4em" v-if="joke">{{"Your Joke: " + joke}}</div>
       </v-fab-transition>
-    </v-card>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -80,9 +78,9 @@ export default {
           params: { term: searchTerm },
           headers: { Accept: "application/json" }
         })
-        .then(response => response.data)
-        .catch(error => console.log(error));
-      jokeResponse.then(data => {
+        .then((response) => response.data)
+        .catch((error) => console.log(error));
+      jokeResponse.then((data) => {
         if (data.total_jokes > 0) {
           var max = Math.min(MAX_JOKES_RETURNED_BY_SITE, data.total_jokes);
           this.joke = data.results[Math.floor(Math.random() * max)].joke;
@@ -103,9 +101,9 @@ export default {
           params: params,
           headers: { Accept: "application/json" }
         })
-        .then(response => response.data)
-        .catch(error => console.log(error));
-      jokeResponse.then(data => {
+        .then((response) => response.data)
+        .catch((error) => console.log(error));
+      jokeResponse.then((data) => {
         try {
           if (data.type == "single") {
             this.joke = data.joke;
