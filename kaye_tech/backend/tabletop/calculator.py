@@ -9,7 +9,6 @@ class Calculator:
         self.data = data
 
     def calculate_damage(self):
-        print(self.data)
         character = Character(self.data)
         weapon_damage = character.weapon.damage
         attacks = self.calculate_number_of_attacks(

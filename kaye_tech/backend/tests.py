@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .tabletop.calculator import Calculator
+import json
 
 TEST_DATA = {
     "characterLevel": "11",
@@ -9,12 +10,32 @@ TEST_DATA = {
     "subclass": "Eldritch Knight",
     "averageAC": 14,
     "attackStat": 3,
+    "bonuses": json.dumps({
+        "advantage": False
+    })
 }
+
+TEST_CALCULATOR = Calculator(TEST_DATA)
 
 
 class CalculatorTest(TestCase):
-    def test_running_calculator_method(self):
-        test_calculator = Calculator(TEST_DATA)
-        result = test_calculator.calculate_damage()
-        print(result)
+    def test_calculator_returns_number(self):
+        result = TEST_CALCULATOR.calculate_damage()
         assert isinstance(result, float)
+
+    def test_proficiency_bonus_calculation(self):
+        assert TEST_CALCULATOR.calculate_proficiency_bonus(1) == 2
+        assert TEST_CALCULATOR.calculate_proficiency_bonus(5) == 3
+        assert TEST_CALCULATOR.calculate_proficiency_bonus(9) == 4
+        assert TEST_CALCULATOR.calculate_proficiency_bonus(13) == 5
+        assert TEST_CALCULATOR.calculate_proficiency_bonus(20) == 6
+
+    def test_fighter_attack_calculation(self):
+        assert TEST_CALCULATOR.calculate_fighter_attacks(1) == 1
+        assert TEST_CALCULATOR.calculate_fighter_attacks(5) == 2
+        assert TEST_CALCULATOR.calculate_fighter_attacks(11) == 3
+        assert TEST_CALCULATOR.calculate_fighter_attacks(20) == 4
+
+    def test_ranger_attack_calculation(self):
+        assert TEST_CALCULATOR.calculate_ranger_attacks(1) == 1
+        assert TEST_CALCULATOR.calculate_ranger_attacks(5) == 2
