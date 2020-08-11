@@ -110,7 +110,7 @@
             </v-col>
           </v-row>
           <br />
-          <v-card color="card" class="ml-4" width="100%">
+          <v-card color="card" class="ml-sm-4" width="100%">
             <v-card-title class="headline">Results</v-card-title>
             <v-slide-x-transition>
               <div v-if="articles.length>0">
@@ -206,17 +206,17 @@ export default {
   computed: {
     keywords() {
       return this.searchCriteria
-        .filter(function (searchTerm) {
+        .filter(function(searchTerm) {
           return searchTerm.type == "Keyword";
         })
-        .map((a) => a.text);
+        .map(a => a.text);
     },
     sections() {
       return this.searchCriteria
-        .filter(function (searchTerm) {
+        .filter(function(searchTerm) {
           return searchTerm.type == "Section";
         })
-        .map((a) => a.text);
+        .map(a => a.text);
     },
     anythingButCoronavirus() {
       for (var item of this.searchCriteria) {
@@ -252,7 +252,7 @@ export default {
         "order-by": orderBy,
         "page-size": this.pageSize
       };
-      newsApi.fetchArticles(params).then((data) => {
+      newsApi.fetchArticles(params).then(data => {
         this.articles = data.response.results;
       });
     },
@@ -264,10 +264,8 @@ export default {
       this.searchTerm = "";
     },
     fetchGuardianSections() {
-      newsApi.fetchSections().then((data) => {
-        this.guardianSections = data.response.results.filter(function (
-          section
-        ) {
+      newsApi.fetchSections().then(data => {
+        this.guardianSections = data.response.results.filter(function(section) {
           var excludedSections = [
             "About",
             "Extra",
@@ -295,7 +293,7 @@ export default {
       this.searchCriteria.push(this.abcFilter);
     },
     fetchTldrTechNews() {
-      newsApi.scrapeHTML(this.tldrUrl).then((data) => {
+      newsApi.scrapeHTML(this.tldrUrl).then(data => {
         var span = document.createElement("span");
         span.innerHTML = data.split("Daily Update").pop();
         this.techNews = span.innerText
@@ -315,13 +313,13 @@ export default {
     }
   },
   watch: {
-    searchCriteria: function () {
+    searchCriteria: function() {
       this.fetchArticles();
     },
-    pageSize: function () {
+    pageSize: function() {
       this.fetchArticles();
     },
-    section: function () {
+    section: function() {
       if (this.section) {
         this.searchCriteria.push({ text: this.section, type: "Section" });
         this.section = "";
