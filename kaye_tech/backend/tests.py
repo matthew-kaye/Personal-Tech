@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .tabletop.calculator import Calculator
+from .tabletop.character import Character
 import json
 
 TEST_DATA = {
@@ -16,6 +17,7 @@ TEST_DATA = {
 }
 
 TEST_CALCULATOR = Calculator(TEST_DATA)
+TEST_CHARACTER = Character(TEST_DATA)
 
 
 class CalculatorTest(TestCase):
@@ -39,3 +41,7 @@ class CalculatorTest(TestCase):
     def test_ranger_attack_calculation(self):
         assert TEST_CALCULATOR.calculate_ranger_attacks(1) == 1
         assert TEST_CALCULATOR.calculate_ranger_attacks(5) == 2
+
+    def test_crit_calculation(self):
+        assert TEST_CALCULATOR.calculate_chance_of_crit(False) == 0.05
+        assert TEST_CALCULATOR.calculate_chance_of_crit(True) == 0.0975

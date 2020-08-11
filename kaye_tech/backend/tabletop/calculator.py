@@ -30,10 +30,10 @@ class Calculator:
         bonus_to_hit = character.attack_stat + proficiency_bonus
         chance_to_hit = max(1 - (armour_class-1-bonus_to_hit)/20, 0.05)
         chance_to_hit = min(chance_to_hit, 0.95)
-        return 1-(1-chance_to_hit) ^ 2 if character.advantage else chance_to_hit
+        return 1-(1-chance_to_hit) ** 2 if character.advantage else chance_to_hit
 
     def calculate_chance_of_crit(self, advantage):
-        return 1 - 0.95 ^ 2 if advantage else 0.05
+        return round(1 - 0.95 ** 2 if advantage else 0.05, 8)
 
     def calculate_number_of_attacks(self, character):
         if character.weapon.loading:
