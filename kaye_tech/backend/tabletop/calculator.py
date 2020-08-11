@@ -1,4 +1,7 @@
 from .weapon import Blacksmith
+from .character import Character
+import json
+import math
 
 
 class Calculator:
@@ -6,33 +9,40 @@ class Calculator:
         self.data = data
 
     def calculate_damage(self):
-        weapon = self.draw_weapon()
-        attacks = 1 if weapon.loading else self.calculate_number_of_attacks(weapon)
-        return float(weapon.damage) * attacks
+        print(self.data)
+        character = Character(self.data)
+        weapon_damage = character.weapon.damage
+        attacks = self.calculate_number_of_attacks(
+            character
+        )
+        armour_class = int(self.data["averageAC"])
+        chance_to_hit = self.calculate_chance_to_hit(
+            armour_class, character
+        )
+        crit_chance = self.calculate_chance_of_crit(character.advantage)
+        attack_damage = (weapon_damage + character.attack_stat)*chance_to_hit
+        crit_damage = weapon_damage*crit_chance
+        return (attack_damage + crit_damage)*attacks
 
-    def draw_weapon(self):
-        blacksmith = Blacksmith()
-        weapon_name = self.data["weapon"]
-        if weapon_name == "Longsword":
-            return blacksmith.make_longsword()
-        elif weapon_name == "Greatsword":
-            return blacksmith.make_greatsword()
-        elif weapon_name == "Greataxe":
-            return blacksmith.make_greataxe()
-        elif weapon_name == "Handaxe":
-            return blacksmith.make_handaxe()
-        elif weapon_name == "Heavy Crossbow":
-            return blacksmith.make_heavy_crossbow()
-        elif weapon_name == "Longbow":
-            return blacksmith.make_longbow()
+    def calculate_chance_to_hit(self, armour_class, character):
+        proficiency_bonus = self.calculate_proficiency_bonus(
+            character.level
+        )
+        bonus_to_hit = character.attack_stat + proficiency_bonus
+        chance_to_hit = max(1 - (armour_class-1-bonus_to_hit)/20, 0.05)
+        chance_to_hit = min(chance_to_hit, 0.95)
+        return 1-(1-chance_to_hit) ^ 2 if character.advantage else chance_to_hit
 
-    def calculate_number_of_attacks(self, weapon):
-        characterClass = self.data["characterClass"]
-        characterLevel = int(self.data["characterLevel"])
-        if characterClass == "Fighter":
-            return self.calculate_fighter_attacks(characterLevel)
-        elif characterClass == "Ranger":
-            return self.calculate_ranger_attacks(characterLevel)
+    def calculate_chance_of_crit(self, advantage):
+        return 1 - 0.95 ^ 2 if advantage else 0.05
+
+    def calculate_number_of_attacks(self, character):
+        if character.weapon.loading:
+            return 1
+        if character.character_class == "Fighter":
+            return self.calculate_fighter_attacks(character.level)
+        elif character.character_class == "Ranger":
+            return self.calculate_ranger_attacks(character.level)
 
     def calculate_fighter_attacks(self, level):
         if level == 20:
@@ -49,3 +59,6 @@ class Calculator:
             return 2
         else:
             return 1
+
+    def calculate_proficiency_bonus(self, level):
+        return math.ceil(level/4) + 1

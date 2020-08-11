@@ -14,6 +14,20 @@ class Weapon:
 
 
 class Blacksmith:
+    def draw_weapon(self, weapon_name):
+        if weapon_name == "Longsword":
+            return self.make_longsword()
+        elif weapon_name == "Greatsword":
+            return self.make_greatsword()
+        elif weapon_name == "Greataxe":
+            return self.make_greataxe()
+        elif weapon_name == "Handaxe":
+            return self.make_handaxe()
+        elif weapon_name == "Heavy Crossbow":
+            return self.make_heavy_crossbow()
+        elif weapon_name == "Longbow":
+            return self.make_longbow()
+
     def make_longsword(self):
         return Weapon("Longsword", 4.5, versatile=True)
 
@@ -31,4 +45,3 @@ class Blacksmith:
 
     def make_longbow(self):
         return Weapon("Longbow", 4.5, ranged=True, heavy=True)
-
