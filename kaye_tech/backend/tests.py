@@ -9,8 +9,8 @@ TEST_DATA = {
     "weapon": "Longsword",
     "fightingStyle": "Duelling",
     "subclass": "Eldritch Knight",
-    "averageAC": 14,
-    "attackStat": 3,
+    "averageAC": 16,
+    "attackStat": 5,
     "bonuses": json.dumps({
         "advantage": False
     })
@@ -45,3 +45,11 @@ class CalculatorTest(TestCase):
     def test_crit_calculation(self):
         assert TEST_CALCULATOR.calculate_chance_of_crit(False) == 0.05
         assert TEST_CALCULATOR.calculate_chance_of_crit(True) == 0.0975
+
+    def test_chance_to_hit_calculation(self):
+        assert TEST_CALCULATOR.calculate_chance_to_hit(
+            20, TEST_CHARACTER) == 0.5
+        assert TEST_CALCULATOR.calculate_chance_to_hit(
+            30, TEST_CHARACTER) == 0.05
+        assert TEST_CALCULATOR.calculate_chance_to_hit(
+            1, TEST_CHARACTER) == 0.95
