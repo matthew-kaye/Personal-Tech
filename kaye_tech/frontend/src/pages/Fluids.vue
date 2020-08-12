@@ -6,7 +6,7 @@
       </span>
       <v-tooltip v-model="showToggleGuiHint" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn large v-on="on" icon class="ml-6" primary @click="toggleGui">
+          <v-btn large v-on="on" icon class="ml-6 hidden-xs-only" primary @click="toggleGui">
             <v-icon v-if="showGui">mdi-eye-off</v-icon>
             <v-icon v-if="!showGui">mdi-eye</v-icon>
           </v-btn>
@@ -15,7 +15,14 @@
       </v-tooltip>
       <v-tooltip v-model="showFullscreenHint" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn label="Fullscreen" v-on="on" icon class="ml-6" primary @click="goFullscreen">
+          <v-btn
+            label="Fullscreen"
+            v-on="on"
+            icon
+            class="ml-6 hidden-xs-only"
+            primary
+            @click="goFullscreen"
+          >
             <v-icon large>mdi-fullscreen</v-icon>
           </v-btn>
         </template>
@@ -102,7 +109,7 @@
       </v-menu>
       <v-tooltip v-model="toggleDragButtonhint" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn v-on="on" large icon class="ml-6" @click="toggleContinuous">
+          <v-btn v-on="on" large icon class="ml-6 hidden-xs-only" @click="toggleContinuous">
             <v-icon v-if="continuous">mdi-cursor-default-click</v-icon>
             <v-icon v-if="!continuous">mdi-cursor-default-click-outline</v-icon>
           </v-btn>
@@ -110,9 +117,9 @@
         Toggle drawing with mouse hover
         <span></span>
       </v-tooltip>
-      <v-tooltip max-width="350" v-model="showInfoTooltip" bottom>
+      <v-tooltip class="hidden-xs-only" max-width="350" v-model="showInfoTooltip" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn icon class="ml-6" v-on="on">
+          <v-btn icon class="ml-6 hidden-xs-only" v-on="on">
             <v-icon>mdi-information</v-icon>
           </v-btn>
         </template>
@@ -131,15 +138,18 @@
         :activateGui="true"
       />
     </div>
+    <ScrollButton class="hidden-sm-and-up" />
   </div>
 </template>
 
 <script>
 import FluidsSheet from "@/components/FluidsSheet.vue";
+import ScrollButton from "@/components/ScrollButton.vue";
 
 export default {
   components: {
-    FluidsSheet
+    FluidsSheet,
+    ScrollButton
   },
   data() {
     return {

@@ -92,7 +92,7 @@ export default {
       }
     }
     let config = this.config;
-    if (this.activateGui && !window.gui) {
+    if (this.activateGui && !window.gui && !isMobile()) {
       this.gui = new dat.GUI({ width: 300 });
       startGUI(this.gui);
     }

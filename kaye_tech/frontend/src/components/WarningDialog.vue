@@ -19,9 +19,6 @@ export default {
       return this.dialog;
     }
   },
-  data() {
-    return {};
-  },
   props: {
     dialog: Boolean
   },
