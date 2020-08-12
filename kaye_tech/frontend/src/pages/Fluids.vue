@@ -31,8 +31,8 @@
       <v-tooltip v-model="showToggleWidescreenHint" bottom>
         <template v-slot:activator="{ on }">
           <v-btn large icon v-on="on" class="ml-6" primary @click="toggleWidescreen">
-            <v-icon v-if="fullscreen">mdi-arrow-collapse-all</v-icon>
-            <v-icon v-if="!fullscreen">mdi-arrow-expand-all</v-icon>
+            <v-icon v-if="widescreen">mdi-arrow-collapse-all</v-icon>
+            <v-icon v-if="!widescreen">mdi-arrow-expand-all</v-icon>
           </v-btn>
         </template>
         Toggle Widescreen
@@ -167,7 +167,7 @@ export default {
       backgroundColourHint: false,
       splatColourHint: false,
       toggleDragButtonhint: false,
-      fullscreen: false,
+      widescreen: false,
       continuous: false
     };
   },
@@ -184,9 +184,9 @@ export default {
       canvas.requestFullscreen();
     },
     toggleWidescreen() {
-      this.fullscreen = !this.fullscreen;
-      this.$root.$emit("toggleFooter", this.fullscreen);
-      if (this.fullscreen) {
+      this.widescreen = !this.widescreen;
+      this.$root.$emit("toggleFooter", this.widescreen);
+      if (this.widescreen) {
         window.scrollTo(0, document.body.scrollHeight);
       }
     },
@@ -208,7 +208,7 @@ export default {
   },
   computed: {
     computedMargin() {
-      return `ma-${this.fullscreen ? 0 : 8}`;
+      return `ma-${this.widescreen ? 0 : 8}`;
     },
     backgroundColour: {
       get() {

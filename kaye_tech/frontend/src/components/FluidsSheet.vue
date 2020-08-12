@@ -92,9 +92,12 @@ export default {
       }
     }
     let config = this.config;
-    if (this.activateGui && !window.gui && !isMobile()) {
+    if (this.activateGui && !window.gui) {
       this.gui = new dat.GUI({ width: 300 });
-      startGUI(this.gui);
+      var gui = startGUI(this.gui);
+      if (isMobile()) {
+        gui.close();
+      }
     }
 
     let pointers = [];
