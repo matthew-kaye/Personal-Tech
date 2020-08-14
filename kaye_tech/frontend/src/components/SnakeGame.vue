@@ -133,7 +133,9 @@ export default {
         e.preventDefault();
       }
       if (e.key === " " && !freezeOverride) {
-        e.preventDefault();
+        if (e.target == document.body) {
+          e.preventDefault();
+        }
         active = !active;
         requestAnimationFrame(loop);
       } else if (
