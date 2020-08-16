@@ -9,6 +9,7 @@
         <v-spacer />
         <v-text-field
           dark
+          color="white"
           outlined
           class="mb-n8"
           v-model="search"

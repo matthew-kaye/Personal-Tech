@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="ma-6">
+    <v-card class="ma-md-6 ma-2">
       <v-card-title class="primary headline">
         <span class="white--text">News search</span>
         <v-btn class="ml-8" color="primary" @click="tldrTech=!tldrTech">
@@ -24,7 +24,7 @@
         </v-card>
       </v-dialog>
       <v-row justify="start">
-        <v-col>
+        <v-col cols="12" md="auto">
           <v-row align="center" justify="start" md="auto">
             <v-card-title class="ml-4">Search Criteria:</v-card-title>
             <v-col
@@ -41,7 +41,7 @@
             </v-col>
           </v-row>
           <v-row class="mx-2" justify="start">
-            <v-col lg="3" md="6" cols="12">
+            <v-col lg="auto" md="6" cols="12">
               <v-autocomplete
                 v-model="section"
                 :items="guardianSections"
@@ -56,7 +56,7 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-autocomplete>
             </v-col>
-            <v-col cols="9" lg="2" md="6">
+            <v-col cols="9" lg="auto" md="6">
               <v-select
                 round
                 outlined
@@ -67,7 +67,7 @@
                 :menu-props="{ transition: 'slide-y-transition' }"
               ></v-select>
             </v-col>
-            <v-col cols="3" md="1">
+            <v-col cols="3" md="auto">
               <v-tooltip v-model="showABCHint" bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -86,7 +86,7 @@
                 Anything But Coronavirus
               </v-tooltip>
             </v-col>
-            <v-col cols="12" lg="3">
+            <v-col cols="12" md="6" lg="auto">
               <v-text-field
                 round
                 outlined
@@ -139,8 +139,8 @@
             </v-slide-x-transition>
           </v-card>
         </v-col>
-        <v-col cols="3" class="ma-4" md="auto">
-          <TwitterFeed />
+        <v-col class="ma-md-4" cols="auto">
+          <TwitterFeed class="ml-md-4" />
         </v-col>
       </v-row>
       <br />

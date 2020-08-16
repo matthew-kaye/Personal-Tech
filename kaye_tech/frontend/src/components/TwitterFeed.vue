@@ -1,7 +1,7 @@
 <template>
   <div
     class="hastagify_embed"
-    data-width="300"
+    data-width="350"
     data-mode="popular"
     data-popular-type="last-week"
     data-popular-lang="en"
