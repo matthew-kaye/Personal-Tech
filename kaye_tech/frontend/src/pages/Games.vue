@@ -1,40 +1,42 @@
 <template>
   <div>
-    <v-tabs grow>
+    <v-tabs grow class="pa-md-4">
       <v-tab class="hidden-sm-and-down">
         <v-icon class="mr-2">mdi-gamepad</v-icon>Snake Game
       </v-tab>
-      <v-tab-item class="hidden-sm-and-down mt-4">
-        <v-row class="ml-3">
-          <v-col md="auto" v-if="snakeHighScores.length>0">
-            <v-card cols="1" width="400">
-              <v-list>
-                <v-list-item color="primary">
-                  Top 10 Leaderboard
-                  <v-btn icon @click="fetchScores" class="ml-4">
-                    <v-icon>mdi-refresh</v-icon>
-                  </v-btn>
-                </v-list-item>
+      <v-tab-item class="hidden-sm-and-down ma-4">
+        <v-card>
+          <v-row class="ml-3">
+            <v-col md="auto" v-if="snakeHighScores.length>0">
+              <v-card cols="1" width="400">
+                <v-list>
+                  <v-list-item color="primary">
+                    Top 10 Leaderboard
+                    <v-btn icon @click="fetchScores" class="ml-4">
+                      <v-icon>mdi-refresh</v-icon>
+                    </v-btn>
+                  </v-list-item>
+                  <v-divider />
+                  <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
+                    <v-list-item-content>{{item.fields.name}}</v-list-item-content>
+                    <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
+                  </v-list-item>
+                </v-list>
                 <v-divider />
-                <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
-                  <v-list-item-content>{{item.fields.name}}</v-list-item-content>
-                  <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
-                </v-list-item>
-              </v-list>
-              <v-divider />
-              <v-card-text>Direct the snake to eat the apple using the arrow keys, and press space bar to pause/unpause. Press any arrow key to begin. Avoid hitting the walls!</v-card-text>
-            </v-card>
-          </v-col>
-          <v-col>
-            <SnakeGame class="ma-6" />
-          </v-col>
-        </v-row>
+                <v-card-text>Direct the snake to eat the apple using the arrow keys, and press space bar to pause/unpause. Press any arrow key to begin. Avoid hitting the walls!</v-card-text>
+              </v-card>
+            </v-col>
+            <v-col>
+              <SnakeGame class="ma-6" />
+            </v-col>
+          </v-row>
+        </v-card>
       </v-tab-item>
       <v-tab>
         <v-icon class="mr-2">mdi-earth</v-icon>
         <span class="hidden-sm-and-down">Countries Game</span>
       </v-tab>
-      <v-tab-item class="mt-4">
+      <v-tab-item class="my-4">
         <GeographyGame />
       </v-tab-item>
       <v-tab>
