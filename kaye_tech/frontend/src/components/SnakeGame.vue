@@ -126,6 +126,9 @@ export default {
       });
     }
     document.addEventListener("keydown", function(e) {
+      if (e.target.type == "text") {
+        return;
+      }
       if ([38, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
       }
@@ -133,7 +136,11 @@ export default {
         e.preventDefault();
         active = !active;
         requestAnimationFrame(loop);
-      } else if (!active && !freezeOverride) {
+      } else if (
+        !active &&
+        !freezeOverride &&
+        [37, 38, 39, 40].indexOf(e.keyCode) > -1
+      ) {
         active = true;
         requestAnimationFrame(loop);
       }

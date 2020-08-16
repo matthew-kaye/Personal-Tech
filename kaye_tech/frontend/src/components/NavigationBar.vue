@@ -2,7 +2,7 @@
   <div v-if="currentUser" @click="closeGui()">
     <v-navigation-drawer class="py-4" v-model="drawer" temporary app>
       <v-list nav>
-        <v-list-item>
+        <v-list-item @click="goHome">
           <v-list-item-icon>
             <v-img max-height="50" max-width="50" src="/static/frontend/k-logo.jpg" />
           </v-list-item-icon>
@@ -26,7 +26,7 @@
     </v-navigation-drawer>
     <v-app-bar dark color="primary">
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <span @click="goHome()" tag="span" style="cursor: pointer; display: flex;">
+      <span @click="goHome" tag="span" style="cursor: pointer; display: flex;">
         <v-img class="ml-1 my-2" max-height="48" max-width="50" src="/static/frontend/k-logo.jpg" />
         <v-toolbar-title class="mx-3 mt-4 hidden-sm-and-down">
           <b class="headline font-weight-bold">Matt's Tech</b>
