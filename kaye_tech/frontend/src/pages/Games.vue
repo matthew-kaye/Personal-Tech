@@ -1,68 +1,50 @@
 <template>
   <div>
-    <v-row class="mt-4 ml-3">
-      <v-col cols="12" md="auto" class="hidden-sm-and-down">
-        <v-btn class="mr-6" color="primary" @click="snakeGame=!snakeGame">
-          <v-icon class="mr-2">mdi-gamepad</v-icon>
-          {{ snakeGame?"Close Snake Game":"Open Snake Game" }}
-        </v-btn>
-      </v-col>
-      <v-col cols="12" md="auto">
-        <v-btn class="mr-6" color="primary" @click="geograpyGame=!geograpyGame">
-          <v-icon class="mr-2">mdi-earth</v-icon>
-          {{ geograpyGame?"Close Countries Game":"Open Countries Game" }}
-        </v-btn>
-      </v-col>
-      <v-col cols="12" md="auto">
-        <v-btn color="primary" @click="damageCalculator=!damageCalculator">
-          <v-icon class="mr-2">mdi-dice-d20</v-icon>
-          {{ damageCalculator?"Close Calculator":"Open D&D Calculator" }}
-        </v-btn>
-      </v-col>
-      <!-- <v-col>
-        <v-btn
-          class="ml-6"
-          color="primary"
-          @click="roomSelect=!roomSelect"
-        >{{ roomSelect?"Close Room Select":"Join Room (Unfinished)" }}</v-btn>
-      </v-col>-->
-    </v-row>
-    <v-fade-transition>
-      <v-row v-if="snakeGame" class="ml-3">
-        <v-col md="auto" v-if="snakeHighScores.length>0">
-          <v-card cols="1" width="400">
-            <v-list>
-              <v-list-item color="primary">
-                Top 10 Leaderboard
-                <v-btn icon @click="fetchScores" class="ml-4">
-                  <v-icon>mdi-refresh</v-icon>
-                </v-btn>
-              </v-list-item>
+    <v-tabs grow>
+      <v-tab class="hidden-sm-and-down">
+        <v-icon class="mr-2">mdi-gamepad</v-icon>Snake Game
+      </v-tab>
+      <v-tab-item class="hidden-sm-and-down mt-4">
+        <v-row class="ml-3">
+          <v-col md="auto" v-if="snakeHighScores.length>0">
+            <v-card cols="1" width="400">
+              <v-list>
+                <v-list-item color="primary">
+                  Top 10 Leaderboard
+                  <v-btn icon @click="fetchScores" class="ml-4">
+                    <v-icon>mdi-refresh</v-icon>
+                  </v-btn>
+                </v-list-item>
+                <v-divider />
+                <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
+                  <v-list-item-content>{{item.fields.name}}</v-list-item-content>
+                  <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
+                </v-list-item>
+              </v-list>
               <v-divider />
-              <v-list-item v-for="item in snakeHighScores" :key="item.fields.id">
-                <v-list-item-content>{{item.fields.name}}</v-list-item-content>
-                <v-list-item-content class="ml-4">{{item.fields.score}}</v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider />
-            <v-card-text>Direct the snake to eat the apple using the arrow keys, and press space bar to pause. Press any key to begin. Avoid hitting the walls!</v-card-text>
-          </v-card>
-        </v-col>
-        <v-col>
-          <SnakeGame class="pb-4" />
-        </v-col>
-      </v-row>
-    </v-fade-transition>
-    <v-fade-transition>
-      <div v-if="geograpyGame">
+              <v-card-text>Direct the snake to eat the apple using the arrow keys, and press space bar to pause. Press any key to begin. Avoid hitting the walls!</v-card-text>
+            </v-card>
+          </v-col>
+          <v-col>
+            <SnakeGame class="ma-6" />
+          </v-col>
+        </v-row>
+      </v-tab-item>
+      <v-tab>
+        <v-icon class="mr-2">mdi-earth</v-icon>
+        <span class="hidden-sm-and-down">Countries Game</span>
+      </v-tab>
+      <v-tab-item class="mt-4">
         <GeographyGame />
-      </div>
-    </v-fade-transition>
-    <v-fade-transition>
-      <div v-if="damageCalculator">
-        <DamageCalculator ref="calculator" />
-      </div>
-    </v-fade-transition>
+      </v-tab-item>
+      <v-tab>
+        <v-icon class="mr-2">mdi-dice-d20</v-icon>
+        <span class="hidden-sm-and-down">D&D Damage Calculator</span>
+      </v-tab>
+      <v-tab-item class="mt-4">
+        <DamageCalculator />
+      </v-tab-item>
+    </v-tabs>
     <v-slide-y-transition>
       <v-card class="ma-6" v-if="roomSelect">
         <v-card-title class="primary headline">
@@ -112,9 +94,6 @@ export default {
   data() {
     return {
       roomName: "",
-      snakeGame: false,
-      geograpyGame: false,
-      damageCalculator: false,
       roomSelect: false,
       snakeHighScores: []
     };
@@ -127,7 +106,7 @@ export default {
       window.location.pathname = "/games/" + roomName + "/";
     },
     fetchScores() {
-      snakeApi.getScores({}).then((data) => {
+      snakeApi.getScores({}).then(data => {
         this.snakeHighScores = JSON.parse(data).slice(0, 10);
       });
     }

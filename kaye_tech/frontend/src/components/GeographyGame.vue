@@ -1,8 +1,8 @@
 <template>
-  <v-card class="ma-6">
+  <v-card>
     <v-card-title class="primary headline">
       <v-row align="center" class="my-n3">
-        <v-col cols="12" md="auto" align="center" class="ml-md-0 ml-n6">
+        <v-col cols="12" md="auto" align="center" class="ml-md-0 ml-n4">
           <v-icon large color="white" class="mr-2">mdi-earth</v-icon>
           <span class="white--text mr-4">{{`Guess the ${gameMode.headerText}!`}}</span>
         </v-col>
@@ -170,10 +170,10 @@ export default {
         .get(this.countryCapitalUrl, {
           headers: { Accept: "application/json" }
         })
-        .then((response) => response.data)
-        .catch((error) => console.log(error));
-      countryApiResponse.then((data) => {
-        this.fullCountrylist = data.filter(function (country) {
+        .then(response => response.data)
+        .catch(error => console.log(error));
+      countryApiResponse.then(data => {
+        this.fullCountrylist = data.filter(function(country) {
           var alpha2CodesToExclude = [
             "AX",
             "AS",
@@ -244,7 +244,7 @@ export default {
       this.unusedCountryList =
         this.unusedCountryList.length == 1
           ? this.fullCountrylist
-          : this.unusedCountryList.filter((x) => x !== country);
+          : this.unusedCountryList.filter(x => x !== country);
       return country;
     },
     validateGuess() {
@@ -280,12 +280,12 @@ export default {
     }
   },
   watch: {
-    userGuess: function () {
+    userGuess: function() {
       if (this.gameMode.capitalGame ? this.capitalMatch : this.countryMatch) {
         this.validateGuess();
       }
     },
-    gameMode: function () {
+    gameMode: function() {
       this.resetScores();
     }
   }

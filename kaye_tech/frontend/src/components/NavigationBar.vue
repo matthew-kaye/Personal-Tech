@@ -136,7 +136,7 @@ export default {
     };
   },
   created() {
-    accountsApi.getCurrentUser().then((data) => {
+    accountsApi.getCurrentUser().then(data => {
       this.currentUser = data;
     });
   },

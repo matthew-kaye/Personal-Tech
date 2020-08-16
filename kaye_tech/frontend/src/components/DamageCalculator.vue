@@ -1,9 +1,6 @@
 <template>
-  <v-card class="ma-6-md ma-4">
-    <v-card-title class="primary headline">
-      <span class="white--text">Expected Damage Calculator</span>
-    </v-card-title>
-    <v-card-title>Character Options</v-card-title>
+  <v-card>
+    <v-card-title class="mb-2">Character Options</v-card-title>
     <v-row class="mx-0">
       <v-col cols="6" md="1">
         <v-select
@@ -273,7 +270,7 @@ export default {
         dualWielder: false,
         shadowBlade: false
       },
-      requiredField: [(v) => !!v],
+      requiredField: [v => !!v],
       classes: {},
       classList: [],
       subclasses: {},

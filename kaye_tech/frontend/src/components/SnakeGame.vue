@@ -166,6 +166,9 @@ export default {
   width: 50%;
   height: 50%;
 }
+.theme--dark canvas {
+  background-color: black;
+}
 .swal-modal {
   background-color: rgb(31, 124, 7);
   border: 3px solid white;
