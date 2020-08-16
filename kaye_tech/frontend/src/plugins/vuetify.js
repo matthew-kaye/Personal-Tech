@@ -14,7 +14,7 @@ export default new Vuetify({
         primary: colors.pink.darken4,
         secondary: colors.shades.black,
         offset: colors.grey.darken1,
-        card: colors.shades.white,
+        card: colors.grey.lighten4,
         background: colors.shades.white
       },
       dark: {

@@ -2,12 +2,13 @@
   <div>
     <v-card class="ma-6">
       <v-card-title class="primary headline">
-        <span class="mr-4 my-2" md="auto">Burrito Rankings</span>
+        <span class="mr-4 my-2 white--text" md="auto">Burrito Rankings</span>
         <v-btn class="mr-6" v-if="admin" color="primary" medium @click="addNewVendor()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-spacer />
         <v-text-field
+          dark
           outlined
           class="mb-n8"
           v-model="search"
@@ -97,7 +98,7 @@ export default {
   },
   created() {
     this.fetchVendors();
-    accountsApi.getCurrentUser().then((data) => {
+    accountsApi.getCurrentUser().then(data => {
       this.currentUser = data.username;
     });
   },
@@ -146,25 +147,25 @@ export default {
       this.$refs.burritoDialog.open();
     },
     saveData(vendorData) {
-      burritoApi.makeVendor(vendorData).then((data) => {
+      burritoApi.makeVendor(vendorData).then(data => {
         this.fetchVendors();
       });
     },
     updateData(vendorData) {
-      burritoApi.updateVendor(vendorData).then((data) => {
+      burritoApi.updateVendor(vendorData).then(data => {
         this.fetchVendors();
       });
     },
     deleteData() {
       this.warningDialog = false;
       this.$refs.burritoDialog.close();
-      burritoApi.deleteVendor(this.vendor.pk).then((data) => {
+      burritoApi.deleteVendor(this.vendor.pk).then(data => {
         this.fetchVendors();
       });
     },
     fetchVendors() {
-      burritoApi.getVendors({}).then((data) => {
-        this.vendors = JSON.parse(data).sort(function (a, b) {
+      burritoApi.getVendors({}).then(data => {
+        this.vendors = JSON.parse(data).sort(function(a, b) {
           return b.fields.rating - a.fields.rating;
         });
       });
