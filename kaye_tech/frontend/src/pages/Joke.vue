@@ -3,10 +3,14 @@
     <v-card-title class="primary headline">
       <span class="white--text">Joke search</span>
     </v-card-title>
-    <v-card-title>Search term - search for a joke by typing in a keyword:</v-card-title>
+    <div
+      class="white--text mt-4 ml-4 mr-2"
+      style="font-size:1.4em"
+      v-if="joke"
+    >Search term - search for a joke by typing in a keyword:</div>
     <v-card-text>
       <v-row>
-        <v-col cols="12" md="3">
+        <v-col cols="12" sm="8" md="6" lg="4">
           <v-text-field
             class="mt-1"
             outlined
@@ -78,9 +82,9 @@ export default {
           params: { term: searchTerm },
           headers: { Accept: "application/json" }
         })
-        .then((response) => response.data)
-        .catch((error) => console.log(error));
-      jokeResponse.then((data) => {
+        .then(response => response.data)
+        .catch(error => console.log(error));
+      jokeResponse.then(data => {
         if (data.total_jokes > 0) {
           var max = Math.min(MAX_JOKES_RETURNED_BY_SITE, data.total_jokes);
           this.joke = data.results[Math.floor(Math.random() * max)].joke;
@@ -101,9 +105,9 @@ export default {
           params: params,
           headers: { Accept: "application/json" }
         })
-        .then((response) => response.data)
-        .catch((error) => console.log(error));
-      jokeResponse.then((data) => {
+        .then(response => response.data)
+        .catch(error => console.log(error));
+      jokeResponse.then(data => {
         try {
           if (data.type == "single") {
             this.joke = data.joke;

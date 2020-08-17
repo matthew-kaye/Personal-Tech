@@ -23,10 +23,15 @@
           <span>
             <strong>
               Matthew Kaye
-              - {{ new Date().getFullYear() }}
+              <span class="hidden-xs-only">- {{ new Date().getFullYear() }}</span>
             </strong>
           </span>
-          <v-btn class="mb-2 ml-2" icon href="https://www.linkedin.com/in/matthew-kaye-20332016a/">
+          <v-btn
+            class="mb-2 ml-2"
+            icon
+            target="_blank"
+            href="https://www.linkedin.com/in/matthew-kaye-20332016a/"
+          >
             <v-icon>mdi-linkedin</v-icon>
           </v-btn>
           <v-btn
@@ -36,7 +41,7 @@
           >
             <v-icon>mdi-email</v-icon>
           </v-btn>
-          <v-btn icon href="https://github.com/matthew-kaye" class="mb-2 ml-2 mr-4">
+          <v-btn icon href="https://github.com/matthew-kaye" target="_blank" class="mb-2 ml-2 mr-4">
             <v-icon>fab fa-github</v-icon>
           </v-btn>
         </div>

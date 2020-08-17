@@ -2,16 +2,17 @@
   <div>
     <v-card class="ma-6">
       <v-card-title class="primary headline">
-        <span class="mr-4 my-2 white--text" md="auto">Burrito Rankings</span>
-        <v-btn class="mr-6" v-if="admin" color="primary" medium @click="addNewVendor()">
+        <span class="my-2 white--text hidden-xs-only" md="auto">Burrito Rankings</span>
+        <span class="my-2 white--text hidden-sm-and-up" md="auto">Burritos</span>
+        <v-btn class="mr-6 ml-2" v-if="admin" color="primary" medium @click="addNewVendor()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-        <v-spacer />
+        <v-spacer class="hidden-sm-and-down" />
         <v-text-field
           dark
           color="white"
           outlined
-          class="mb-n8"
+          class="mb-n8 mt-2 mt-sm-0"
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
