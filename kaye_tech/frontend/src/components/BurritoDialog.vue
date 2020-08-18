@@ -3,6 +3,10 @@
     <v-card>
       <v-card-title v-if="dialogMode!='View'">
         <span class="headline">Add Burrito Vendor</span>
+        <v-spacer />
+        <v-btn icon @click="dialog=false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-divider class="mb-n2" v-if="dialogMode!='View'" />
       <v-card-title>
@@ -21,7 +25,7 @@
               required
             ></v-text-field>
           </v-col>
-          <v-col md="auto">
+          <v-col cols="auto">
             <v-btn
               v-if="admin && dialogMode=='View' && editable"
               @click="toggleEditMode()"
@@ -35,7 +39,12 @@
               <v-icon large class="mb-1">mdi-delete-circle</v-icon>
             </v-btn>
           </v-col>
-          <v-col></v-col>
+          <v-spacer />
+          <v-col v-if="dialogMode=='View'">
+            <v-btn icon @click="dialog=false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-col>
         </v-row>
       </v-card-title>
       <v-divider />

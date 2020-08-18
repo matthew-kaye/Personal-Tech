@@ -4,6 +4,10 @@
       <v-card flat v-if="book" color="card">
         <v-card-title class="primary headline">
           <span class="white--text">{{toTitleCase(book.title) + ", " + book.contributor}}</span>
+          <v-spacer />
+          <v-btn icon @click="dialog=false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-row class="ma-4" justify="start">
           <v-col md="auto">

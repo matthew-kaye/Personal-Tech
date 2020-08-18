@@ -3,15 +3,20 @@
     <v-card color="card">
       <v-card-title class>
         <b>About</b>
+        <v-spacer />
+        <v-btn icon @click="dialog=false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
+
       <v-divider />
       <v-row justify="space-around">
-        <v-col md="auto">
-          <v-avatar left size="100" class="mt-5 ml-6">
+        <v-col cols="12" md="auto" align="center">
+          <v-avatar left size="100" class="mt-5 ml-sm-6">
             <img src="/static/frontend/matt.jpg" />
           </v-avatar>
         </v-col>
-        <v-col class="ml-n4 mr-4">
+        <v-col class="ml-md-n4 ml-4 mr-4">
           <v-card-text>
             Hello! My name's Matt, and I work as a Software Engineer at Brainlabs.
             During the Covid-19 lockdown I was keen to improve my web skills, so built this as a place to showcase them with a variety of interesting content (to me anyway!),
@@ -25,8 +30,8 @@
           </v-card-text>
         </v-col>
       </v-row>
-      <v-row class="ml-1 mt-n6">
-        <v-col style="text-align: center;">
+      <v-row class="ml-1 mt-n6" align="center" justify="center">
+        <v-col cols="12" md="auto" style="text-align: center;">
           <v-card-text>
             <span class="headline">
               <b>Details</b>
@@ -48,10 +53,10 @@
             <br />
           </v-card-text>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="auto" align="center">
           <div>
             <v-img
-              class="ml-12 mt-2 logo"
+              class="ml-md-12 mt-2 logo"
               max-height="200"
               max-width="200"
               src="/static/frontend/k-logo.jpg"
@@ -59,15 +64,6 @@
           </div>
         </v-col>
       </v-row>
-      <iframe
-        class="ml-10"
-        width="624"
-        height="351"
-        src="https://www.youtube.com/embed/CSUGQmDaGto"
-        frameborder="0"
-        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
     </v-card>
   </v-dialog>
 </template>
