@@ -3,7 +3,6 @@
     <v-expand-transition>
       <NavigationBar />
     </v-expand-transition>
-
     <v-slide-y-reverse-transition :hide-on-leave="true">
       <v-content>
         <keep-alive>
@@ -59,15 +58,15 @@ export default {
   },
   created() {
     window.activeTab = true;
-    window.onfocus = function() {
+    window.onfocus = function () {
       window.activeTab = true;
     };
-    window.onblur = function() {
+    window.onblur = function () {
       window.activeTab = false;
     };
   },
   mounted() {
-    this.$root.$on("toggleFooter", fullscreen => {
+    this.$root.$on("toggleFooter", (fullscreen) => {
       this.footer = !fullscreen;
     });
   },
@@ -117,5 +116,8 @@ body {
 .header,
 .footer {
   flex-shrink: 0;
+}
+.v-card__title {
+  word-break: normal; /* maybe !important  */
 }
 </style>

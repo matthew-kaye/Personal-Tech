@@ -3,8 +3,7 @@
     <v-card color="card">
       <v-card-title class>
         <b>About</b>
-        <v-spacer />
-        <v-btn icon @click="dialog=false">
+        <v-btn class="ma-5 hidden-md-and-up" fixed top right icon @click="dialog=false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>

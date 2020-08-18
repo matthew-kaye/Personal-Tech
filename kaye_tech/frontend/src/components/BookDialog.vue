@@ -3,9 +3,8 @@
     <v-scale-transition>
       <v-card flat v-if="book" color="card">
         <v-card-title class="primary headline">
-          <span class="white--text">{{toTitleCase(book.title) + ", " + book.contributor}}</span>
-          <v-spacer />
-          <v-btn icon @click="dialog=false">
+          <div class="white--text">{{toTitleCase(book.title) + ", " + book.contributor}}</div>
+          <v-btn class="ma-4 hidden-md-and-up" fixed top right icon @click="dialog=false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
