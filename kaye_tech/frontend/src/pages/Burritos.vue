@@ -2,9 +2,9 @@
   <div>
     <v-card class="ma-6">
       <v-card-title class="primary headline">
-        <span class="my-2 white--text hidden-xs-only" md="auto">Burrito Rankings</span>
-        <span class="my-2 white--text hidden-sm-and-up" md="auto">Burritos</span>
-        <v-btn class="mr-6 ml-2" v-if="admin" color="primary" medium @click="addNewVendor()">
+        <span class="my-2 mr-2 white--text hidden-xs-only" md="auto">Burrito Rankings</span>
+        <span class="my-2 mr-2 white--text hidden-sm-and-up" md="auto">Burritos</span>
+        <v-btn class="mr-6" v-if="admin" color="primary" medium @click="addNewVendor()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-spacer class="hidden-sm-and-down" />
@@ -100,7 +100,7 @@ export default {
   },
   created() {
     this.fetchVendors();
-    accountsApi.getCurrentUser().then(data => {
+    accountsApi.getCurrentUser().then((data) => {
       this.currentUser = data.username;
     });
   },
@@ -149,25 +149,25 @@ export default {
       this.$refs.burritoDialog.open();
     },
     saveData(vendorData) {
-      burritoApi.makeVendor(vendorData).then(data => {
+      burritoApi.makeVendor(vendorData).then((data) => {
         this.fetchVendors();
       });
     },
     updateData(vendorData) {
-      burritoApi.updateVendor(vendorData).then(data => {
+      burritoApi.updateVendor(vendorData).then((data) => {
         this.fetchVendors();
       });
     },
     deleteData() {
       this.warningDialog = false;
       this.$refs.burritoDialog.close();
-      burritoApi.deleteVendor(this.vendor.pk).then(data => {
+      burritoApi.deleteVendor(this.vendor.pk).then((data) => {
         this.fetchVendors();
       });
     },
     fetchVendors() {
-      burritoApi.getVendors({}).then(data => {
-        this.vendors = JSON.parse(data).sort(function(a, b) {
+      burritoApi.getVendors({}).then((data) => {
+        this.vendors = JSON.parse(data).sort(function (a, b) {
           return b.fields.rating - a.fields.rating;
         });
       });

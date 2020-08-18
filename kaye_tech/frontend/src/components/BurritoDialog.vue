@@ -35,13 +35,19 @@
             >
               <v-icon left>mdi-pencil</v-icon>Toggle Edit
             </v-btn>
-            <v-btn large @click="deleteVendor()" color="primary" v-if="admin && !editable" icon>
+            <v-btn
+              large
+              class="ml-n4 ml-sm-n2"
+              @click="deleteVendor()"
+              color="primary"
+              v-if="admin && !editable"
+              icon
+            >
               <v-icon large class="mb-1">mdi-delete-circle</v-icon>
             </v-btn>
           </v-col>
-          <v-spacer />
-          <v-col v-if="dialogMode=='View'">
-            <v-btn icon @click="dialog=false">
+          <v-col v-if="dialogMode=='View'" align="right">
+            <v-btn class="ml-n6" icon @click="dialog=false">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-col>

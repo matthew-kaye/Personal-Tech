@@ -8,7 +8,6 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-
       <v-divider />
       <v-row justify="space-around">
         <v-col cols="12" md="auto" align="center">
