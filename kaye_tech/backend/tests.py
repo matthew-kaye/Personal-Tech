@@ -33,14 +33,14 @@ class CalculatorTest(TestCase):
         assert TEST_CALCULATOR.calculate_proficiency_bonus(20) == 6
 
     def test_fighter_attack_calculation(self):
-        assert TEST_CALCULATOR.calculate_fighter_attacks(1) == 1
-        assert TEST_CALCULATOR.calculate_fighter_attacks(5) == 2
-        assert TEST_CALCULATOR.calculate_fighter_attacks(11) == 3
-        assert TEST_CALCULATOR.calculate_fighter_attacks(20) == 4
+        assert TEST_CHARACTER.fighter_attacks(1) == 1
+        assert TEST_CHARACTER.fighter_attacks(5) == 2
+        assert TEST_CHARACTER.fighter_attacks(11) == 3
+        assert TEST_CHARACTER.fighter_attacks(20) == 4
 
     def test_ranger_attack_calculation(self):
-        assert TEST_CALCULATOR.calculate_ranger_attacks(1) == 1
-        assert TEST_CALCULATOR.calculate_ranger_attacks(5) == 2
+        assert TEST_CHARACTER.ranger_attacks(1) == 1
+        assert TEST_CHARACTER.ranger_attacks(5) == 2
 
     def test_crit_calculation(self):
         assert TEST_CALCULATOR.calculate_chance_of_crit(False) == 0.05

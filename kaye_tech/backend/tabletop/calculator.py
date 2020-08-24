@@ -11,16 +11,14 @@ class Calculator:
     def calculate_damage(self):
         character = Character(self.data)
         weapon_damage = character.weapon.damage
-        attacks = self.calculate_number_of_attacks(
-            character
-        )
+        attacks = character.number_of_attacks()
         armour_class = int(self.data["averageAC"])
         chance_to_hit = self.calculate_chance_to_hit(
             armour_class, character
         )
         crit_chance = self.calculate_chance_of_crit(character.advantage)
-        attack_damage = (weapon_damage + character.attack_stat)*chance_to_hit
-        crit_damage = weapon_damage*crit_chance
+        attack_damage = self.calculate_attack_damage(character) *chance_to_hit
+        crit_damage = character.weapon.damage*crit_chance
         return (attack_damage + crit_damage)*attacks
 
     def calculate_chance_to_hit(self, armour_class, character):
@@ -35,29 +33,12 @@ class Calculator:
     def calculate_chance_of_crit(self, advantage):
         return round(1 - 0.95 ** 2 if advantage else 0.05, 8)
 
-    def calculate_number_of_attacks(self, character):
-        if character.weapon.loading:
-            return 1
-        if character.character_class == "Fighter":
-            return self.calculate_fighter_attacks(character.level)
-        elif character.character_class == "Ranger":
-            return self.calculate_ranger_attacks(character.level)
-
-    def calculate_fighter_attacks(self, level):
-        if level == 20:
-            return 4
-        elif level >= 11:
-            return 3
-        elif level >= 5:
-            return 2
+    def calculate_attack_damage(self, character):
+        base_damage = character.weapon.damage + character.attack_stat
+        if character.battle_class.fighting_style=="Duelling" and (character.weapon.light or character.weapon.versatile):
+            return base_damage+2
         else:
-            return 1
-
-    def calculate_ranger_attacks(self, level):
-        if level >= 5:
-            return 2
-        else:
-            return 1
+            return base_damage
 
     def calculate_proficiency_bonus(self, level):
         return math.ceil(level/4) + 1

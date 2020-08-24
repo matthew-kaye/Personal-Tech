@@ -609,8 +609,8 @@ export default {
     }
   },
   watch: {
-    playerDataToProcess: function() {
-      calculatorApi.getDamage(this.playerDataToProcess).then(data => {
+    playerDataToProcess: function () {
+      calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
         console.log(data);
       });
     },
