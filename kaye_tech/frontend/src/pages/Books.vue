@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-card class="ma-4" v-if="books.length>0">
+  <div align="center">
+    <v-card class="ma-4" max-width="1200" v-if="books.length>0">
       <v-card-title class="primary headline">
         <span
           class="white--text"

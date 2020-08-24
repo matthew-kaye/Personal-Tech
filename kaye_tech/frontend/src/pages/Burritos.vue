@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-card class="ma-6">
+  <div align="center">
+    <v-card justify="center" class="ma-md-6 ma-2" max-width="1200">
       <v-card-title class="primary headline">
         <span class="my-2 mr-2 white--text hidden-xs-only" md="auto">Burrito Rankings</span>
         <span class="my-2 mr-2 white--text hidden-sm-and-up" md="auto">Burritos</span>
