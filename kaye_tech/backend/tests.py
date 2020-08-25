@@ -9,29 +9,30 @@ from dataclasses import dataclass
 
 @dataclass
 class TestData:
-    characterLevel: int = 11
-    characterClass: str = Classes.FIGHTER
+    character_level: int = 11
+    character_class: str = Classes.FIGHTER
     weapon: str = Weapons.LONGSWORD
-    fightingStyle: str = Styles.DEFENCE
+    fighting_style: str = Styles.DEFENCE
     subclass: str = "Eldritch Knight"
-    averageAC: int = 16
-    attackStat: int = 5
+    average_AC: int = 16
+    attack_stat: int = 5
 
     def data(self, bonuses=None):
         return {
-            "characterLevel": self.characterLevel,
-            "characterClass": self.characterClass,
+            "characterLevel": self.character_level,
+            "characterClass": self.character_class,
             "weapon": self.weapon,
-            "fightingStyle": self.fightingStyle,
+            "fightingStyle": self.fighting_style,
             "subclass": self.subclass,
-            "averageAC": self.averageAC,
-            "attackStat": self.attackStat,
+            "averageAC": self.average_AC,
+            "attackStat": self.attack_stat,
             "bonuses": json.dumps(bonuses if bonuses else {"advantage": False}),
         }
 
 
 TEST_CALCULATOR = Calculator(TestData().data())
 TEST_CHARACTER = Character(TestData().data())
+TEST_SMITH = Blacksmith()
 
 
 class CalculatorTest(TestCase):
@@ -50,7 +51,9 @@ class CalculatorTest(TestCase):
 
     def test_attack_damage_calculation(self):
         assert TEST_CALCULATOR.calculate_attack_damage() == 9.5
-        DUELLIST_CALCULATOR = Calculator(TestData(fightingStyle=Styles.DUELLING).data())
+        DUELLIST_CALCULATOR = Calculator(
+            TestData(fighting_style=Styles.DUELLING).data()
+        )
         assert DUELLIST_CALCULATOR.calculate_attack_damage() == 11.5
 
 
@@ -75,6 +78,20 @@ class CharacterTest(TestCase):
     def test_archery_bonus_calculation(self):
         assert TEST_CHARACTER.bonus_to_hit() == 9
         archer = Character(
-            TestData(fightingStyle=Styles.ARCHERY, weapon=Weapons.LONGBOW).data()
+            TestData(fighting_style=Styles.ARCHERY, weapon=Weapons.LONGBOW).data()
         )
         assert archer.bonus_to_hit() == 11
+
+    def test_great_weapon_fighting_bonus(self):
+        greatsword = TEST_SMITH.draw_weapon(Weapons.GREATSWORD)
+        longsword = TEST_SMITH.draw_weapon(Weapons.LONGSWORD)
+        greatswordsman = Character(
+            TestData(fighting_style=Styles.TWO_HANDED, weapon=Weapons.GREATSWORD).data()
+        )
+        two_handed_swordsman = Character(
+            TestData(fighting_style=Styles.TWO_HANDED).data()
+        )
+        assert TEST_CHARACTER.average_dice_damage() == 4.5
+        assert greatswordsman.average_dice_damage() == 25 / 3
+        assert round(two_handed_swordsman.average_dice_damage(), 1) == 6.3
+

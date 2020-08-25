@@ -20,6 +20,9 @@ class Weapon:
     loading: bool = False
     versatile: bool = False
 
+    def __eq__(self, other):
+        return self.name == other
+
 
 class Blacksmith:
     def draw_weapon(self, weapon_name):

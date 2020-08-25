@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from .weapon import Weapon, Blacksmith
+from .weapon import Weapon, Weapons, Blacksmith
 from .fighting_styles import Styles
 import math
 import json
@@ -62,8 +62,20 @@ class Character:
         return base_bonus + style_bonus
 
     def average_dice_damage(self):
-        if self.battle_class.fighting_style == Styles.TWO_HANDED:
-            return 0
+        if self.battle_class.fighting_style == Styles.TWO_HANDED and (
+            self.weapon.heavy or self.weapon.versatile
+        ):
+            return self.great_weapon_damage(self.weapon)
+        else:
+            return self.weapon.damage
+
+    def great_weapon_damage(self, weapon):
+        weapon_damage = weapon.damage + 1 if weapon.versatile else weapon.damage
+        if weapon == Weapons.GREATSWORD:
+            return weapon_damage + 4 / 3
+        dice_max = weapon_damage * 2 - 1
+        reroll_chance = 2 / dice_max
+        return reroll_chance * weapon_damage + (1 - reroll_chance) * (weapon_damage + 1)
 
     def proficiency_bonus_by_level(self, level):
         return math.ceil(level / 4) + 1

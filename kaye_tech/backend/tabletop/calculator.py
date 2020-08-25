@@ -14,7 +14,7 @@ class Calculator:
         chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
         crit_chance = self.chance_to_crit_by_advantage(self.character.advantage)
         attack_damage = self.calculate_attack_damage() * chance_to_hit
-        crit_damage = self.character.weapon.damage * crit_chance
+        crit_damage = self.character.average_dice_damage() * crit_chance
         return (attack_damage + crit_damage) * attacks
 
     def chance_to_hit_by_ac(self, armour_class):
@@ -29,7 +29,7 @@ class Calculator:
         return round(1 - 0.95 ** 2 if advantage else 0.05, 8)
 
     def calculate_attack_damage(self):
-        base_damage = self.character.weapon.damage + self.character.attack_stat
+        base_damage = self.character.average_dice_damage() + self.character.attack_stat
         weapon = self.character.weapon
         if (
             self.character.battle_class.fighting_style == Styles.DUELLING
