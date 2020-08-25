@@ -5,6 +5,14 @@ import math
 import json
 
 
+class Subclasses:
+    BATTLE_MASTER = "Battle Master"
+    BEAST_MASTER = "Beast Master"
+    CHAMPION = "Champion"
+    ELDRITCH_KNIGHT = "Eldritch Knight"
+    HUNTER = "Hunter"
+
+
 class Classes:
     RANGER = "Ranger"
     FIGHTER = "Fighter"
@@ -30,6 +38,7 @@ class Class:
 class Character:
     weapon: Weapon
     battle_class: Class
+    subclass: str
     attack_stat: int
     advantage: bool
     level: int
@@ -42,6 +51,7 @@ class Character:
         self.advantage = json.loads(data["bonuses"])["advantage"]
         self.attack_stat = int(data["attackStat"])
         self.battle_class = Class(data["characterClass"], data["fightingStyle"])
+        self.subclass = data["subclass"]
         self.proficiency_bonus = self.proficiency_bonus_by_level(self.level)
 
     def number_of_attacks(self):
@@ -51,6 +61,19 @@ class Character:
             return self.fighter_attacks_by_level(self.level)
         elif self.battle_class == Classes.RANGER:
             return self.ranger_attacks_by_level(self.level)
+
+    def chance_to_hit_by_ac(self, armour_class):
+        bonus_to_hit = self.bonus_to_hit()
+        chance_to_hit = max(1 - (armour_class - 1 - bonus_to_hit) / 20, 0.05)
+        chance_to_hit = min(chance_to_hit, 0.95)
+        return 1 - (1 - chance_to_hit) ** 2 if self.advantage else chance_to_hit
+
+    def chance_to_crit(self):
+        if self.subclass == Subclasses.CHAMPION and self.level >= 3:
+            crit_chance = 0.15 if self.level >= 15 else 0.1
+        else:
+            crit_chance = 0.05
+        return round(1 - (1 - crit_chance) ** 2 if self.advantage else crit_chance, 8)
 
     def bonus_to_hit(self):
         base_bonus = self.attack_stat + self.proficiency_bonus

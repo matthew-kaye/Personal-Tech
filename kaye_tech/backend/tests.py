@@ -14,7 +14,7 @@ class TestData:
     weapon: str = Weapons.LONGSWORD
     fighting_style: str = Styles.DEFENCE
     subclass: str = "Eldritch Knight"
-    average_AC: int = 16
+    average_AC: int = 17
     attack_stat: int = 5
 
     def data(self, bonuses=None):
@@ -40,15 +40,6 @@ class CalculatorTest(TestCase):
         result = TEST_CALCULATOR.calculate_damage()
         assert isinstance(result, float)
 
-    def test_crit_calculation(self):
-        assert TEST_CALCULATOR.chance_to_crit_by_advantage(False) == 0.05
-        assert TEST_CALCULATOR.chance_to_crit_by_advantage(True) == 0.0975
-
-    def test_chance_to_hit_calculation(self):
-        assert TEST_CALCULATOR.chance_to_hit_by_ac(20) == 0.5
-        assert TEST_CALCULATOR.chance_to_hit_by_ac(30) == 0.05
-        assert TEST_CALCULATOR.chance_to_hit_by_ac(1) == 0.95
-
     def test_attack_damage_calculation(self):
         assert TEST_CALCULATOR.calculate_attack_damage() == 9.5
         DUELLIST_CALCULATOR = Calculator(
@@ -64,6 +55,19 @@ class CharacterTest(TestCase):
         assert TEST_CHARACTER.proficiency_bonus_by_level(9) == 4
         assert TEST_CHARACTER.proficiency_bonus_by_level(13) == 5
         assert TEST_CHARACTER.proficiency_bonus_by_level(20) == 6
+
+    def test_chance_to_hit_calculation(self):
+        assert TEST_CHARACTER.chance_to_hit_by_ac(1) == 0.95
+        assert TEST_CHARACTER.chance_to_hit_by_ac(17) == 0.65
+        assert TEST_CHARACTER.chance_to_hit_by_ac(20) == 0.5
+        assert TEST_CHARACTER.chance_to_hit_by_ac(30) == 0.05
+        assert TEST_CHARACTER.chance_to_crit() == 0.05
+
+    def test_flanking_hit_chance_calculation(self):
+        flanker = Character(TestData().data({"advantage": True}))
+        assert round(flanker.chance_to_hit_by_ac(0), 6) == 0.9975
+        assert round(flanker.chance_to_hit_by_ac(17), 6) == 0.8775
+        assert flanker.chance_to_crit() == 0.0975
 
     def test_fighter_attack_calculation(self):
         assert TEST_CHARACTER.fighter_attacks_by_level(1) == 1
