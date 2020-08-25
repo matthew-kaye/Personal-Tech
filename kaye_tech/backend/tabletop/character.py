@@ -43,9 +43,11 @@ class Character:
     advantage: bool
     level: int
     proficiency_bonus: int
+    enemy_armour_class: int
 
     def __init__(self, data):
         blacksmith = Blacksmith()
+        self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
         self.weapon = blacksmith.draw_weapon(data["weapon"])
         self.level = int(data["characterLevel"])
         self.advantage = json.loads(data["bonuses"])["advantage"]
@@ -54,6 +56,14 @@ class Character:
         self.subclass = data["subclass"]
         self.proficiency_bonus = self.proficiency_bonus_by_level(self.level)
 
+    def damage_output(self):
+        attacks = self.number_of_attacks()
+        chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
+        crit_chance = self.chance_to_crit()
+        attack_damage = self.calculate_attack_damage() * chance_to_hit
+        crit_damage = self.average_dice_damage() * crit_chance
+        return (attack_damage + crit_damage) * attacks
+
     def number_of_attacks(self):
         if self.weapon.loading:
             return 1
@@ -61,6 +71,14 @@ class Character:
             return self.fighter_attacks_by_level(self.level)
         elif self.battle_class == Classes.RANGER:
             return self.ranger_attacks_by_level(self.level)
+
+    def calculate_attack_damage(self):
+        base_damage = self.average_dice_damage() + self.attack_stat
+        weapon = self.weapon
+        if self.battle_class.fighting_style == Styles.DUELLING and not weapon.heavy:
+            return base_damage + 2
+        else:
+            return base_damage
 
     def chance_to_hit_by_ac(self, armour_class):
         bonus_to_hit = self.bonus_to_hit()

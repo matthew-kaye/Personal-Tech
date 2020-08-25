@@ -301,8 +301,6 @@ export default {
     totalDamage() {
       var baseDamage =
         this.numberOfAttacks * this.attackDamage * this.chanceToHit;
-
-      console.log(this.chanceToHit);
       var critDamage =
         this.numberOfAttacks * this.chanceToCrit * this.averageDamageDie;
       var extraDamage = this.abilityDamage + this.bonusAttackDamage;

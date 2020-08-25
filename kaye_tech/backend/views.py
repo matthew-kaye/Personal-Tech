@@ -3,7 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Vendor, HighScore
-from .tabletop.calculator import Calculator
+from .tabletop.character import Character
 import logging
 
 
@@ -92,8 +92,7 @@ class SnakeViewSet(viewsets.ViewSet):
     def create(self, request):
         try:
             data = request.data["data"]
-            highScore, created = HighScore.objects.get_or_create(
-                name=data["name"])
+            highScore, created = HighScore.objects.get_or_create(name=data["name"])
             if data["score"] > highScore.score:
                 highScore.score = data["score"]
             highScore.save()
@@ -125,8 +124,7 @@ class SnakeViewSet(viewsets.ViewSet):
 class CalculatorViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
-            damage_calculator = Calculator(request.query_params)
-            data = damage_calculator.calculate_damage()
+            data = Character(request.query_params).damage_output()
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(e)

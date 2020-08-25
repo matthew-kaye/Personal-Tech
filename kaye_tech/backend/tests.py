@@ -1,5 +1,4 @@
 from django.test import TestCase
-from .tabletop.calculator import Calculator
 from .tabletop.character import Character, Classes
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
@@ -30,25 +29,20 @@ class TestData:
         }
 
 
-TEST_CALCULATOR = Calculator(TestData().data())
 TEST_CHARACTER = Character(TestData().data())
 TEST_SMITH = Blacksmith()
 
 
-class CalculatorTest(TestCase):
-    def test_calculator_returns_number(self):
-        result = TEST_CALCULATOR.calculate_damage()
+class CharacterTest(TestCase):
+    def test_damage_output_returns_number(self):
+        result = TEST_CHARACTER.damage_output()
         assert isinstance(result, float)
 
     def test_attack_damage_calculation(self):
-        assert TEST_CALCULATOR.calculate_attack_damage() == 9.5
-        DUELLIST_CALCULATOR = Calculator(
-            TestData(fighting_style=Styles.DUELLING).data()
-        )
-        assert DUELLIST_CALCULATOR.calculate_attack_damage() == 11.5
+        assert TEST_CHARACTER.calculate_attack_damage() == 9.5
+        duellist = Character(TestData(fighting_style=Styles.DUELLING).data())
+        assert duellist.calculate_attack_damage() == 11.5
 
-
-class CharacterTest(TestCase):
     def test_proficiency_bonus_calculation(self):
         assert TEST_CHARACTER.proficiency_bonus_by_level(1) == 2
         assert TEST_CHARACTER.proficiency_bonus_by_level(5) == 3
