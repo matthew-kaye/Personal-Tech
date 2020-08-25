@@ -1,7 +1,6 @@
 from .weapon import Blacksmith
 from .character import Character
 import json
-import math
 
 
 class Calculator:
@@ -19,8 +18,7 @@ class Calculator:
         return (attack_damage + crit_damage) * attacks
 
     def chance_to_hit_by_ac(self, armour_class):
-        proficiency_bonus = self.proficiency_bonus_by_level(self.character.level)
-        bonus_to_hit = self.character.attack_stat + proficiency_bonus
+        bonus_to_hit = self.character.bonus_to_hit()
         chance_to_hit = max(1 - (armour_class - 1 - bonus_to_hit) / 20, 0.05)
         chance_to_hit = min(chance_to_hit, 0.95)
         return (
@@ -40,5 +38,3 @@ class Calculator:
         else:
             return base_damage
 
-    def proficiency_bonus_by_level(self, level):
-        return math.ceil(level / 4) + 1
