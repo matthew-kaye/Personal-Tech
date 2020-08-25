@@ -1,5 +1,13 @@
-# from abc import ABC, abstractmethod
 from dataclasses import dataclass
+
+
+class Weapons:
+    HANDAXE = "Handaxe"
+    HEAVY_CROSSBOW = "Heavy Crossbow"
+    LONGBOW = "Longbow"
+    LONGSWORD = "Longsword"
+    GREATAXE = "Greataxe"
+    GREATSWORD = "Greatsword"
 
 
 @dataclass
@@ -15,33 +23,35 @@ class Weapon:
 
 class Blacksmith:
     def draw_weapon(self, weapon_name):
-        if weapon_name == "Longsword":
+        if weapon_name == Weapons.LONGSWORD:
             return self.make_longsword()
-        elif weapon_name == "Greatsword":
+        elif weapon_name == Weapons.GREATSWORD:
             return self.make_greatsword()
-        elif weapon_name == "Greataxe":
+        elif weapon_name == Weapons.GREATAXE:
             return self.make_greataxe()
-        elif weapon_name == "Handaxe":
+        elif weapon_name == Weapons.HANDAXE:
             return self.make_handaxe()
-        elif weapon_name == "Heavy Crossbow":
+        elif weapon_name == Weapons.HEAVY_CROSSBOW:
             return self.make_heavy_crossbow()
-        elif weapon_name == "Longbow":
+        elif weapon_name == Weapons.LONGBOW:
             return self.make_longbow()
 
     def make_longsword(self):
-        return Weapon("Longsword", 4.5, versatile=True)
+        return Weapon(Weapons.LONGSWORD, 4.5, versatile=True)
 
     def make_greataxe(self):
-        return Weapon("Greataxe", 6.5, heavy=True)
+        return Weapon(Weapons.GREATAXE, 6.5, heavy=True)
 
     def make_greatsword(self):
-        return Weapon("Greatsword", 7, heavy=True)
+        return Weapon(Weapons.GREATSWORD, 7, heavy=True)
 
     def make_handaxe(self):
-        return Weapon("Handaxe", 3.5, light=True, ranged=True)
+        return Weapon(Weapons.HANDAXE, 3.5, light=True, ranged=True)
 
     def make_heavy_crossbow(self):
-        return Weapon("Heavy Crossbow", 5.5, ranged=True, loading=True, heavy=True)
+        return Weapon(
+            Weapons.HEAVY_CROSSBOW, 5.5, ranged=True, loading=True, heavy=True
+        )
 
     def make_longbow(self):
-        return Weapon("Longbow", 4.5, ranged=True, heavy=True)
+        return Weapon(Weapons.LONGBOW, 4.5, ranged=True, heavy=True)

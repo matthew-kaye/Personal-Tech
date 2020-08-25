@@ -1,5 +1,6 @@
 from .weapon import Blacksmith
 from .character import Character
+from .fighting_styles import Styles
 import json
 
 
@@ -9,7 +10,6 @@ class Calculator:
         self.character = Character(data)
 
     def calculate_damage(self):
-        weapon_damage = self.character.weapon.damage
         attacks = self.character.number_of_attacks()
         chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
         crit_chance = self.chance_to_crit_by_advantage(self.character.advantage)
@@ -31,8 +31,9 @@ class Calculator:
     def calculate_attack_damage(self):
         base_damage = self.character.weapon.damage + self.character.attack_stat
         weapon = self.character.weapon
-        if self.character.battle_class.fighting_style == "Duelling" and (
-            weapon.light or weapon.versatile
+        if (
+            self.character.battle_class.fighting_style == Styles.DUELLING
+            and not weapon.heavy
         ):
             return base_damage + 2
         else:

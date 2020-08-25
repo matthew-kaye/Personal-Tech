@@ -1,7 +1,13 @@
 from dataclasses import dataclass
 from .weapon import Weapon, Blacksmith
+from .fighting_styles import Styles
 import math
 import json
+
+
+class Classes:
+    RANGER = "Ranger"
+    FIGHTER = "Fighter"
 
 
 @dataclass
@@ -41,19 +47,23 @@ class Character:
     def number_of_attacks(self):
         if self.weapon.loading:
             return 1
-        if self.battle_class == "Fighter":
+        if self.battle_class == Classes.FIGHTER:
             return self.fighter_attacks_by_level(self.level)
-        elif self.battle_class == "Ranger":
+        elif self.battle_class == Classes.RANGER:
             return self.ranger_attacks_by_level(self.level)
 
     def bonus_to_hit(self):
         base_bonus = self.attack_stat + self.proficiency_bonus
         style_bonus = (
             2
-            if self.battle_class.fighting_style == "Archery" and self.weapon.ranged
+            if self.battle_class.fighting_style == Styles.ARCHERY and self.weapon.ranged
             else 0
         )
         return base_bonus + style_bonus
+
+    def average_dice_damage(self):
+        if self.battle_class.fighting_style == Styles.TWO_HANDED:
+            return 0
 
     def proficiency_bonus_by_level(self, level):
         return math.ceil(level / 4) + 1

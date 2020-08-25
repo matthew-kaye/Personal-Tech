@@ -1,7 +1,8 @@
 from django.test import TestCase
 from .tabletop.calculator import Calculator
-from .tabletop.character import Character
-from .tabletop.weapon import Weapon, Blacksmith
+from .tabletop.character import Character, Classes
+from .tabletop.weapon import Weapon, Weapons, Blacksmith
+from .tabletop.fighting_styles import Styles
 import json
 from dataclasses import dataclass
 
@@ -9,9 +10,9 @@ from dataclasses import dataclass
 @dataclass
 class TestData:
     characterLevel: int = 11
-    characterClass: str = "Fighter"
-    weapon: str = "Longsword"
-    fightingStyle: str = "Defence"
+    characterClass: str = Classes.FIGHTER
+    weapon: str = Weapons.LONGSWORD
+    fightingStyle: str = Styles.DEFENCE
     subclass: str = "Eldritch Knight"
     averageAC: int = 16
     attackStat: int = 5
@@ -49,8 +50,8 @@ class CalculatorTest(TestCase):
 
     def test_attack_damage_calculation(self):
         assert TEST_CALCULATOR.calculate_attack_damage() == 9.5
-        TEST_DUELLIST_CALCULATOR = Calculator(TestData(fightingStyle="Duelling").data())
-        assert TEST_DUELLIST_CALCULATOR.calculate_attack_damage() == 11.5
+        DUELLIST_CALCULATOR = Calculator(TestData(fightingStyle=Styles.DUELLING).data())
+        assert DUELLIST_CALCULATOR.calculate_attack_damage() == 11.5
 
 
 class CharacterTest(TestCase):
@@ -71,7 +72,9 @@ class CharacterTest(TestCase):
         assert TEST_CHARACTER.ranger_attacks_by_level(1) == 1
         assert TEST_CHARACTER.ranger_attacks_by_level(5) == 2
 
-    def test_ranger_attack_calculation(self):
+    def test_archery_bonus_calculation(self):
         assert TEST_CHARACTER.bonus_to_hit() == 9
-        archer = Character(TestData(fightingStyle="Archery", weapon="Longbow").data())
+        archer = Character(
+            TestData(fightingStyle=Styles.ARCHERY, weapon=Weapons.LONGBOW).data()
+        )
         assert archer.bonus_to_hit() == 11
