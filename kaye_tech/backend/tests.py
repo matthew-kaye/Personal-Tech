@@ -1,23 +1,37 @@
 from django.test import TestCase
 from .tabletop.calculator import Calculator
 from .tabletop.character import Character
+from .tabletop.weapon import Weapon, Blacksmith
 import json
+from dataclasses import dataclass
 
-TEST_DATA = {
-    "characterLevel": "11",
-    "characterClass": "Fighter",
-    "weapon": "Longsword",
-    "fightingStyle": "Duelling",
-    "subclass": "Eldritch Knight",
-    "averageAC": 16,
-    "attackStat": 5,
-    "bonuses": json.dumps({
-        "advantage": False
-    })
-}
+@dataclass
+class TestData:
+    characterLevel: int = 11
+    characterClass: str = "Fighter"
+    weapon: str = "Longsword"
+    fightingStyle: str = "Defence"
+    subclass: str = "Eldritch Knight"
+    averageAC: int = 16
+    attackStat: int = 5
 
-TEST_CALCULATOR = Calculator(TEST_DATA)
-TEST_CHARACTER = Character(TEST_DATA)
+
+    def data(self, bonuses=None):
+        return {
+            "characterLevel": self.characterLevel,
+            "characterClass": self.characterClass ,
+            "weapon": self.weapon,
+            "fightingStyle": self.fightingStyle,
+            "subclass":self.subclass,
+            "averageAC": self.averageAC,
+            "attackStat": self.attackStat,
+            "bonuses": json.dumps(bonuses if bonuses else {"advantage": False})
+        }
+
+
+
+TEST_CALCULATOR = Calculator(TestData().data())
+TEST_CHARACTER = Character(TestData().data())
 
 
 class CalculatorTest(TestCase):
@@ -26,30 +40,32 @@ class CalculatorTest(TestCase):
         assert isinstance(result, float)
 
     def test_proficiency_bonus_calculation(self):
-        assert TEST_CALCULATOR.calculate_proficiency_bonus(1) == 2
-        assert TEST_CALCULATOR.calculate_proficiency_bonus(5) == 3
-        assert TEST_CALCULATOR.calculate_proficiency_bonus(9) == 4
-        assert TEST_CALCULATOR.calculate_proficiency_bonus(13) == 5
-        assert TEST_CALCULATOR.calculate_proficiency_bonus(20) == 6
+        assert TEST_CALCULATOR.proficiency_bonus_by_level(1) == 2
+        assert TEST_CALCULATOR.proficiency_bonus_by_level(5) == 3
+        assert TEST_CALCULATOR.proficiency_bonus_by_level(9) == 4
+        assert TEST_CALCULATOR.proficiency_bonus_by_level(13) == 5
+        assert TEST_CALCULATOR.proficiency_bonus_by_level(20) == 6
 
     def test_fighter_attack_calculation(self):
-        assert TEST_CHARACTER.fighter_attacks(1) == 1
-        assert TEST_CHARACTER.fighter_attacks(5) == 2
-        assert TEST_CHARACTER.fighter_attacks(11) == 3
-        assert TEST_CHARACTER.fighter_attacks(20) == 4
+        assert TEST_CHARACTER.fighter_attacks_by_level(1) == 1
+        assert TEST_CHARACTER.fighter_attacks_by_level(5) == 2
+        assert TEST_CHARACTER.fighter_attacks_by_level(11) == 3
+        assert TEST_CHARACTER.fighter_attacks_by_level(20) == 4
 
     def test_ranger_attack_calculation(self):
-        assert TEST_CHARACTER.ranger_attacks(1) == 1
-        assert TEST_CHARACTER.ranger_attacks(5) == 2
+        assert TEST_CHARACTER.ranger_attacks_by_level(1) == 1
+        assert TEST_CHARACTER.ranger_attacks_by_level(5) == 2
 
     def test_crit_calculation(self):
-        assert TEST_CALCULATOR.calculate_chance_of_crit(False) == 0.05
-        assert TEST_CALCULATOR.calculate_chance_of_crit(True) == 0.0975
+        assert TEST_CALCULATOR.chance_to_crit_by_advantage(False) == 0.05
+        assert TEST_CALCULATOR.chance_to_crit_by_advantage(True) == 0.0975
 
     def test_chance_to_hit_calculation(self):
-        assert TEST_CALCULATOR.calculate_chance_to_hit(
-            20, TEST_CHARACTER) == 0.5
-        assert TEST_CALCULATOR.calculate_chance_to_hit(
-            30, TEST_CHARACTER) == 0.05
-        assert TEST_CALCULATOR.calculate_chance_to_hit(
-            1, TEST_CHARACTER) == 0.95
+        assert TEST_CALCULATOR.chance_to_hit_by_ac(20) == 0.5
+        assert TEST_CALCULATOR.chance_to_hit_by_ac(30) == 0.05
+        assert TEST_CALCULATOR.chance_to_hit_by_ac(1) == 0.95
+
+    def test_attack_damage_calculation(self):
+        assert TEST_CALCULATOR.calculate_attack_damage() == 9.5
+        TEST_DUELLIST_CALCULATOR = Calculator(TestData(fightingStyle="Duelling").data())
+        assert TEST_DUELLIST_CALCULATOR.calculate_attack_damage() == 11.5

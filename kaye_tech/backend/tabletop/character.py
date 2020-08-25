@@ -39,11 +39,11 @@ class Character:
         if self.weapon.loading:
             return 1
         if self.battle_class == "Fighter":
-            return self.fighter_attacks(self.level)
+            return self.fighter_attacks_by_level(self.level)
         elif self.battle_class == "Ranger":
-            return self.ranger_attacks(self.level)
+            return self.ranger_attacks_by_level(self.level)
 
-    def fighter_attacks(self, level):
+    def fighter_attacks_by_level(self, level):
         if level == 20:
             return 4
         elif level >= 11:
@@ -53,5 +53,5 @@ class Character:
         else:
             return 1
 
-    def ranger_attacks(self, level):
+    def ranger_attacks_by_level(self, level):
         return 2 if level>=5 else 1
