@@ -15,6 +15,7 @@ django-extensions = "*"
 uwsgi = "*"
 channels = "*"
 channels-redis = "*"
+black = "*"
 
 [requires]
 python_version = "3"
