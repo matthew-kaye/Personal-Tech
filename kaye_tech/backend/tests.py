@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .tabletop.character import Character, Classes
+from .tabletop.character import Character, Classes, Subclasses
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
 import json
@@ -12,7 +12,7 @@ class TestData:
     character_class: str = Classes.FIGHTER
     weapon: str = Weapons.LONGSWORD
     fighting_style: str = Styles.DEFENCE
-    subclass: str = "Eldritch Knight"
+    subclass: str = Subclasses.ELDRITCH_KNIGHT
     average_AC: int = 17
     attack_stat: int = 5
 
@@ -93,3 +93,9 @@ class CharacterTest(TestCase):
         assert greatswordsman.average_dice_damage() == 25 / 3
         assert round(two_handed_swordsman.average_dice_damage(), 1) == 6.3
 
+    def test_bonus_attack_damage(self):
+        axe_wielder = Character(
+            TestData(fighting_style=Styles.TWO_WEAPON, weapon=Weapons.HANDAXE).data()
+        )
+        assert TEST_CHARACTER.bonus_attack_damage() == 0
+        assert axe_wielder.bonus_attack_damage() == 5.7

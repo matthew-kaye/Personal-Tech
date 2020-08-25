@@ -62,7 +62,7 @@ class Character:
         crit_chance = self.chance_to_crit()
         attack_damage = self.calculate_attack_damage() * chance_to_hit
         crit_damage = self.average_dice_damage() * crit_chance
-        return (attack_damage + crit_damage) * attacks
+        return (attack_damage + crit_damage) * attacks + self.bonus_attack_damage()
 
     def number_of_attacks(self):
         if self.weapon.loading:
@@ -79,6 +79,15 @@ class Character:
             return base_damage + 2
         else:
             return base_damage
+
+    def bonus_attack_damage(self):
+        chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
+        if self.battle_class.fighting_style == Styles.TWO_WEAPON and self.weapon.light:
+            return (
+                self.weapon.damage + self.attack_stat
+            ) * chance_to_hit + self.weapon.damage * self.chance_to_crit()
+        else:
+            return 0
 
     def chance_to_hit_by_ac(self, armour_class):
         bonus_to_hit = self.bonus_to_hit()
