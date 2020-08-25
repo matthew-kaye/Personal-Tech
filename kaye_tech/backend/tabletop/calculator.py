@@ -6,7 +6,7 @@ import json
 
 class Calculator:
     def __init__(self, data):
-        self.enemy_armour_class = int(data["averageAC"])
+        self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
         self.character = Character(data)
 
     def calculate_damage(self):

@@ -1,6 +1,3 @@
-from dataclasses import dataclass
-
-
 class Styles:
     ARCHERY = "Archery"
     DEFENCE = "Defence"
