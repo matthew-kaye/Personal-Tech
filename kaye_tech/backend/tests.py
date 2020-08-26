@@ -16,7 +16,7 @@ class TestData:
     average_AC: int = 17
     attack_stat: int = 5
 
-    def data(self, bonuses=None):
+    def data(self, bonuses=None, abilities=None):
         return {
             "characterLevel": self.character_level,
             "characterClass": self.character_class,
@@ -26,6 +26,7 @@ class TestData:
             "averageAC": self.average_AC,
             "attackStat": self.attack_stat,
             "bonuses": json.dumps(bonuses if bonuses else {"advantage": False}),
+            "abilities": json.dumps(abilities if abilities else {"dualWielder": False}),
         }
 
 
@@ -58,7 +59,7 @@ class CharacterTest(TestCase):
         assert TEST_CHARACTER.chance_to_crit() == 0.05
 
     def test_flanking_hit_chance_calculation(self):
-        flanker = Character(TestData().data({"advantage": True}))
+        flanker = Character(TestData().data(bonuses={"advantage": True}))
         assert round(flanker.chance_to_hit_by_ac(0), 6) == 0.9975
         assert round(flanker.chance_to_hit_by_ac(17), 6) == 0.8775
         assert flanker.chance_to_crit() == 0.0975
@@ -97,5 +98,11 @@ class CharacterTest(TestCase):
         axe_wielder = Character(
             TestData(fighting_style=Styles.TWO_WEAPON, weapon=Weapons.HANDAXE).data()
         )
+        double_swordsman = Character(
+            TestData(fighting_style=Styles.TWO_WEAPON).data(
+                abilities={"dualWielder": True}
+            )
+        )
         assert TEST_CHARACTER.bonus_attack_damage() == 0
         assert axe_wielder.bonus_attack_damage() == 5.7
+        assert round(double_swordsman.bonus_attack_damage(), 6) == 6.4

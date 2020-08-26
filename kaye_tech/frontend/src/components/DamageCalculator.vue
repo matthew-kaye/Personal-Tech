@@ -647,6 +647,7 @@ export default {
     abilities: {
       deep: true,
       handler() {
+        this.chooseWeaponFromStyle();
         this.disableImpossibleAbilities();
         this.calculateNumberOfAttacks();
       }

@@ -44,13 +44,17 @@ class Character:
     level: int
     proficiency_bonus: int
     enemy_armour_class: int
+    dual_wielder: bool
 
     def __init__(self, data):
         blacksmith = Blacksmith()
+        bonuses = json.loads(data["bonuses"])
+        abilities = json.loads(data["abilities"])
         self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
         self.weapon = blacksmith.draw_weapon(data["weapon"])
         self.level = int(data["characterLevel"])
-        self.advantage = json.loads(data["bonuses"])["advantage"]
+        self.advantage = bonuses["advantage"]
+        self.dual_wielder = abilities["dualWielder"]
         self.attack_stat = int(data["attackStat"])
         self.battle_class = Class(data["characterClass"], data["fightingStyle"])
         self.subclass = data["subclass"]
@@ -81,8 +85,14 @@ class Character:
             return base_damage
 
     def bonus_attack_damage(self):
+        if self.battle_class.fighting_style == Styles.TWO_WEAPON:
+            return self.second_weapon_damage()
+        else:
+            return 0
+
+    def second_weapon_damage(self):
         chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
-        if self.battle_class.fighting_style == Styles.TWO_WEAPON and self.weapon.light:
+        if self.weapon.light or (self.dual_wielder and not self.weapon.heavy):
             return (
                 self.weapon.damage + self.attack_stat
             ) * chance_to_hit + self.weapon.damage * self.chance_to_crit()
