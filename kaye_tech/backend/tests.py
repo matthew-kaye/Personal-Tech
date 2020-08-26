@@ -15,8 +15,12 @@ class TestData:
     subclass: str = Subclasses.ELDRITCH_KNIGHT
     average_AC: int = 17
     attack_stat: int = 5
+    sharpshooter: bool = False
+    great_weapon_master: bool = False
+    dual_wielder: bool = False
+    advantage: bool = False
 
-    def data(self, bonuses=None, abilities=None):
+    def data(self):
         return {
             "characterLevel": self.character_level,
             "characterClass": self.character_class,
@@ -25,8 +29,14 @@ class TestData:
             "subclass": self.subclass,
             "averageAC": self.average_AC,
             "attackStat": self.attack_stat,
-            "bonuses": json.dumps(bonuses if bonuses else {"advantage": False}),
-            "abilities": json.dumps(abilities if abilities else {"dualWielder": False}),
+            "bonuses": json.dumps({"advantage": self.advantage}),
+            "abilities": json.dumps(
+                {
+                    "dualWielder": self.dual_wielder,
+                    "sharpshooter": self.sharpshooter,
+                    "greatWeaponMaster": self.great_weapon_master,
+                }
+            ),
         }
 
 
@@ -40,9 +50,9 @@ class CharacterTest(TestCase):
         assert isinstance(result, float)
 
     def test_attack_damage_calculation(self):
-        assert TEST_CHARACTER.calculate_attack_damage() == 9.5
+        assert TEST_CHARACTER.attack_damage() == 9.5
         duellist = Character(TestData(fighting_style=Styles.DUELLING).data())
-        assert duellist.calculate_attack_damage() == 11.5
+        assert duellist.attack_damage() == 11.5
 
     def test_proficiency_bonus_calculation(self):
         assert TEST_CHARACTER.proficiency_bonus_by_level(1) == 2
@@ -59,7 +69,7 @@ class CharacterTest(TestCase):
         assert TEST_CHARACTER.chance_to_crit() == 0.05
 
     def test_flanking_hit_chance_calculation(self):
-        flanker = Character(TestData().data(bonuses={"advantage": True}))
+        flanker = Character(TestData(advantage=True).data())
         assert round(flanker.chance_to_hit_by_ac(0), 6) == 0.9975
         assert round(flanker.chance_to_hit_by_ac(17), 6) == 0.8775
         assert flanker.chance_to_crit() == 0.0975
@@ -99,10 +109,27 @@ class CharacterTest(TestCase):
             TestData(fighting_style=Styles.TWO_WEAPON, weapon=Weapons.HANDAXE).data()
         )
         double_swordsman = Character(
-            TestData(fighting_style=Styles.TWO_WEAPON).data(
-                abilities={"dualWielder": True}
-            )
+            TestData(fighting_style=Styles.TWO_WEAPON, dual_wielder=True).data()
         )
         assert TEST_CHARACTER.bonus_attack_damage() == 0
         assert axe_wielder.bonus_attack_damage() == 5.7
         assert round(double_swordsman.bonus_attack_damage(), 6) == 6.4
+
+    def test_big_hit_abilities(self):
+        sharpshooter = Character(
+            TestData(
+                weapon=Weapons.LONGBOW, fighting_style=Styles.ARCHERY, sharpshooter=True
+            ).data()
+        )
+        great_weapon_master = Character(
+            TestData(
+                weapon=Weapons.GREATSWORD,
+                fighting_style=Styles.TWO_HANDED,
+                great_weapon_master=True,
+            ).data()
+        )
+        assert great_weapon_master.bonus_to_hit() == 4
+        assert round(great_weapon_master.attack_damage(), 8) == round(70 / 3, 8)
+        assert sharpshooter.bonus_to_hit() == 6
+        assert sharpshooter.attack_damage() == 19.5
+

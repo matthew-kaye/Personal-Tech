@@ -45,6 +45,8 @@ class Character:
     proficiency_bonus: int
     enemy_armour_class: int
     dual_wielder: bool
+    sharpshooter: bool
+    great_weapon_master: bool
 
     def __init__(self, data):
         blacksmith = Blacksmith()
@@ -55,6 +57,8 @@ class Character:
         self.level = int(data["characterLevel"])
         self.advantage = bonuses["advantage"]
         self.dual_wielder = abilities["dualWielder"]
+        self.sharpshooter = abilities["sharpshooter"]
+        self.great_weapon_master = abilities["greatWeaponMaster"]
         self.attack_stat = int(data["attackStat"])
         self.battle_class = Class(data["characterClass"], data["fightingStyle"])
         self.subclass = data["subclass"]
@@ -64,7 +68,7 @@ class Character:
         attacks = self.number_of_attacks()
         chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
         crit_chance = self.chance_to_crit()
-        attack_damage = self.calculate_attack_damage() * chance_to_hit
+        attack_damage = self.attack_damage() * chance_to_hit
         crit_damage = self.average_dice_damage() * crit_chance
         return (attack_damage + crit_damage) * attacks + self.bonus_attack_damage()
 
@@ -76,13 +80,23 @@ class Character:
         elif self.battle_class == Classes.RANGER:
             return self.ranger_attacks_by_level(self.level)
 
-    def calculate_attack_damage(self):
+    def attack_damage(self):
         base_damage = self.average_dice_damage() + self.attack_stat
         weapon = self.weapon
         if self.battle_class.fighting_style == Styles.DUELLING and not weapon.heavy:
             return base_damage + 2
+        elif self.attempting_bigger_hit():
+            return base_damage + 10
         else:
             return base_damage
+
+    def average_dice_damage(self):
+        if self.battle_class.fighting_style == Styles.TWO_HANDED and (
+            self.weapon.heavy or self.weapon.versatile
+        ):
+            return self.great_weapon_damage(self.weapon)
+        else:
+            return self.weapon.damage
 
     def bonus_attack_damage(self):
         if self.battle_class.fighting_style == Styles.TWO_WEAPON:
@@ -119,15 +133,15 @@ class Character:
             if self.battle_class.fighting_style == Styles.ARCHERY and self.weapon.ranged
             else 0
         )
-        return base_bonus + style_bonus
+        ability_modifier = -5 if self.attempting_bigger_hit() else 0
+        return base_bonus + style_bonus + ability_modifier
 
-    def average_dice_damage(self):
-        if self.battle_class.fighting_style == Styles.TWO_HANDED and (
+    def attempting_bigger_hit(self):
+        sharpshooting = self.sharpshooter and self.weapon.ranged
+        heavy_swing = self.great_weapon_master and (
             self.weapon.heavy or self.weapon.versatile
-        ):
-            return self.great_weapon_damage(self.weapon)
-        else:
-            return self.weapon.damage
+        )
+        return sharpshooting or heavy_swing
 
     def great_weapon_damage(self, weapon):
         weapon_damage = weapon.damage + 1 if weapon.versatile else weapon.damage
