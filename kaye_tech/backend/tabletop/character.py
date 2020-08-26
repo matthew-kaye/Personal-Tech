@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from .weapon import Weapon, Weapons, Blacksmith
 from .fighting_styles import Styles
+from .classes import Classes, Class, Ranger, Fighter
+from abc import ABC, abstractmethod
 import math
 import json
 
@@ -11,27 +13,6 @@ class Subclasses:
     CHAMPION = "Champion"
     ELDRITCH_KNIGHT = "Eldritch Knight"
     HUNTER = "Hunter"
-
-
-class Classes:
-    RANGER = "Ranger"
-    FIGHTER = "Fighter"
-
-
-@dataclass
-class Class:
-    name: str
-    fighting_style: str
-
-    def __init__(self, name, fighting_style):
-        self.name = name
-        self.fighting_style = fighting_style
-
-    def __str__(self):
-        return self.name
-
-    def __eq__(self, other):
-        return self.name == other
 
 
 @dataclass
@@ -62,7 +43,9 @@ class Character:
         self.sharpshooter = abilities["sharpshooter"]
         self.great_weapon_master = abilities["greatWeaponMaster"]
         self.attack_stat = int(data["attackStat"])
-        self.battle_class = Class(data["characterClass"], data["fightingStyle"])
+        self.battle_class = (
+            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(data)
+        )
         self.subclass = data["subclass"]
         self.proficiency_bonus = self.proficiency_bonus_by_level(self.level)
 
@@ -77,10 +60,8 @@ class Character:
     def number_of_attacks(self):
         if self.weapon.loading:
             return 1
-        if self.battle_class == Classes.FIGHTER:
-            return self.fighter_attacks_by_level(self.level)
-        elif self.battle_class == Classes.RANGER:
-            return self.ranger_attacks_by_level(self.level)
+        else:
+            return self.battle_class.number_of_attacks(self.level)
 
     def attack_damage(self):
         base_damage = self.average_dice_damage() + self.attack_stat + self.magic_bonus()
@@ -160,16 +141,3 @@ class Character:
 
     def proficiency_bonus_by_level(self, level):
         return math.ceil(level / 4) + 1
-
-    def fighter_attacks_by_level(self, level):
-        if level == 20:
-            return 4
-        elif level >= 11:
-            return 3
-        elif level >= 5:
-            return 2
-        else:
-            return 1
-
-    def ranger_attacks_by_level(self, level):
-        return 2 if level >= 5 else 1

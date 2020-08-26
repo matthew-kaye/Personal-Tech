@@ -1,5 +1,6 @@
 from django.test import TestCase
-from .tabletop.character import Character, Classes, Subclasses
+from .tabletop.character import Character, Subclasses
+from .tabletop.classes import Classes, Ranger, Fighter
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
 import json
@@ -77,16 +78,6 @@ class CharacterTest(TestCase):
         assert round(flanker.chance_to_hit_by_ac(17), 6) == 0.8775
         assert flanker.chance_to_crit() == 0.0975
 
-    def test_fighter_attack_calculation(self):
-        assert TEST_CHARACTER.fighter_attacks_by_level(1) == 1
-        assert TEST_CHARACTER.fighter_attacks_by_level(5) == 2
-        assert TEST_CHARACTER.fighter_attacks_by_level(11) == 3
-        assert TEST_CHARACTER.fighter_attacks_by_level(20) == 4
-
-    def test_ranger_attack_calculation(self):
-        assert TEST_CHARACTER.ranger_attacks_by_level(1) == 1
-        assert TEST_CHARACTER.ranger_attacks_by_level(5) == 2
-
     def test_archery_bonus_calculation(self):
         assert TEST_CHARACTER.bonus_to_hit() == 9
         archer = Character(
@@ -142,3 +133,14 @@ class CharacterTest(TestCase):
         assert magic_swordsman.attack_damage() == TEST_CHARACTER.attack_damage() + 1
         assert magic_swordsman.bonus_to_hit() == TEST_CHARACTER.bonus_to_hit() + 1
 
+
+class ClassTest(TestCase):
+    def test_fighter_attack_calculation(self):
+        assert Fighter(TestData().data()).number_of_attacks(1) == 1
+        assert Fighter(TestData().data()).number_of_attacks(5) == 2
+        assert Fighter(TestData().data()).number_of_attacks(11) == 3
+        assert Fighter(TestData().data()).number_of_attacks(20) == 4
+
+    def test_ranger_attack_calculation(self):
+        assert Ranger(TestData().data()).number_of_attacks(1) == 1
+        assert Ranger(TestData().data()).number_of_attacks(5) == 2
