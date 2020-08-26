@@ -19,6 +19,7 @@ class TestData:
     great_weapon_master: bool = False
     dual_wielder: bool = False
     advantage: bool = False
+    magic_weapon: bool = False
 
     def data(self):
         return {
@@ -29,7 +30,9 @@ class TestData:
             "subclass": self.subclass,
             "averageAC": self.average_AC,
             "attackStat": self.attack_stat,
-            "bonuses": json.dumps({"advantage": self.advantage}),
+            "bonuses": json.dumps(
+                {"advantage": self.advantage, "magicWeapon": self.magic_weapon,}
+            ),
             "abilities": json.dumps(
                 {
                     "dualWielder": self.dual_wielder,
@@ -132,4 +135,10 @@ class CharacterTest(TestCase):
         assert round(great_weapon_master.attack_damage(), 8) == round(70 / 3, 8)
         assert sharpshooter.bonus_to_hit() == 6
         assert sharpshooter.attack_damage() == 19.5
+
+    def test_magic_weapon(self):
+        magic_swordsman = Character(TestData(magic_weapon=True).data())
+        assert magic_swordsman.magic_bonus() == TEST_CHARACTER.magic_bonus() + 1
+        assert magic_swordsman.attack_damage() == TEST_CHARACTER.attack_damage() + 1
+        assert magic_swordsman.bonus_to_hit() == TEST_CHARACTER.bonus_to_hit() + 1
 

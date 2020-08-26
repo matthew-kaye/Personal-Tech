@@ -78,7 +78,7 @@
         ></v-select>
       </v-col>
       <v-col cols="6" md="1">
-        <v-text-field outlined v-model="averageAC" label="Enemy AC" required></v-text-field>
+        <v-text-field type="number" outlined v-model="averageAC" label="Enemy AC" required></v-text-field>
       </v-col>
       <v-col cols="6" md="1">
         <v-select
@@ -94,7 +94,7 @@
         <v-switch v-model="bonuses.advantage" class="ma-2" label="Advantage"></v-switch>
       </v-col>
       <v-col md="auto">
-        <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
+        <v-switch v-model="bonuses.magicWeapon" class="ma-2" label="+1 Weapon"></v-switch>
       </v-col>
     </v-row>
     <v-row>
@@ -251,7 +251,7 @@ export default {
       bonuses: {
         advantage: false,
         superiorityDie: false,
-        magic: false
+        magicWeapon: false
       },
       abilities: {
         warMagic: false,
@@ -304,7 +304,10 @@ export default {
       var critDamage =
         this.numberOfAttacks * this.chanceToCrit * this.averageDamageDie;
       var extraDamage = this.abilityDamage + this.bonusAttackDamage;
-      return parseFloat(baseDamage + critDamage + extraDamage).toFixed(1);
+      return (
+        Math.round(parseFloat(baseDamage + critDamage + extraDamage) * 100) /
+        100
+      );
     },
     attackDamage() {
       var extraDamage =
@@ -321,11 +324,10 @@ export default {
     },
     bonusAttackDamage() {
       if (this.allowedToDualWield) {
-        var magicBonus = this.bonuses.magic ? 1 : 0;
-        var toHit = this.proficiencyBonus + this.attackBonus + magicBonus;
+        var toHit = this.proficiencyBonus + this.attackBonus;
         var chanceToHit = this.getChanceToHitFromBonusToHit(toHit);
         return (
-          (this.bonusWeapon.damage + this.attackStat + magicBonus) *
+          (this.bonusWeapon.damage + this.attackStat + this.magicBonus) *
             chanceToHit +
           this.chanceToCrit * this.bonusWeapon.damage
         );
@@ -357,7 +359,7 @@ export default {
         : attackBonus;
     },
     magicBonus() {
-      return !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
+      return !this.abilities.shadowBlade && this.bonuses.magicWeapon ? 1 : 0;
     },
     chanceToHit() {
       var toHit = this.proficiencyBonus + this.attackBonus;
@@ -466,9 +468,10 @@ export default {
     boomingBladeDamage() {
       var moveDamage = this.warMagicDamage + 4.5;
       return (
-        parseFloat(this.totalDamage) +
-        this.chanceToHit * moveDamage
-      ).toFixed(1);
+        Math.round(
+          (parseFloat(this.totalDamage) + this.chanceToHit * moveDamage) * 100
+        ) / 100
+      );
     },
     greatWeaponFightingBonus() {
       if (this.weapon == this.weapons.greatsword) {
@@ -611,7 +614,7 @@ export default {
   watch: {
     playerDataToProcess: function () {
       calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
-        console.log(data);
+        console.log("Calculator Estimate: " + data);
       });
     },
     characterLevel: {

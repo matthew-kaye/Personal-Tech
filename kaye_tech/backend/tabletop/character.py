@@ -47,6 +47,7 @@ class Character:
     dual_wielder: bool
     sharpshooter: bool
     great_weapon_master: bool
+    magic_weapon: bool
 
     def __init__(self, data):
         blacksmith = Blacksmith()
@@ -56,6 +57,7 @@ class Character:
         self.weapon = blacksmith.draw_weapon(data["weapon"])
         self.level = int(data["characterLevel"])
         self.advantage = bonuses["advantage"]
+        self.magic_weapon = bonuses["magicWeapon"]
         self.dual_wielder = abilities["dualWielder"]
         self.sharpshooter = abilities["sharpshooter"]
         self.great_weapon_master = abilities["greatWeaponMaster"]
@@ -81,9 +83,11 @@ class Character:
             return self.ranger_attacks_by_level(self.level)
 
     def attack_damage(self):
-        base_damage = self.average_dice_damage() + self.attack_stat
-        weapon = self.weapon
-        if self.battle_class.fighting_style == Styles.DUELLING and not weapon.heavy:
+        base_damage = self.average_dice_damage() + self.attack_stat + self.magic_bonus()
+        if (
+            self.battle_class.fighting_style == Styles.DUELLING
+            and not self.weapon.heavy
+        ):
             return base_damage + 2
         elif self.attempting_bigger_hit():
             return base_damage + 10
@@ -108,7 +112,7 @@ class Character:
         chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
         if self.weapon.light or (self.dual_wielder and not self.weapon.heavy):
             return (
-                self.weapon.damage + self.attack_stat
+                self.weapon.damage + self.attack_stat + self.magic_bonus()
             ) * chance_to_hit + self.weapon.damage * self.chance_to_crit()
         else:
             return 0
@@ -127,7 +131,7 @@ class Character:
         return round(1 - (1 - crit_chance) ** 2 if self.advantage else crit_chance, 8)
 
     def bonus_to_hit(self):
-        base_bonus = self.attack_stat + self.proficiency_bonus
+        base_bonus = self.attack_stat + self.proficiency_bonus + self.magic_bonus()
         style_bonus = (
             2
             if self.battle_class.fighting_style == Styles.ARCHERY and self.weapon.ranged
@@ -150,6 +154,9 @@ class Character:
         dice_max = weapon_damage * 2 - 1
         reroll_chance = 2 / dice_max
         return reroll_chance * weapon_damage + (1 - reroll_chance) * (weapon_damage + 1)
+
+    def magic_bonus(self):
+        return 1 if self.magic_weapon else 0
 
     def proficiency_bonus_by_level(self, level):
         return math.ceil(level / 4) + 1
