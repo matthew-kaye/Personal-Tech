@@ -58,6 +58,11 @@ class CharacterTest(TestCase):
         duellist = Character(TestData(fighting_style=Styles.DUELLING).data())
         assert duellist.attack_damage() == 11.5
 
+    def test_number_of_attacks(self):
+        crossbowman = Character(TestData(weapon=Weapons.HEAVY_CROSSBOW).data())
+        assert crossbowman.number_of_attacks() == 1
+        assert TEST_CHARACTER.number_of_attacks() == 3
+
     def test_proficiency_bonus_calculation(self):
         assert TEST_CHARACTER.proficiency_bonus_by_level(1) == 2
         assert TEST_CHARACTER.proficiency_bonus_by_level(5) == 3
