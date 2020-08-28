@@ -104,9 +104,9 @@
           <v-col md="auto" v-if="subclass=='Battle Master'">
             <v-switch
               :disabled="characterLevel<3"
-              v-model="bonuses.superiorityDie"
+              v-model="abilities.superiority"
               class="ma-2"
-              label="Superiority Dmg"
+              label="Superiority Damage"
             ></v-switch>
           </v-col>
           <v-col md="auto" v-if="subclass=='Eldritch Knight'">
@@ -250,7 +250,6 @@ export default {
       fightingStyle: "Duelling",
       bonuses: {
         advantage: false,
-        superiorityDie: false,
         magicWeapon: false
       },
       abilities: {
@@ -262,7 +261,8 @@ export default {
         crossbowExpert: false,
         greatWeaponMaster: false,
         dualWielder: false,
-        shadowBlade: false
+        shadowBlade: false,
+        superiority: false
       },
       classes: {},
       classList: [],
@@ -395,14 +395,14 @@ export default {
     },
     abilityDamage() {
       var damageChance = this.chanceToHit + this.chanceToCrit;
-      if (this.superiorityDieDamage > 0) {
+      if (this.superiorityDamage > 0) {
         return (
-          (this.chanceOfAHit + this.chanceOfACrit) * this.superiorityDieDamage
+          (this.chanceOfAHit + this.chanceOfACrit) * this.superiorityDamage
         );
       } else if (this.warMagicDamage > 0) {
         return damageChance * this.warMagicDamage;
       }
-      this.bonuses.superiorityDie = false;
+      this.abilities.superiority = false;
       this.abilities.warMagic = false;
       if (this.characterClass == this.classes.ranger) {
         var huntersMarkDamage = this.abilities.huntersMark
@@ -415,8 +415,8 @@ export default {
       }
       return 0;
     },
-    superiorityDieDamage() {
-      if (this.subclass == "Battle Master" && this.bonuses.superiorityDie) {
+    superiorityDamage() {
+      if (this.abilities.superiority) {
         if (this.characterLevel >= 18) {
           return 6.5;
         } else if (this.characterLevel >= 10) {
@@ -612,8 +612,8 @@ export default {
     }
   },
   watch: {
-    playerDataToProcess: function () {
-      calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
+    playerDataToProcess: function() {
+      calculatorApi.getDamage(this.playerDataToProcess).then(data => {
         console.log("Calculator Estimate: " + data);
       });
     },

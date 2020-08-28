@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import json
 
 
 class Classes:
@@ -9,10 +10,13 @@ class Classes:
 class Class(ABC):
     name: str
     fighting_style: str
+    superiority_bonus: bool
 
     def __init__(self, data):
+        abilities = json.loads(data["abilities"])
         self.name = data["characterClass"]
         self.fighting_style = data["fightingStyle"]
+        self.superiority_bonus = abilities["superiority"]
 
     @abstractmethod
     def number_of_attacks(self, level):
@@ -34,3 +38,13 @@ class Fighter(Class):
             return 2
         else:
             return 1
+
+    def superiority_die_damage(self, level):
+        if not self.superiority_bonus or level < 3:
+            return 0
+        if level >= 18:
+            return 6.5
+        elif level >= 10:
+            return 5.5
+        elif level >= 3:
+            return 4.5

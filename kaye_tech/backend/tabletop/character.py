@@ -35,7 +35,8 @@ class Character:
     def __init__(self, data):
         bonuses = json.loads(data["bonuses"])
         abilities = json.loads(data["abilities"])
-        self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
+        self.enemy_armour_class = int(
+            data["averageAC"]) if data["averageAC"] else 0
         self.weapon = SMITH.draw_weapon(data["weapon"])
         self.level = int(data["characterLevel"])
         self.advantage = bonuses["advantage"]
@@ -45,7 +46,8 @@ class Character:
         self.great_weapon_master = abilities["greatWeaponMaster"]
         self.attack_stat = int(data["attackStat"])
         self.battle_class = (
-            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(data)
+            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(
+                data)
         )
         self.subclass = data["subclass"]
         self.proficiency_bonus = self.proficiency_bonus_by_level(self.level)
@@ -56,7 +58,8 @@ class Character:
         crit_chance = self.chance_to_crit()
         attack_damage = self.attack_damage() * chance_to_hit
         crit_damage = self.average_dice_damage() * crit_chance
-        return (attack_damage + crit_damage) * attacks + self.bonus_attack_damage()
+        bonus_damage = self.bonus_attack_damage() + self.ability_damage()
+        return (attack_damage + crit_damage) * attacks + bonus_damage
 
     def number_of_attacks(self):
         if self.weapon.loading:
@@ -99,11 +102,19 @@ class Character:
         else:
             return 0
 
+    def ability_damage(self):
+        damage = self.battle_class.superiority_die_damage(self.level)
+        return damage*(self.chance_of_a_hit() + self.chance_of_a_crit())
+
     def chance_to_hit_by_ac(self, armour_class):
         bonus_to_hit = self.bonus_to_hit()
         chance_to_hit = max(1 - (armour_class - 1 - bonus_to_hit) / 20, 0.05)
         chance_to_hit = min(chance_to_hit, 0.95)
         return 1 - (1 - chance_to_hit) ** 2 if self.advantage else chance_to_hit
+
+    def chance_of_a_hit(self):
+        chance_to_hit = self.chance_to_hit_by_ac(self.enemy_armour_class)
+        return 1 - (1 - chance_to_hit)**self.battle_class.number_of_attacks(self.level)
 
     def chance_to_crit(self):
         if self.subclass == Subclasses.CHAMPION and self.level >= 3:
@@ -111,6 +122,9 @@ class Character:
         else:
             crit_chance = 0.05
         return round(1 - (1 - crit_chance) ** 2 if self.advantage else crit_chance, 8)
+
+    def chance_of_a_crit(self):
+        return 1 - (1-self.chance_to_crit())**self.battle_class.number_of_attacks(self.level)
 
     def bonus_to_hit(self):
         base_bonus = self.attack_stat + self.proficiency_bonus + self.magic_bonus()
