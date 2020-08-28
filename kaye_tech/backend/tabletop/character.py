@@ -6,6 +6,8 @@ from abc import ABC, abstractmethod
 import math
 import json
 
+SMITH = Blacksmith()
+
 
 class Subclasses:
     BATTLE_MASTER = "Battle Master"
@@ -31,11 +33,10 @@ class Character:
     magic_weapon: bool
 
     def __init__(self, data):
-        blacksmith = Blacksmith()
         bonuses = json.loads(data["bonuses"])
         abilities = json.loads(data["abilities"])
         self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
-        self.weapon = blacksmith.draw_weapon(data["weapon"])
+        self.weapon = SMITH.draw_weapon(data["weapon"])
         self.level = int(data["characterLevel"])
         self.advantage = bonuses["advantage"]
         self.magic_weapon = bonuses["magicWeapon"]
