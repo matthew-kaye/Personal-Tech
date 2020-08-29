@@ -22,6 +22,7 @@ class TestData:
     advantage: bool = False
     magic_weapon: bool = False
     superiority: bool = False
+    hunters_mark: bool = False
 
     def data(self):
         return {
@@ -40,7 +41,8 @@ class TestData:
                     "dualWielder": self.dual_wielder,
                     "sharpshooter": self.sharpshooter,
                     "greatWeaponMaster": self.great_weapon_master,
-                    "superiority": self.superiority
+                    "superiority": self.superiority,
+                    "huntersMark": self.hunters_mark
                 }
             ),
         }
@@ -57,6 +59,7 @@ class CharacterTest(TestCase):
 
     def test_attack_damage_calculation(self):
         assert TEST_CHARACTER.attack_damage() == 9.5
+        assert TEST_CHARACTER.ability_damage() == 0
         duellist = Character(TestData(fighting_style=Styles.DUELLING).data())
         assert duellist.attack_damage() == 11.5
 
@@ -161,3 +164,9 @@ class ClassTest(TestCase):
         battle_master = Character(TestData(superiority=True).data())
         assert round(battle_master.ability_damage(), 6) == 6.048625
         assert battle_master.damage_output() == 25.248625
+
+    def test_ranger_abilities(self):
+        ranger = Character(
+            TestData(character_class=Classes.RANGER, hunters_mark=True).data())
+        assert ranger.ability_damage() == 4.9
+        assert ranger.damage_output() == 17.7

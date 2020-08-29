@@ -11,21 +11,37 @@ class Class(ABC):
     name: str
     fighting_style: str
     superiority_bonus: bool
+    hunters_mark: bool
 
     def __init__(self, data):
         abilities = json.loads(data["abilities"])
         self.name = data["characterClass"]
         self.fighting_style = data["fightingStyle"]
         self.superiority_bonus = abilities["superiority"]
+        self.hunters_mark = abilities["huntersMark"]
 
     @abstractmethod
     def number_of_attacks(self, level):
+        pass
+
+    @abstractmethod
+    def damage_per_hit(self, level):
+        pass
+
+    @abstractmethod
+    def damage_on_a_hit(self, level):
         pass
 
 
 class Ranger(Class):
     def number_of_attacks(self, level):
         return 2 if level >= 5 else 1
+
+    def damage_per_hit(self, level):
+        return 3.5 if self.hunters_mark else 0
+
+    def damage_on_a_hit(self, level):
+        return 0
 
 
 class Fighter(Class):
@@ -39,7 +55,10 @@ class Fighter(Class):
         else:
             return 1
 
-    def superiority_die_damage(self, level):
+    def damage_per_hit(self, level):
+        return 0
+
+    def damage_on_a_hit(self, level):
         if not self.superiority_bonus or level < 3:
             return 0
         if level >= 18:

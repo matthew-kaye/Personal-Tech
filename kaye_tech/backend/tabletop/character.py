@@ -103,8 +103,11 @@ class Character:
             return 0
 
     def ability_damage(self):
-        damage = self.battle_class.superiority_die_damage(self.level)
-        return damage*(self.chance_of_a_hit() + self.chance_of_a_crit())
+        damage_on_hit = self.battle_class.damage_on_a_hit(
+            self.level) * (self.chance_of_a_hit() + self.chance_of_a_crit())
+        damage_per_hit = self.battle_class.damage_per_hit(
+            self.level) * self.number_of_attacks() * (self.chance_to_hit_by_ac(self.enemy_armour_class)+self.chance_to_crit())
+        return damage_on_hit + damage_per_hit
 
     def chance_to_hit_by_ac(self, armour_class):
         bonus_to_hit = self.bonus_to_hit()
