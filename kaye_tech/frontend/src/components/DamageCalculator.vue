@@ -153,19 +153,19 @@
             ></v-switch>
           </v-col>
           <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
-            <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
+            <v-switch v-model="feats.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
           </v-col>
           <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
-            <v-switch v-model="abilities.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
+            <v-switch v-model="feats.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
           </v-col>
           <v-col
             md="auto"
             v-if="fightingStyle==fightingStyles.twoHanded || fightingStyle==fightingStyles.defence"
           >
-            <v-switch v-model="abilities.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
+            <v-switch v-model="feats.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
           </v-col>
           <v-col md="auto" v-if="fightingStyle==fightingStyles.twoWeapon">
-            <v-switch v-model="abilities.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
+            <v-switch v-model="feats.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
           </v-col>
         </v-row>
       </v-col>
@@ -252,15 +252,17 @@ export default {
         advantage: false,
         magicWeapon: false
       },
+      feats: {
+        sharpshooter: false,
+        crossbowExpert: false,
+        greatWeaponMaster: false,
+        dualWielder: false
+      },
       abilities: {
         warMagic: false,
         huntersMark: false,
         colossusSlayer: false,
         wolfAttack: false,
-        sharpshooter: false,
-        crossbowExpert: false,
-        greatWeaponMaster: false,
-        dualWielder: false,
         shadowBlade: false,
         superiority: false
       },
@@ -295,7 +297,8 @@ export default {
         averageAC: this.averageAC,
         attackStat: this.attackStat,
         abilities: this.abilities,
-        bonuses: this.bonuses
+        bonuses: this.bonuses,
+        feats: this.feats
       };
     },
     totalDamage() {
@@ -316,8 +319,8 @@ export default {
           : 0;
       var attackDamage =
         this.averageDamageDie + extraDamage + this.attackStat + this.magicBonus;
-      return (this.abilities.sharpshooter && this.weapon.ranged) ||
-        (this.abilities.greatWeaponMaster &&
+      return (this.feats.sharpshooter && this.weapon.ranged) ||
+        (this.feats.greatWeaponMaster &&
           (this.weapon.heavy || this.weapon.versatile))
         ? attackDamage + 10
         : attackDamage;
@@ -336,9 +339,7 @@ export default {
     },
     allowedToDualWield() {
       if (this.fightingStyle == this.fightingStyles.twoWeapon) {
-        return this.abilities.dualWielder
-          ? !this.weapon.heavy
-          : this.weapon.light;
+        return this.feats.dualWielder ? !this.weapon.heavy : this.weapon.light;
       }
       return false;
     },
@@ -349,11 +350,11 @@ export default {
         this.weapon.ranged
       ) {
         attackBonus =
-          this.abilities.sharpshooter && this.weapon.ranged
+          this.feats.sharpshooter && this.weapon.ranged
             ? attackBonus - 3
             : attackBonus + 2;
       }
-      return this.abilities.greatWeaponMaster &&
+      return this.feats.greatWeaponMaster &&
         (this.weapon.heavy || this.weapon.versatile)
         ? attackBonus - 5
         : attackBonus;
@@ -523,12 +524,12 @@ export default {
           break;
         case this.fightingStyles.archery:
           this.weapon =
-            this.characterLevel < 5 || this.abilities.crossbowExpert
+            this.characterLevel < 5 || this.feats.crossbowExpert
               ? this.weapons.heavyCrossbow
               : this.weapons.longbow;
           break;
         case this.fightingStyles.twoWeapon:
-          this.weapon = this.abilities.dualWielder
+          this.weapon = this.feats.dualWielder
             ? this.weapons.longsword
             : this.weapons.handaxe;
           this.bonusWeapon = this.weapon;
@@ -566,14 +567,14 @@ export default {
             this.numberOfAttacks = 1;
           }
       }
-      if (this.weapon.loading && !this.abilities.crossbowExpert) {
+      if (this.weapon.loading && !this.feats.crossbowExpert) {
         this.numberOfAttacks = 1;
       }
     },
     disableImpossibleAbilities() {
       if (this.fightingStyle != this.fightingStyles.archery) {
-        this.abilities.sharpshooter = false;
-        this.abilities.crossbowExpert = false;
+        this.feats.sharpshooter = false;
+        this.feats.crossbowExpert = false;
       }
       this.abilities.huntersMark =
         this.characterLevel > 1 ? this.abilities.huntersMark : false;
@@ -585,13 +586,13 @@ export default {
         this.characterLevel > 2 && this.subclass == "Beast Master"
           ? this.abilities.wolfAttack
           : false;
-      this.abilities.greatWeaponMaster =
+      this.feats.greatWeaponMaster =
         this.weapon.heavy || this.weapon.versatile
-          ? this.abilities.greatWeaponMaster
+          ? this.feats.greatWeaponMaster
           : false;
-      this.abilities.dualWielder =
+      this.feats.dualWielder =
         this.fightingStyle == this.fightingStyles.twoWeapon
-          ? this.abilities.dualWielder
+          ? this.feats.dualWielder
           : false;
       this.abilities.shadowBlade =
         this.subclass == "Eldritch Knight" &&

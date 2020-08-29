@@ -34,7 +34,7 @@ class Character:
 
     def __init__(self, data):
         bonuses = json.loads(data["bonuses"])
-        abilities = json.loads(data["abilities"])
+        feats = json.loads(data["feats"])
         self.level = int(data["characterLevel"])
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
         self.enemy_armour_class = int(
@@ -42,9 +42,10 @@ class Character:
         self.weapon = SMITH.draw_weapon(data["weapon"])
         self.advantage = bonuses["advantage"]
         self.magic_weapon = bonuses["magicWeapon"]
-        self.dual_wielder = abilities["dualWielder"]
-        self.sharpshooter = abilities["sharpshooter"]
-        self.great_weapon_master = abilities["greatWeaponMaster"]
+        self.dual_wielder = feats["dualWielder"]
+        self.sharpshooter = feats["sharpshooter"]
+        self.great_weapon_master = feats["greatWeaponMaster"]
+        self.crossbow_expert = feats["crossbowExpert"]
         self.attack_stat = int(data["attackStat"])
         self.battle_class = (
             Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(
@@ -59,7 +60,7 @@ class Character:
         return (attack_damage + crit_damage) * self.number_of_attacks() + bonus_damage
 
     def number_of_attacks(self):
-        if self.weapon.loading:
+        if self.weapon.loading and not self.crossbow_expert:
             return 1
         return self.battle_class.number_of_attacks(self.level)
 
