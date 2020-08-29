@@ -1,20 +1,12 @@
 from dataclasses import dataclass
 from .weapon import Weapon, Weapons, Blacksmith
 from .fighting_styles import Styles
-from .classes import Classes, Class, Ranger, Fighter
+from .classes import Classes, Subclasses, Class, Ranger, Fighter
 from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_of_an_instance, chance_if_advantage
 from abc import ABC, abstractmethod
 import json
 
 SMITH = Blacksmith()
-
-
-class Subclasses:
-    BATTLE_MASTER = "Battle Master"
-    BEAST_MASTER = "Beast Master"
-    CHAMPION = "Champion"
-    ELDRITCH_KNIGHT = "Eldritch Knight"
-    HUNTER = "Hunter"
 
 
 @dataclass
@@ -34,12 +26,17 @@ class Character:
 
     def __init__(self, data):
         bonuses = json.loads(data["bonuses"])
+        abilities = json.loads(data["abilities"])
         feats = json.loads(data["feats"])
         self.level = int(data["characterLevel"])
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
         self.enemy_armour_class = int(
             data["averageAC"]) if data["averageAC"] else 0
-        self.weapon = SMITH.draw_weapon(data["weapon"])
+        self.battle_class = (
+            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(
+                data)
+        )
+        self.weapon = self.pick_weapon(data["weapon"])
         self.advantage = bonuses["advantage"]
         self.magic_weapon = bonuses["magicWeapon"]
         self.dual_wielder = feats["dualWielder"]
@@ -47,11 +44,6 @@ class Character:
         self.great_weapon_master = feats["greatWeaponMaster"]
         self.crossbow_expert = feats["crossbowExpert"]
         self.attack_stat = int(data["attackStat"])
-        self.battle_class = (
-            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(
-                data)
-        )
-        self.subclass = data["subclass"]
 
     def damage_output(self):
         attack_damage = self.attack_damage() * self.chance_to_hit()
@@ -110,7 +102,7 @@ class Character:
         return chance_of_an_instance(self.chance_to_hit(), attacks)
 
     def chance_to_crit(self):
-        if self.subclass == Subclasses.CHAMPION and self.level >= 3:
+        if self.battle_class.subclass == Subclasses.CHAMPION and self.level >= 3:
             crit_chance = 0.15 if self.level >= 15 else 0.1
         else:
             crit_chance = 0.05
@@ -146,3 +138,8 @@ class Character:
 
     def magic_bonus(self):
         return 1 if self.magic_weapon else 0
+
+    def pick_weapon(self, weapon):
+        if self.battle_class.shadow_blade:
+            return SMITH.conjure_shadow_blade(self.battle_class.caster_level())
+        return SMITH.draw_weapon(weapon)

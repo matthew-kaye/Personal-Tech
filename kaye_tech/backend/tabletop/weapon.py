@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from .utilities import proficiency_bonus_by_level
+import math
 
 
 class Weapons:
@@ -9,6 +10,7 @@ class Weapons:
     LONGSWORD = "Longsword"
     GREATAXE = "Greataxe"
     GREATSWORD = "Greatsword"
+    SHADOW_BLADE = "Shadow Blade"
 
 
 @dataclass
@@ -59,3 +61,7 @@ class Blacksmith:
 
     def make_longbow(self):
         return Weapon(Weapons.LONGBOW, 4.5, ranged=True, heavy=True)
+
+    def conjure_shadow_blade(self, caster_level):
+        damage = 9 + 4.5*min(math.floor((caster_level-1)/4), 3)
+        return Weapon(Weapons.SHADOW_BLADE, damage, light=True, ranged=True)

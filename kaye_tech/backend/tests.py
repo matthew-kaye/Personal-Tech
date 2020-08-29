@@ -1,6 +1,6 @@
 from django.test import TestCase
-from .tabletop.character import Character, Subclasses
-from .tabletop.classes import Classes, Ranger, Fighter, Wolf
+from .tabletop.character import Character
+from .tabletop.classes import Classes, Subclasses, Ranger, Fighter, Wolf
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
 from .tabletop.utilities import proficiency_bonus_by_level, chance_to_hit, chance_of_an_instance, chance_if_advantage
@@ -27,6 +27,8 @@ class TestData:
     hunters_mark: bool = False
     colossus_slayer: bool = False
     wolf_attack: bool = False
+    war_magic: bool = False
+    shadow_blade: bool = False
 
     def data(self):
         return {
@@ -45,7 +47,9 @@ class TestData:
                     "superiority": self.superiority,
                     "huntersMark": self.hunters_mark,
                     "colossusSlayer": self.colossus_slayer,
-                    "wolfAttack": self.wolf_attack
+                    "wolfAttack": self.wolf_attack,
+                    "warMagic": self.war_magic,
+                    "shadowBlade": self.shadow_blade
                 }
             ),
             "feats": json.dumps(
@@ -214,3 +218,15 @@ class ClassTest(TestCase):
         flanking_beast_master = Character(
             TestData(character_class=Classes.RANGER, wolf_attack=True, advantage=True).data())
         assert round(flanking_beast_master.damage_output(), 6) == 28.23
+
+    def test_shadow_blade_damage(self):
+        for caster_level in range(3, 5):
+            assert TEST_SMITH.conjure_shadow_blade(4).damage == 9
+        for caster_level in range(5, 9):
+            assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 13.5
+        for caster_level in range(9, 13):
+            assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 18
+        for caster_level in range(13, 21):
+            assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 22.5
+        assert Character(TestData(shadow_blade=True).data()
+                         ).damage_output() == 28.65
