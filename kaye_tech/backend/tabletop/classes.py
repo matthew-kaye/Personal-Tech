@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_if_advantage
 import json
 
 
@@ -14,11 +15,16 @@ class Class(ABC):
     superiority_bonus: bool
     hunters_mark: bool
     colossus_slayer: bool
+    advantage: bool
 
     def __init__(self, data):
         abilities = json.loads(data["abilities"])
+        bonuses = json.loads(data["bonuses"])
         self.name = data["characterClass"]
         self.level = data["characterLevel"]
+        self.advantage = bonuses["advantage"]
+        self.enemy_armour = int(
+            data["averageAC"]) if data["averageAC"] else 0
         self.fighting_style = data["fightingStyle"]
         self.superiority_bonus = abilities["superiority"]
         self.hunters_mark = abilities["huntersMark"]
@@ -37,14 +43,31 @@ class Class(ABC):
     def damage_on_a_hit(self, level):
         pass
 
+    @abstractmethod
+    def other_damage(self, level):
+        pass
+
 
 class Wolf:
     bonus_to_hit: int
-    bite_damage: int = 5
-    damage_per_hit: int = 7
+    average_damage_die: int = 5
+    bite_damage: int
+    attacks: int
+    chance_to_hit: float
+    chance_to_crit: float
 
-    def __init__(self, proficiency_bonus):
-        self.bonus_to_hit = 4 + proficiency_bonus
+    def __init__(self, ranger_level: int, enemy_armour: int, advantage: bool):
+        self.bonus_to_hit = 4 + proficiency_bonus_by_level(ranger_level)
+        self.bite_damage = 7 + proficiency_bonus_by_level(ranger_level)
+        self.number_of_attacks = 2 if ranger_level >= 11 else 1
+        self.chance_to_hit = chance_to_hit(
+            self.bonus_to_hit, enemy_armour, advantage)
+        self.chance_to_crit = chance_if_advantage(0.05, advantage)
+
+    def damage_output(self):
+        base_damage = self.bite_damage * self.chance_to_hit
+        crit_damage = self.average_damage_die * self.chance_to_crit
+        return self.number_of_attacks*(base_damage+crit_damage)
 
 
 class Ranger(Class):
@@ -56,6 +79,12 @@ class Ranger(Class):
 
     def damage_on_a_hit(self, level):
         return 4.5 if self.colossus_slayer else 0
+
+    def other_damage(self, level):
+        if self.wolf_attack:
+            companion = Wolf(level, self.enemy_armour, self.advantage)
+            return companion.damage_output()
+        return 0
 
 
 class Fighter(Class):
@@ -81,3 +110,6 @@ class Fighter(Class):
             return 5.5
         elif level >= 3:
             return 4.5
+
+    def other_damage(self, level):
+        return 0

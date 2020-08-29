@@ -612,10 +612,13 @@ export default {
     }
   },
   watch: {
-    playerDataToProcess: function () {
-      calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
-        console.log("Calculator Estimate: " + data);
-      });
+    playerDataToProcess: {
+      deep: true,
+      handler() {
+        calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
+          console.log("Calculator Estimate: " + data);
+        });
+      }
     },
     characterLevel: {
       deep: true,

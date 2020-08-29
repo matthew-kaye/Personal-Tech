@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .tabletop.character import Character, Subclasses
-from .tabletop.classes import Classes, Ranger, Fighter
+from .tabletop.classes import Classes, Ranger, Fighter, Wolf
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
 from .tabletop.utilities import proficiency_bonus_by_level, chance_to_hit, chance_of_an_instance, chance_if_advantage
@@ -183,3 +183,18 @@ class ClassTest(TestCase):
         ranger.battle_class.colossus_slayer = True
         assert round(ranger.ability_damage(), 6) == 9.2875
         assert ranger.damage_output() == 22.0875
+
+    def test_range_wolf_damage(self):
+        wolf = Wolf(5, 0, False)
+        bigger_wolf = Wolf(11, 0, False)
+        assert wolf.bonus_to_hit == 7 and wolf.bite_damage == 10
+        assert wolf.number_of_attacks == 1
+        assert bigger_wolf.number_of_attacks == 2
+        assert bigger_wolf.bonus_to_hit == 8 and bigger_wolf.bite_damage == 11
+        beast_master = Character(
+            TestData(character_class=Classes.RANGER, wolf_attack=True).data())
+        assert round(beast_master.damage_output(), 6) == 20.1
+        beast_master.advantage = True
+        flanking_beast_master = Character(
+            TestData(character_class=Classes.RANGER, wolf_attack=True, advantage=True).data())
+        assert round(flanking_beast_master.damage_output(), 6) == 28.23

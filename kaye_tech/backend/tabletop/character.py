@@ -53,18 +53,15 @@ class Character:
         self.subclass = data["subclass"]
 
     def damage_output(self):
-        attacks = self.number_of_attacks()
-        crit_chance = self.chance_to_crit()
         attack_damage = self.attack_damage() * self.chance_to_hit()
-        crit_damage = self.average_dice_damage() * crit_chance
+        crit_damage = self.average_dice_damage() * self.chance_to_crit()
         bonus_damage = self.bonus_attack_damage() + self.ability_damage()
-        return (attack_damage + crit_damage) * attacks + bonus_damage
+        return (attack_damage + crit_damage) * self.number_of_attacks() + bonus_damage
 
     def number_of_attacks(self):
         if self.weapon.loading:
             return 1
-        else:
-            return self.battle_class.number_of_attacks(self.level)
+        return self.battle_class.number_of_attacks(self.level)
 
     def attack_damage(self):
         base_damage = self.average_dice_damage() + self.attack_stat + self.magic_bonus()
@@ -75,37 +72,34 @@ class Character:
             return base_damage + 2
         elif self.attempting_bigger_hit():
             return base_damage + 10
-        else:
-            return base_damage
+        return base_damage
 
     def average_dice_damage(self):
         if self.battle_class.fighting_style == Styles.TWO_HANDED and (
             self.weapon.heavy or self.weapon.versatile
         ):
             return self.great_weapon_damage(self.weapon)
-        else:
-            return self.weapon.damage
+        return self.weapon.damage
 
     def bonus_attack_damage(self):
         if self.battle_class.fighting_style == Styles.TWO_WEAPON:
             return self.second_weapon_damage()
-        else:
-            return 0
+        return 0
 
     def second_weapon_damage(self):
         if self.weapon.light or (self.dual_wielder and not self.weapon.heavy):
             return (
                 self.weapon.damage + self.attack_stat + self.magic_bonus()
             ) * self.chance_to_hit() + self.weapon.damage * self.chance_to_crit()
-        else:
-            return 0
+        return 0
 
     def ability_damage(self):
         damage_on_hit = self.battle_class.damage_on_a_hit(
             self.level) * (self.chance_of_a_hit() + self.chance_of_a_crit())
         damage_per_hit = self.battle_class.damage_per_hit(
             self.level) * self.number_of_attacks() * (self.chance_to_hit()+self.chance_to_crit())
-        return damage_on_hit + damage_per_hit
+        extra_damage = self.battle_class.other_damage(self.level)
+        return damage_on_hit + damage_per_hit + extra_damage
 
     def chance_to_hit(self):
         return chance_to_hit(self.bonus_to_hit(), self.enemy_armour_class, self.advantage)
