@@ -3,6 +3,7 @@ from .tabletop.character import Character, Subclasses
 from .tabletop.classes import Classes, Ranger, Fighter
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
+from .tabletop.utilities import proficiency_bonus_by_level, chance_to_hit, chance_of_an_instance, chance_if_advantage
 import json
 from dataclasses import dataclass
 
@@ -24,6 +25,7 @@ class TestData:
     superiority: bool = False
     hunters_mark: bool = False
     colossus_slayer: bool = False
+    wolf_attack: bool = False
 
     def data(self):
         return {
@@ -44,7 +46,8 @@ class TestData:
                     "greatWeaponMaster": self.great_weapon_master,
                     "superiority": self.superiority,
                     "huntersMark": self.hunters_mark,
-                    "colossusSlayer": self.colossus_slayer
+                    "colossusSlayer": self.colossus_slayer,
+                    "wolfAttack": self.wolf_attack
                 }
             ),
         }
@@ -70,24 +73,13 @@ class CharacterTest(TestCase):
         assert crossbowman.number_of_attacks() == 1
         assert TEST_CHARACTER.number_of_attacks() == 3
 
-    def test_proficiency_bonus_calculation(self):
-        assert TEST_CHARACTER.proficiency_bonus_by_level(1) == 2
-        assert TEST_CHARACTER.proficiency_bonus_by_level(5) == 3
-        assert TEST_CHARACTER.proficiency_bonus_by_level(9) == 4
-        assert TEST_CHARACTER.proficiency_bonus_by_level(13) == 5
-        assert TEST_CHARACTER.proficiency_bonus_by_level(20) == 6
-
     def test_chance_to_hit_calculation(self):
-        assert TEST_CHARACTER.chance_to_hit_by_ac(1) == 0.95
-        assert TEST_CHARACTER.chance_to_hit_by_ac(17) == 0.65
-        assert TEST_CHARACTER.chance_to_hit_by_ac(20) == 0.5
-        assert TEST_CHARACTER.chance_to_hit_by_ac(30) == 0.05
+        assert TEST_CHARACTER.chance_to_hit() == 0.65
         assert TEST_CHARACTER.chance_to_crit() == 0.05
 
     def test_flanking_hit_chance_calculation(self):
         flanker = Character(TestData(advantage=True).data())
-        assert round(flanker.chance_to_hit_by_ac(0), 6) == 0.9975
-        assert round(flanker.chance_to_hit_by_ac(17), 6) == 0.8775
+        assert round(flanker.chance_to_hit(), 6) == 0.8775
         assert flanker.chance_to_crit() == 0.0975
 
     def test_archery_bonus_calculation(self):
@@ -149,6 +141,22 @@ class CharacterTest(TestCase):
         assert magic_swordsman.magic_bonus() == TEST_CHARACTER.magic_bonus() + 1
         assert magic_swordsman.attack_damage() == TEST_CHARACTER.attack_damage() + 1
         assert magic_swordsman.bonus_to_hit() == TEST_CHARACTER.bonus_to_hit() + 1
+
+
+class UtilitiesTest(TestCase):
+    def test_proficiency_bonus_calculation(self):
+        assert proficiency_bonus_by_level(1) == 2
+        assert proficiency_bonus_by_level(5) == 3
+        assert proficiency_bonus_by_level(9) == 4
+        assert proficiency_bonus_by_level(13) == 5
+        assert proficiency_bonus_by_level(20) == 6
+
+    def test_chance_to_hit_calculation(self):
+        assert chance_to_hit(5, 1, False) == 0.95
+        assert round(chance_to_hit(5, 1, True), 6) == 0.9975
+        assert chance_to_hit(9, 17, False) == 0.65
+        assert chance_to_hit(0, 30, False) == 0.05
+        assert round(chance_to_hit(0, 30, True), 6) == 0.0975
 
 
 class ClassTest(TestCase):
