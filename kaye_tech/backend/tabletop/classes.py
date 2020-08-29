@@ -12,6 +12,7 @@ class Class(ABC):
     fighting_style: str
     superiority_bonus: bool
     hunters_mark: bool
+    colossus_slayer: bool
 
     def __init__(self, data):
         abilities = json.loads(data["abilities"])
@@ -19,6 +20,7 @@ class Class(ABC):
         self.fighting_style = data["fightingStyle"]
         self.superiority_bonus = abilities["superiority"]
         self.hunters_mark = abilities["huntersMark"]
+        self.colossus_slayer = abilities["colossusSlayer"]
 
     @abstractmethod
     def number_of_attacks(self, level):
@@ -41,7 +43,7 @@ class Ranger(Class):
         return 3.5 if self.hunters_mark else 0
 
     def damage_on_a_hit(self, level):
-        return 0
+        return 4.5 if self.colossus_slayer else 0
 
 
 class Fighter(Class):

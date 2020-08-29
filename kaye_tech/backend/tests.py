@@ -23,6 +23,7 @@ class TestData:
     magic_weapon: bool = False
     superiority: bool = False
     hunters_mark: bool = False
+    colossus_slayer: bool = False
 
     def data(self):
         return {
@@ -42,7 +43,8 @@ class TestData:
                     "sharpshooter": self.sharpshooter,
                     "greatWeaponMaster": self.great_weapon_master,
                     "superiority": self.superiority,
-                    "huntersMark": self.hunters_mark
+                    "huntersMark": self.hunters_mark,
+                    "colossusSlayer": self.colossus_slayer
                 }
             ),
         }
@@ -170,3 +172,6 @@ class ClassTest(TestCase):
             TestData(character_class=Classes.RANGER, hunters_mark=True).data())
         assert ranger.ability_damage() == 4.9
         assert ranger.damage_output() == 17.7
+        ranger.battle_class.colossus_slayer = True
+        assert round(ranger.ability_damage(), 6) == 9.2875
+        assert ranger.damage_output() == 22.0875
