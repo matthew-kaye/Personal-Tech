@@ -230,3 +230,12 @@ class ClassTest(TestCase):
             assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 22.5
         assert Character(TestData(shadow_blade=True).data()
                          ).damage_output() == 28.65
+
+    def test_booming_blade_damage(self):
+        assert TEST_CHARACTER.battle_class.booming_blade_damage() == 9
+        assert Fighter(TestData(character_level=17).data()
+                       ).booming_blade_damage() == 13.5
+        assert Fighter(TestData(character_level=7).data()
+                       ).booming_blade_damage() == 4.5
+        assert Character(TestData(war_magic=True).data()
+                         ).damage_output() == 19.1

@@ -88,10 +88,12 @@ class Character:
 
     def ability_damage(self):
         damage_on_hit = self.battle_class.damage_on_a_hit(
-            self.level) * (self.chance_of_a_hit() + self.chance_of_a_crit())
+        ) * (self.chance_of_a_hit() + self.chance_of_a_crit())
+        per_hit_chance = self.chance_to_hit()+self.chance_to_crit()
         damage_per_hit = self.battle_class.damage_per_hit(
-            self.level) * self.number_of_attacks() * (self.chance_to_hit()+self.chance_to_crit())
-        extra_damage = self.battle_class.other_damage(self.level)
+        ) * self.number_of_attacks() * (per_hit_chance)
+        extra_damage = self.battle_class.other_damage(
+        ) + (self.battle_class.booming_blade_damage() * per_hit_chance if self.battle_class.war_magic else 0)
         return damage_on_hit + damage_per_hit + extra_damage
 
     def chance_to_hit(self):

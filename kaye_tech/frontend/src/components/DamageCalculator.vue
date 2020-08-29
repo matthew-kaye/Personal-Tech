@@ -114,7 +114,7 @@
               :disabled="characterLevel<7"
               v-model="abilities.warMagic"
               class="ma-2"
-              label="War Magic"
+              label="War Magic (Booming Blade)"
             ></v-switch>
           </v-col>
           <v-col
@@ -170,14 +170,13 @@
         </v-row>
       </v-col>
       <v-col cols="11" md="auto" class="ml-4">
-        <v-card elevation="10" v-if="!abilities.warMagic">
+        <v-card elevation="10">
           <v-card-title class="primary headline">
-            <span class="white--text">{{"Damage: " + totalDamage }}</span>
-          </v-card-title>
-        </v-card>
-        <v-card elevation="10" v-if="abilities.warMagic">
-          <v-card-title class="primary headline">
-            <span class="white--text">{{`Damage (moves): ${totalDamage} (${boomingBladeDamage}) `}}</span>
+            <span
+              v-if="abilities.warMagic"
+              class="white--text"
+            >{{`Damage (moves): ${totalDamage} (${boomingBladeDamage}) `}}</span>
+            <span v-else class="white--text">{{"Damage: " + totalDamage }}</span>
           </v-card-title>
         </v-card>
       </v-col>
