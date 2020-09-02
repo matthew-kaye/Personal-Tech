@@ -591,9 +591,13 @@ export default {
         this.characterLevel > 2 && this.subclass == "Beast Master"
           ? this.abilities.wolfAttack
           : false;
-      this.feats.greatWeaponMaster =
-        this.weapon.heavy || this.weapon.versatile
-          ? this.feats.greatWeaponMaster
+      this.feats.greatWeaponMaster = !this.weapon.ranged
+        ? this.feats.greatWeaponMaster
+        : false;
+      this.feats.greatWeaponMasterSwing =
+        (this.weapon.heavy || this.weapon.versatile) &&
+        this.feats.greatWeaponMaster
+          ? this.feats.greatWeaponMasterSwing
           : false;
       this.feats.dualWielder =
         this.fightingStyle == this.fightingStyles.twoWeapon
@@ -662,6 +666,12 @@ export default {
         this.chooseWeaponFromStyle();
         this.disableImpossibleAbilities();
         this.calculateNumberOfAttacks();
+      }
+    },
+    feats: {
+      deep: true,
+      handler() {
+        this.disableImpossibleAbilities();
       }
     }
   }
