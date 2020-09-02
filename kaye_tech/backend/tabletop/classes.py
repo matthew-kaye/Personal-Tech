@@ -144,7 +144,6 @@ class Fighter(Class):
         return 0
 
     def booming_blade_damage(self):
-        # when moving, it's double + 4.5
         if self.level >= 17:
             return 13.5
         elif self.level >= 11:

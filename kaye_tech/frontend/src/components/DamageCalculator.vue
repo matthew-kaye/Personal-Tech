@@ -240,7 +240,6 @@ export default {
     for (var value in this.weapons) {
       this.weaponList.push(this.weapons[value]);
     }
-    this.weapons.shadowBlade = { damage: 9, name: "Shadow Blade", light: true };
     this.calculateFields();
   },
   data() {
@@ -352,9 +351,6 @@ export default {
         case this.fightingStyles.defence:
           this.weapon = this.weapons.greatsword;
       }
-      this.weapon = this.abilities.shadowBlade
-        ? this.weapons.shadowBlade
-        : this.weapon;
     },
     calculateAverageAC() {
       this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
