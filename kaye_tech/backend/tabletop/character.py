@@ -50,8 +50,6 @@ class Character:
 
     def damage_output(self):
         bonus_damage = self.bonus_attack_damage() + self.ability_damage()
-        print(bonus_damage)
-        print(self.average_attack_damage())
         return self.average_attack_damage() * self.number_of_attacks() + bonus_damage
 
     def number_of_attacks(self):

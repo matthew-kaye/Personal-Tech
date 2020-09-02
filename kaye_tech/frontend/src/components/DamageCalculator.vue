@@ -160,10 +160,7 @@
           <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
             <v-switch v-model="feats.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
           </v-col>
-          <v-col
-            md="auto"
-            v-if="fightingStyle==fightingStyles.twoHanded || fightingStyle==fightingStyles.defence"
-          >
+          <v-col md="auto" v-if="(weapon.versatile ||weapon.heavy) && !weapon.ranged">
             <v-switch v-model="feats.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
           </v-col>
           <v-col md="auto" v-if="feats.greatWeaponMaster">
@@ -609,6 +606,9 @@ export default {
         this.fightingStyle != this.fightingStyles.archery
           ? this.abilities.shadowBlade
           : false;
+      this.bonuses.magicWeapon = this.abilities.shadowBlade
+        ? false
+        : this.bonuses.magicWeapon;
     },
     getChanceToHitFromBonusToHit(bonusToHit) {
       var chanceToHit = Math.max(
@@ -619,6 +619,14 @@ export default {
       return this.bonuses.advantage
         ? 1 - Math.pow(1 - chanceToHit, 2)
         : chanceToHit;
+    },
+    resetAbilities() {
+      for (var key in this.abilities) {
+        this.abilities[key] = false;
+      }
+      for (var key in this.feats) {
+        this.feats[key] = false;
+      }
     }
   },
   watch: {
@@ -643,7 +651,14 @@ export default {
         this.calculateAttackStat();
         this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
+        this.resetAbilities();
         this.subclass = this.subclasses[this.characterClass][0];
+      }
+    },
+    subclass: {
+      deep: true,
+      handler() {
+        this.resetAbilities();
       }
     },
     weapon: {
