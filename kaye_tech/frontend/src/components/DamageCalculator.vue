@@ -177,8 +177,8 @@
             <span
               v-if="abilities.warMagic"
               class="white--text"
-            >{{`Damage (moves): ${totalDamage} (${boomingBladeDamage}) `}}</span>
-            <span v-else class="white--text">{{"Damage: " + totalDamage }}</span>
+            >{{`Damage (moves): ${damageOutput} (Placeholder) `}}</span>
+            <span v-else class="white--text">{{"Damage: " + damageOutput }}</span>
           </v-card-title>
         </v-card>
       </v-col>
@@ -281,11 +281,7 @@ export default {
       weaponList: [],
       weapon: {},
       bonusWeapon: {},
-      wolf: {
-        bonusToHit: 4,
-        averageDamageDie: 5,
-        damagePerHit: 7
-      }
+      damageOutput: 0
     };
   },
   computed: {
@@ -302,192 +298,6 @@ export default {
         bonuses: this.bonuses,
         feats: this.feats
       };
-    },
-    totalDamage() {
-      var baseDamage =
-        this.numberOfAttacks * this.attackDamage * this.chanceToHit;
-      var critDamage =
-        this.numberOfAttacks * this.chanceToCrit * this.averageDamageDie;
-      var extraDamage = this.abilityDamage + this.bonusAttackDamage;
-      return (
-        Math.round(parseFloat(baseDamage + critDamage + extraDamage) * 100) /
-        100
-      );
-    },
-    attackDamage() {
-      var extraDamage =
-        this.fightingStyle == this.fightingStyles.duelling && !this.weapon.heavy
-          ? 2
-          : 0;
-      var attackDamage =
-        this.averageDamageDie + extraDamage + this.attackStat + this.magicBonus;
-      return (this.feats.sharpshooter && this.weapon.ranged) ||
-        (this.feats.greatWeaponMaster &&
-          (this.weapon.heavy || this.weapon.versatile))
-        ? attackDamage + 10
-        : attackDamage;
-    },
-    bonusAttackDamage() {
-      if (this.allowedToDualWield) {
-        var toHit = this.proficiencyBonus + this.attackBonus;
-        var chanceToHit = this.getChanceToHitFromBonusToHit(toHit);
-        return (
-          (this.bonusWeapon.damage + this.attackStat + this.magicBonus) *
-            chanceToHit +
-          this.chanceToCrit * this.bonusWeapon.damage
-        );
-      }
-      return 0;
-    },
-    allowedToDualWield() {
-      if (this.fightingStyle == this.fightingStyles.twoWeapon) {
-        return this.feats.dualWielder ? !this.weapon.heavy : this.weapon.light;
-      }
-      return false;
-    },
-    attackBonus() {
-      var attackBonus = this.attackStat + this.magicBonus;
-      if (
-        this.fightingStyle == this.fightingStyles.archery &&
-        this.weapon.ranged
-      ) {
-        attackBonus =
-          this.feats.sharpshooter && this.weapon.ranged
-            ? attackBonus - 3
-            : attackBonus + 2;
-      }
-      return this.feats.greatWeaponMaster &&
-        (this.weapon.heavy || this.weapon.versatile)
-        ? attackBonus - 5
-        : attackBonus;
-    },
-    magicBonus() {
-      return !this.abilities.shadowBlade && this.bonuses.magicWeapon ? 1 : 0;
-    },
-    chanceToHit() {
-      var toHit = this.proficiencyBonus + this.attackBonus;
-      return this.getChanceToHitFromBonusToHit(toHit);
-    },
-    chanceOfAHit() {
-      return 1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
-    },
-    chanceToCrit() {
-      var critChance = 0.05;
-      if (this.subclass == "Champion") {
-        if (this.characterLevel >= 15) {
-          critChance = 0.15;
-        } else if (this.characterLevel >= 3) {
-          critChance = 0.1;
-        }
-      }
-      return this.bonuses.advantage
-        ? 1 - Math.pow(1 - critChance, 2)
-        : critChance;
-    },
-    chanceOfACrit() {
-      return 1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
-    },
-    averageDamageDie() {
-      if (
-        this.fightingStyle == this.fightingStyles.twoHanded &&
-        (this.weapon.heavy || this.weapon.versatile)
-      ) {
-        return this.greatWeaponFightingBonus;
-      }
-      return this.weapon.damage;
-    },
-    abilityDamage() {
-      var damageChance = this.chanceToHit + this.chanceToCrit;
-      if (this.superiorityDamage > 0) {
-        return (
-          (this.chanceOfAHit + this.chanceOfACrit) * this.superiorityDamage
-        );
-      } else if (this.warMagicDamage > 0) {
-        return damageChance * this.warMagicDamage;
-      }
-      this.abilities.superiority = false;
-      this.abilities.warMagic = false;
-      if (this.characterClass == this.classes.ranger) {
-        var huntersMarkDamage = this.abilities.huntersMark
-          ? 3.5 * this.numberOfAttacks * damageChance
-          : 0;
-        var colossusSlayerDamage = this.abilities.colossusSlayer
-          ? 4.5 * (this.chanceOfAHit + this.chanceOfACrit)
-          : 0;
-        return huntersMarkDamage + colossusSlayerDamage + this.wolfDamage;
-      }
-      return 0;
-    },
-    superiorityDamage() {
-      if (this.abilities.superiority) {
-        if (this.characterLevel >= 18) {
-          return 6.5;
-        } else if (this.characterLevel >= 10) {
-          return 5.5;
-        } else if (this.characterLevel >= 3) {
-          return 4.5;
-        }
-      }
-      return 0;
-    },
-    warMagicDamage() {
-      if (this.subclass == "Eldritch Knight" && this.abilities.warMagic) {
-        if (this.characterLevel >= 17) {
-          return 13.5;
-        } else if (this.characterLevel >= 11) {
-          return 9;
-        } else if (this.characterLevel >= 7) {
-          return 4.5;
-        }
-      }
-      return 0;
-    },
-    wolfDamage() {
-      if (this.abilities.wolfAttack) {
-        var companionBonusToHit = this.wolf.bonusToHit + this.proficiencyBonus;
-        var wolfBiteDamage = this.wolf.damagePerHit + this.proficiencyBonus;
-        var wolfChanceToHit = this.getChanceToHitFromBonusToHit(
-          companionBonusToHit
-        );
-        return (
-          this.wolfAttacks *
-          (wolfChanceToHit * wolfBiteDamage +
-            this.chanceToCrit * this.wolf.averageDamageDie)
-        );
-      }
-      return 0;
-    },
-    wolfAttacks() {
-      if (this.subclass == "Beast Master" && this.abilities.wolfAttack) {
-        if (this.characterLevel >= 11) {
-          return 2;
-        } else if (this.characterLevel >= 3) {
-          return 1;
-        }
-      }
-      this.abilities.wolfAttack = false;
-      return 0;
-    },
-    boomingBladeDamage() {
-      var moveDamage = this.warMagicDamage + 4.5;
-      return (
-        Math.round(
-          (parseFloat(this.totalDamage) + this.chanceToHit * moveDamage) * 100
-        ) / 100
-      );
-    },
-    greatWeaponFightingBonus() {
-      if (this.weapon == this.weapons.greatsword) {
-        return this.weapon.damage + 4 / 3;
-      }
-      var weaponDamage = this.weapon.versatile
-        ? this.weapon.damage + 1
-        : this.weapon.damage;
-      var diceMax = weaponDamage * 2 - 1;
-      var rerollChance = 2 / diceMax;
-      return (
-        rerollChance * weaponDamage + (1 - rerollChance) * (weaponDamage + 1)
-      );
     }
   },
   methods: {
@@ -610,16 +420,6 @@ export default {
         ? false
         : this.bonuses.magicWeapon;
     },
-    getChanceToHitFromBonusToHit(bonusToHit) {
-      var chanceToHit = Math.max(
-        1 - (this.averageAC - 1 - bonusToHit) / 20,
-        0.05
-      );
-      chanceToHit = Math.min(chanceToHit, 0.95);
-      return this.bonuses.advantage
-        ? 1 - Math.pow(1 - chanceToHit, 2)
-        : chanceToHit;
-    },
     resetAbilities() {
       for (var key in this.abilities) {
         this.abilities[key] = false;
@@ -635,6 +435,7 @@ export default {
       handler() {
         calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
           console.log("Calculator Estimate: " + data);
+          this.damageOutput = Math.round(data * 100) / 100;
         });
       }
     },
