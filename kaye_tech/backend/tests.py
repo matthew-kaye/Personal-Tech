@@ -19,6 +19,7 @@ class TestData:
     attack_stat: int = 5
     sharpshooter: bool = False
     great_weapon_master: bool = False
+    great_weapon_master_swing: bool = False
     dual_wielder: bool = False
     crossbow_expert: bool = False
     advantage: bool = False
@@ -57,6 +58,7 @@ class TestData:
                     "dualWielder": self.dual_wielder,
                     "sharpshooter": self.sharpshooter,
                     "greatWeaponMaster": self.great_weapon_master,
+                    "greatWeaponMasterSwing": self.great_weapon_master_swing,
                     "crossbowExpert": self.crossbow_expert
                 }
             )
@@ -141,9 +143,11 @@ class FeatsTest(TestCase):
                 weapon=Weapons.GREATSWORD,
                 fighting_style=Styles.TWO_HANDED,
                 great_weapon_master=True,
+                great_weapon_master_swing=True
             ).data()
         )
         assert great_weapon_master.bonus_to_hit() == 4
+        assert round(great_weapon_master.bonus_attack_damage(), 6) == 0.4875
         assert round(great_weapon_master.attack_damage(),
                      8) == round(70 / 3, 8)
         assert sharpshooter.bonus_to_hit() == 6
@@ -230,6 +234,19 @@ class ClassTest(TestCase):
             assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 22.5
         assert Character(TestData(shadow_blade=True).data()
                          ).damage_output() == 28.65
+        two_hander = Character(
+            TestData(fighting_style=Styles.TWO_WEAPON,
+                     weapon=Weapons.HANDAXE, shadow_blade=True).data()
+        )
+        assert two_hander.bonus_attack_damage() == 5.7
+        assert two_hander.damage_output() == 34.35
+        dual_wielder = Character(
+            TestData(fighting_style=Styles.TWO_WEAPON,
+                     weapon=Weapons.HANDAXE, shadow_blade=True,
+                     dual_wielder=True).data()
+        )
+        assert round(dual_wielder.bonus_attack_damage(), 6) == 6.4
+        assert dual_wielder.damage_output() == 35.05
 
     def test_booming_blade_damage(self):
         assert TEST_CHARACTER.battle_class.booming_blade_damage() == 9

@@ -49,6 +49,7 @@
         <v-select
           outlined
           v-model="proficiencyBonus"
+          readonly
           :items="getNumberArray(2, 6)"
           attach
           label="Proficiency"
@@ -84,6 +85,7 @@
         <v-select
           outlined
           v-model="numberOfAttacks"
+          readonly
           :items="getNumberArray(1,5)"
           attach
           label="Attacks"
@@ -163,6 +165,9 @@
             v-if="fightingStyle==fightingStyles.twoHanded || fightingStyle==fightingStyles.defence"
           >
             <v-switch v-model="feats.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="feats.greatWeaponMaster">
+            <v-switch v-model="feats.greatWeaponMasterSwing" class="ma-2" label="GW Swing"></v-switch>
           </v-col>
           <v-col md="auto" v-if="fightingStyle==fightingStyles.twoWeapon">
             <v-switch v-model="feats.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
@@ -255,6 +260,7 @@ export default {
         sharpshooter: false,
         crossbowExpert: false,
         greatWeaponMaster: false,
+        greatWeaponMasterSwing: false,
         dualWielder: false
       },
       abilities: {

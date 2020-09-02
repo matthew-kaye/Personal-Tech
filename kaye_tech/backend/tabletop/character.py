@@ -12,6 +12,7 @@ SMITH = Blacksmith()
 @dataclass
 class Character:
     weapon: Weapon
+    bonus_weapon: Weapon
     battle_class: Class
     subclass: str
     attack_stat: int
@@ -42,19 +43,24 @@ class Character:
         self.dual_wielder = feats["dualWielder"]
         self.sharpshooter = feats["sharpshooter"]
         self.great_weapon_master = feats["greatWeaponMaster"]
+        self.great_weapon_master_swing = feats["greatWeaponMasterSwing"]
         self.crossbow_expert = feats["crossbowExpert"]
         self.attack_stat = int(data["attackStat"])
+        self.bonus_weapon = self.pick_bonus_weapon()
 
     def damage_output(self):
-        attack_damage = self.attack_damage() * self.chance_to_hit()
-        crit_damage = self.average_dice_damage() * self.chance_to_crit()
         bonus_damage = self.bonus_attack_damage() + self.ability_damage()
-        return (attack_damage + crit_damage) * self.number_of_attacks() + bonus_damage
+        return self.average_attack_damage() * self.number_of_attacks() + bonus_damage
 
     def number_of_attacks(self):
         if self.weapon.loading and not self.crossbow_expert:
             return 1
         return self.battle_class.number_of_attacks(self.level)
+
+    def average_attack_damage(self):
+        attack_damage = self.attack_damage() * self.chance_to_hit()
+        crit_damage = self.average_dice_damage() * self.chance_to_crit()
+        return attack_damage + crit_damage
 
     def attack_damage(self):
         base_damage = self.average_dice_damage() + self.attack_stat + self.magic_bonus()
@@ -77,13 +83,15 @@ class Character:
     def bonus_attack_damage(self):
         if self.battle_class.fighting_style == Styles.TWO_WEAPON:
             return self.second_weapon_damage()
+        elif self.great_weapon_master:
+            return self.average_attack_damage() * self.chance_to_crit()
         return 0
 
     def second_weapon_damage(self):
-        if self.weapon.light or (self.dual_wielder and not self.weapon.heavy):
+        if self.bonus_weapon.light or (self.dual_wielder and not self.bonus_weapon.heavy):
             return (
-                self.weapon.damage + self.attack_stat + self.magic_bonus()
-            ) * self.chance_to_hit() + self.weapon.damage * self.chance_to_crit()
+                self.bonus_weapon.damage + self.attack_stat + self.magic_bonus()
+            ) * self.chance_to_hit() + self.bonus_weapon.damage * self.chance_to_crit()
         return 0
 
     def ability_damage(self):
@@ -125,7 +133,7 @@ class Character:
 
     def attempting_bigger_hit(self):
         sharpshooting = self.sharpshooter and self.weapon.ranged
-        heavy_swing = self.great_weapon_master and (
+        heavy_swing = self.great_weapon_master_swing and (
             self.weapon.heavy or self.weapon.versatile
         )
         return sharpshooting or heavy_swing
@@ -145,3 +153,6 @@ class Character:
         if self.battle_class.shadow_blade:
             return SMITH.conjure_shadow_blade(self.battle_class.caster_level())
         return SMITH.draw_weapon(weapon)
+
+    def pick_bonus_weapon(self):
+        return SMITH.make_longsword() if self.dual_wielder else SMITH.make_handaxe()
