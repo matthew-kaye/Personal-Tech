@@ -1,6 +1,15 @@
 from dataclasses import dataclass
 from .weapon import Weapon, Weapons, Blacksmith
-from .classes import Classes, Class, Ranger, Fighter
+from .classes import (
+    Classes,
+    Class,
+    Subclasses,
+    Champion,
+    EldritchKnight,
+    BattleMaster,
+    BeastMaster,
+    Hunter,
+)
 from .utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,
@@ -36,9 +45,16 @@ class Character:
         self.level = int(data["characterLevel"])
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
         self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
-        self.battle_class = (
-            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(data)
-        )
+        if data["subclass"] == Subclasses.CHAMPION:
+            self.battle_class = Champion(data)
+        elif data["subclass"] == Subclasses.BATTLE_MASTER:
+            self.battle_class = BattleMaster(data)
+        elif data["subclass"] == Subclasses.ELDRITCH_KNIGHT:
+            self.battle_class = EldritchKnight(data)
+        elif data["subclass"] == Subclasses.BEAST_MASTER:
+            self.battle_class = BeastMaster(data)
+        elif data["subclass"] == Subclasses.HUNTER:
+            self.battle_class = Hunter(data)
         self.weapon = self.pick_weapon(data["weapon"])
         self.advantage = bonuses["advantage"]
         self.magic_weapon = bonuses["magicWeapon"]

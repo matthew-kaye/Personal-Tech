@@ -83,8 +83,6 @@ class Class(ABC):
         return 2 if self.fighting_style == Styles.ARCHERY and weapon.ranged else 0
 
     def crit_chance(self):
-        if self.subclass == Subclasses.CHAMPION and self.level >= 3:
-            return 0.15 if self.level >= 15 else 0.1
         return 0.05
 
     @abstractmethod
@@ -92,20 +90,17 @@ class Class(ABC):
         pass
 
     @abstractmethod
-    def damage_per_hit(self, level):
-        pass
-
-    @abstractmethod
-    def damage_on_a_hit(self, level):
-        pass
-
-    @abstractmethod
-    def other_damage(self, level):
-        pass
-
-    @abstractmethod
     def caster_level(self):
         pass
+
+    def damage_on_a_hit(self):
+        return 0
+
+    def damage_per_hit(self):
+        return 0
+
+    def other_damage(self):
+        return 0
 
 
 class Ranger(Class):
@@ -141,9 +136,6 @@ class Fighter(Class):
         else:
             return 1
 
-    def damage_per_hit(self):
-        return 0
-
     def damage_on_a_hit(self):
         if not self.superiority_bonus or self.level < 3:
             return 0
@@ -153,9 +145,6 @@ class Fighter(Class):
             return 5.5
         elif self.level >= 3:
             return 4.5
-
-    def other_damage(self):
-        return 0
 
     def caster_level(self):
         if self.subclass == Subclasses.ELDRITCH_KNIGHT and self.level >= 3:
@@ -170,3 +159,28 @@ class Fighter(Class):
         elif self.level >= 7:
             return 4.5
         return 0
+
+
+class Champion(Fighter):
+    def crit_chance(self):
+        if self.level >= 15:
+            return 0.15
+        elif self.level >= 3:
+            return 0.1
+        return 0.05
+
+
+class EldritchKnight(Fighter):
+    pass
+
+
+class BattleMaster(Fighter):
+    pass
+
+
+class BeastMaster(Ranger):
+    pass
+
+
+class Hunter(Ranger):
+    pass

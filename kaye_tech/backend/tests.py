@@ -1,6 +1,15 @@
 from django.test import TestCase
 from .tabletop.character import Character
-from .tabletop.classes import Classes, Subclasses, Ranger, Fighter, Wolf
+from .tabletop.classes import (
+    Classes,
+    Subclasses,
+    Wolf,
+    Champion,
+    Hunter,
+    EldritchKnight,
+    BattleMaster,
+    BeastMaster,
+)
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
 from .tabletop.utilities import (
@@ -190,14 +199,14 @@ class UtilitiesTest(TestCase):
 
 class ClassTest(TestCase):
     def test_fighter_attack_calculation(self):
-        assert Fighter(TestData().data()).number_of_attacks(1) == 1
-        assert Fighter(TestData().data()).number_of_attacks(5) == 2
-        assert Fighter(TestData().data()).number_of_attacks(11) == 3
-        assert Fighter(TestData().data()).number_of_attacks(20) == 4
+        assert Champion(TestData().data()).number_of_attacks(1) == 1
+        assert Champion(TestData().data()).number_of_attacks(5) == 2
+        assert Champion(TestData().data()).number_of_attacks(11) == 3
+        assert Champion(TestData().data()).number_of_attacks(20) == 4
 
     def test_ranger_attack_calculation(self):
-        assert Ranger(TestData().data()).number_of_attacks(1) == 1
-        assert Ranger(TestData().data()).number_of_attacks(5) == 2
+        assert Hunter(TestData().data()).number_of_attacks(1) == 1
+        assert Hunter(TestData().data()).number_of_attacks(5) == 2
 
     def test_battle_master_abilities(self):
         battle_master = Character(TestData(superiority=True).data())
@@ -205,16 +214,16 @@ class ClassTest(TestCase):
         assert battle_master.damage_output() == 25.248625
 
     def test_ranger_abilities(self):
-        ranger = Character(
-            TestData(character_class=Classes.RANGER, hunters_mark=True).data()
+        hunter = Character(
+            TestData(subclass=Subclasses.HUNTER, hunters_mark=True).data()
         )
-        assert ranger.ability_damage() == 4.9
-        assert ranger.damage_output() == 17.7
-        ranger.battle_class.colossus_slayer = True
-        assert round(ranger.ability_damage(), 6) == 9.2875
-        assert ranger.damage_output() == 22.0875
+        assert hunter.ability_damage() == 4.9
+        assert hunter.damage_output() == 17.7
+        hunter.battle_class.colossus_slayer = True
+        assert round(hunter.ability_damage(), 6) == 9.2875
+        assert hunter.damage_output() == 22.0875
 
-    def test_range_wolf_damage(self):
+    def test_ranger_wolf_damage(self):
         wolf = Wolf(5, 0, False)
         bigger_wolf = Wolf(11, 0, False)
         assert wolf.bonus_to_hit == 7 and wolf.bite_damage == 10
@@ -222,13 +231,13 @@ class ClassTest(TestCase):
         assert bigger_wolf.number_of_attacks == 2
         assert bigger_wolf.bonus_to_hit == 8 and bigger_wolf.bite_damage == 11
         beast_master = Character(
-            TestData(character_class=Classes.RANGER, wolf_attack=True).data()
+            TestData(subclass=Subclasses.BEAST_MASTER, wolf_attack=True).data()
         )
         assert round(beast_master.damage_output(), 6) == 20.1
         beast_master.advantage = True
         flanking_beast_master = Character(
             TestData(
-                character_class=Classes.RANGER, wolf_attack=True, advantage=True
+                subclass=Subclasses.BEAST_MASTER, wolf_attack=True, advantage=True
             ).data()
         )
         assert round(flanking_beast_master.damage_output(), 6) == 28.23
@@ -266,8 +275,12 @@ class ClassTest(TestCase):
     def test_booming_blade_damage(self):
         assert TEST_CHARACTER.battle_class.booming_blade_damage() == 9
         assert (
-            Fighter(TestData(character_level=17).data()).booming_blade_damage() == 13.5
+            EldritchKnight(TestData(character_level=17).data()).booming_blade_damage()
+            == 13.5
         )
-        assert Fighter(TestData(character_level=7).data()).booming_blade_damage() == 4.5
+        assert (
+            EldritchKnight(TestData(character_level=7).data()).booming_blade_damage()
+            == 4.5
+        )
         assert Character(TestData(war_magic=True).data()).damage_output() == 19.1
 
