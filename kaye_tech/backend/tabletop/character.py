@@ -2,7 +2,12 @@ from dataclasses import dataclass
 from .weapon import Weapon, Weapons, Blacksmith
 from .fighting_styles import Styles
 from .classes import Classes, Subclasses, Class, Ranger, Fighter
-from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_of_an_instance, chance_if_advantage
+from .utilities import (
+    proficiency_bonus_by_level,
+    chance_to_hit,
+    chance_of_an_instance,
+    chance_if_advantage,
+)
 from abc import ABC, abstractmethod
 import json
 
@@ -31,11 +36,9 @@ class Character:
         feats = json.loads(data["feats"])
         self.level = int(data["characterLevel"])
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
-        self.enemy_armour_class = int(
-            data["averageAC"]) if data["averageAC"] else 0
+        self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
         self.battle_class = (
-            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(
-                data)
+            Fighter(data) if data["characterClass"] == Classes.FIGHTER else Ranger(data)
         )
         self.weapon = self.pick_weapon(data["weapon"])
         self.advantage = bonuses["advantage"]
@@ -74,10 +77,8 @@ class Character:
         return base_damage
 
     def average_dice_damage(self):
-        if self.battle_class.fighting_style == Styles.TWO_HANDED and (
-            self.weapon.heavy or self.weapon.versatile
-        ):
-            return self.great_weapon_damage(self.weapon)
+        if self.battle_class.fighting_style == Styles.TWO_HANDED:
+            return self.weapon.great_weapon_damage()
         return self.weapon.damage
 
     def bonus_attack_damage(self):
@@ -88,24 +89,35 @@ class Character:
         return 0
 
     def second_weapon_damage(self):
-        if self.bonus_weapon.light or (self.dual_wielder and not self.bonus_weapon.heavy):
+        if self.bonus_weapon.light or (
+            self.dual_wielder and not self.bonus_weapon.heavy
+        ):
             return (
                 self.bonus_weapon.damage + self.attack_stat + self.magic_bonus()
             ) * self.chance_to_hit() + self.bonus_weapon.damage * self.chance_to_crit()
         return 0
 
     def ability_damage(self):
-        damage_on_hit = self.battle_class.damage_on_a_hit(
-        ) * (self.chance_of_a_hit() + self.chance_of_a_crit())
-        per_hit_chance = self.chance_to_hit()+self.chance_to_crit()
-        damage_per_hit = self.battle_class.damage_per_hit(
-        ) * self.number_of_attacks() * (per_hit_chance)
-        extra_damage = self.battle_class.other_damage(
-        ) + (self.battle_class.booming_blade_damage() * per_hit_chance if self.battle_class.war_magic else 0)
+        damage_on_hit = self.battle_class.damage_on_a_hit() * (
+            self.chance_of_a_hit() + self.chance_of_a_crit()
+        )
+        per_hit_chance = self.chance_to_hit() + self.chance_to_crit()
+        damage_per_hit = (
+            self.battle_class.damage_per_hit()
+            * self.number_of_attacks()
+            * (per_hit_chance)
+        )
+        extra_damage = self.battle_class.other_damage() + (
+            self.battle_class.booming_blade_damage() * per_hit_chance
+            if self.battle_class.war_magic
+            else 0
+        )
         return damage_on_hit + damage_per_hit + extra_damage
 
     def chance_to_hit(self):
-        return chance_to_hit(self.bonus_to_hit(), self.enemy_armour_class, self.advantage)
+        return chance_to_hit(
+            self.bonus_to_hit(), self.enemy_armour_class, self.advantage
+        )
 
     def chance_of_a_hit(self):
         attacks = self.battle_class.number_of_attacks(self.level)
@@ -137,14 +149,6 @@ class Character:
             self.weapon.heavy or self.weapon.versatile
         )
         return sharpshooting or heavy_swing
-
-    def great_weapon_damage(self, weapon):
-        weapon_damage = weapon.damage + 1 if weapon.versatile else weapon.damage
-        if weapon == Weapons.GREATSWORD:
-            return weapon_damage + 4 / 3
-        dice_max = weapon_damage * 2 - 1
-        reroll_chance = 2 / dice_max
-        return reroll_chance * weapon_damage + (1 - reroll_chance) * (weapon_damage + 1)
 
     def magic_bonus(self):
         return 1 if self.magic_weapon else 0

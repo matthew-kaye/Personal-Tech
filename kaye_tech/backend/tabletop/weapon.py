@@ -26,6 +26,18 @@ class Weapon:
     def __eq__(self, other):
         return self.name == other
 
+    def great_weapon_damage(self):
+        weapon_damage = self.damage + 1 if self.versatile else self.damage
+        if self.heavy or self.versatile:
+            if self == Weapons.GREATSWORD:
+                return weapon_damage + 4 / 3
+            dice_max = weapon_damage * 2 - 1
+            reroll_chance = 2 / dice_max
+            return reroll_chance * weapon_damage + (1 - reroll_chance) * (
+                weapon_damage + 1
+            )
+        return self.damage
+
 
 class Blacksmith:
     def draw_weapon(self, weapon_name):
@@ -63,5 +75,5 @@ class Blacksmith:
         return Weapon(Weapons.LONGBOW, 4.5, ranged=True, heavy=True)
 
     def conjure_shadow_blade(self, caster_level):
-        damage = 9 + 4.5*min(math.floor((caster_level-1)/4), 3)
+        damage = 9 + 4.5 * min(math.floor((caster_level - 1) / 4), 3)
         return Weapon(Weapons.SHADOW_BLADE, damage, light=True, ranged=True)
