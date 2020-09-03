@@ -1,15 +1,14 @@
 from django.test import TestCase
 from .tabletop.character import Character
-from .tabletop.classes import (
-    Classes,
-    Subclasses,
-    Wolf,
+from .tabletop.subclasses import (
     Champion,
-    Hunter,
     EldritchKnight,
     BattleMaster,
     BeastMaster,
+    Hunter,
+    Subclasses,
 )
+from .tabletop.classes import Classes, Wolf
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
 from .tabletop.utilities import (

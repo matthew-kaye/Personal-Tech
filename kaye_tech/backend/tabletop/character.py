@@ -1,15 +1,14 @@
 from dataclasses import dataclass
 from .weapon import Weapon, Weapons, Blacksmith
-from .classes import (
-    Classes,
-    Class,
-    Subclasses,
+from .subclasses import (
     Champion,
     EldritchKnight,
     BattleMaster,
     BeastMaster,
     Hunter,
+    Subclasses,
 )
+from .classes import Classes, Class
 from .utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,
