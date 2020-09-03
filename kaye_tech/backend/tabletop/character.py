@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from .weapon import Weapon, Weapons, Blacksmith
-from .fighting_styles import Styles
 from .classes import Classes, Subclasses, Class, Ranger, Fighter
 from .utilities import (
     proficiency_bonus_by_level,
@@ -67,22 +66,16 @@ class Character:
 
     def attack_damage(self):
         base_damage = self.average_dice_damage() + self.attack_stat + self.magic_bonus()
-        if (
-            self.battle_class.fighting_style == Styles.DUELLING
-            and not self.weapon.heavy
-        ):
-            return base_damage + 2
-        elif self.attempting_bigger_hit():
+        if self.attempting_bigger_hit():
             return base_damage + 10
-        return base_damage
+        else:
+            return base_damage + self.battle_class.style_damage(self.weapon)
 
     def average_dice_damage(self):
-        if self.battle_class.fighting_style == Styles.TWO_HANDED:
-            return self.weapon.great_weapon_damage()
-        return self.weapon.damage
+        return self.battle_class.average_dice_damage(self.weapon)
 
     def bonus_attack_damage(self):
-        if self.battle_class.fighting_style == Styles.TWO_WEAPON:
+        if self.battle_class.two_weapons:
             return self.second_weapon_damage()
         elif self.great_weapon_master:
             return self.average_attack_damage() * self.chance_to_crit()
@@ -135,11 +128,7 @@ class Character:
 
     def bonus_to_hit(self):
         base_bonus = self.attack_stat + self.proficiency_bonus + self.magic_bonus()
-        style_bonus = (
-            2
-            if self.battle_class.fighting_style == Styles.ARCHERY and self.weapon.ranged
-            else 0
-        )
+        style_bonus = self.battle_class.style_bonus(self.weapon)
         ability_modifier = -5 if self.attempting_bigger_hit() else 0
         return base_bonus + style_bonus + ability_modifier
 

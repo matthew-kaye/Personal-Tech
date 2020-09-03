@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_if_advantage
+from .fighting_styles import Styles
 import json
 import math
 
@@ -29,14 +30,13 @@ class Wolf:
         self.bonus_to_hit = 4 + proficiency_bonus_by_level(ranger_level)
         self.bite_damage = 7 + proficiency_bonus_by_level(ranger_level)
         self.number_of_attacks = 2 if ranger_level >= 11 else 1
-        self.chance_to_hit = chance_to_hit(
-            self.bonus_to_hit, enemy_armour, advantage)
+        self.chance_to_hit = chance_to_hit(self.bonus_to_hit, enemy_armour, advantage)
         self.chance_to_crit = chance_if_advantage(0.05, advantage)
 
     def damage_output(self):
         base_damage = self.bite_damage * self.chance_to_hit
         crit_damage = self.average_damage_die * self.chance_to_crit
-        return self.number_of_attacks*(base_damage+crit_damage)
+        return self.number_of_attacks * (base_damage + crit_damage)
 
 
 class Class(ABC):
@@ -50,6 +50,7 @@ class Class(ABC):
     war_magic: bool
     shadow_blade: bool
     subclass: str
+    two_weapons: bool
 
     def __init__(self, data):
         abilities = json.loads(data["abilities"])
@@ -57,8 +58,7 @@ class Class(ABC):
         self.name = data["characterClass"]
         self.level = int(data["characterLevel"])
         self.advantage = bonuses["advantage"]
-        self.enemy_armour = int(
-            data["averageAC"]) if data["averageAC"] else 0
+        self.enemy_armour = int(data["averageAC"]) if data["averageAC"] else 0
         self.fighting_style = data["fightingStyle"]
         self.superiority_bonus = abilities["superiority"]
         self.hunters_mark = abilities["huntersMark"]
@@ -67,6 +67,20 @@ class Class(ABC):
         self.war_magic = abilities["warMagic"]
         self.shadow_blade = abilities["shadowBlade"]
         self.subclass = data["subclass"]
+        self.two_weapons = self.fighting_style == Styles.TWO_WEAPON
+
+    def average_dice_damage(self, weapon):
+        if self.fighting_style == Styles.TWO_HANDED:
+            return weapon.great_weapon_damage()
+        return weapon.damage
+
+    def style_damage(self, weapon):
+        if self.fighting_style == Styles.DUELLING and not weapon.heavy:
+            return 2
+        return 0
+
+    def style_bonus(self, weapon):
+        return 2 if self.fighting_style == Styles.ARCHERY and weapon.ranged else 0
 
     @abstractmethod
     def number_of_attacks(self, level):
@@ -106,7 +120,7 @@ class Ranger(Class):
         return 0
 
     def caster_level(self):
-        return 0 if self.level == 1 else math.ceil((self.level)/2)
+        return 0 if self.level == 1 else math.ceil((self.level) / 2)
 
 
 class Fighter(Class):
@@ -140,7 +154,7 @@ class Fighter(Class):
 
     def caster_level(self):
         if self.subclass == Subclasses.ELDRITCH_KNIGHT and self.level >= 3:
-            return math.ceil((self.level)/3)
+            return math.ceil((self.level) / 3)
         return 0
 
     def booming_blade_damage(self):

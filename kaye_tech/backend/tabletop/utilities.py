@@ -16,4 +16,4 @@ def chance_if_advantage(chance: float, advantage: bool):
 
 
 def chance_of_an_instance(chance: float, attacks: int):
-    return 1 - (1 - chance)**attacks
+    return 1 - (1 - chance) ** attacks

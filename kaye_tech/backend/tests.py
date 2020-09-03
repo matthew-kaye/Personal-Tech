@@ -3,7 +3,12 @@ from .tabletop.character import Character
 from .tabletop.classes import Classes, Subclasses, Ranger, Fighter, Wolf
 from .tabletop.weapon import Weapon, Weapons, Blacksmith
 from .tabletop.fighting_styles import Styles
-from .tabletop.utilities import proficiency_bonus_by_level, chance_to_hit, chance_of_an_instance, chance_if_advantage
+from .tabletop.utilities import (
+    proficiency_bonus_by_level,
+    chance_to_hit,
+    chance_of_an_instance,
+    chance_if_advantage,
+)
 import json
 from dataclasses import dataclass
 
@@ -50,7 +55,7 @@ class TestData:
                     "colossusSlayer": self.colossus_slayer,
                     "wolfAttack": self.wolf_attack,
                     "warMagic": self.war_magic,
-                    "shadowBlade": self.shadow_blade
+                    "shadowBlade": self.shadow_blade,
                 }
             ),
             "feats": json.dumps(
@@ -59,9 +64,9 @@ class TestData:
                     "sharpshooter": self.sharpshooter,
                     "greatWeaponMaster": self.great_weapon_master,
                     "greatWeaponMasterSwing": self.great_weapon_master_swing,
-                    "crossbowExpert": self.crossbow_expert
+                    "crossbowExpert": self.crossbow_expert,
                 }
-            )
+            ),
         }
 
 
@@ -97,8 +102,7 @@ class CharacterTest(TestCase):
     def test_archery_bonus_calculation(self):
         assert TEST_CHARACTER.bonus_to_hit() == 9
         archer = Character(
-            TestData(fighting_style=Styles.ARCHERY,
-                     weapon=Weapons.LONGBOW).data()
+            TestData(fighting_style=Styles.ARCHERY, weapon=Weapons.LONGBOW).data()
         )
         assert archer.bonus_to_hit() == 11
 
@@ -106,8 +110,7 @@ class CharacterTest(TestCase):
         greatsword = TEST_SMITH.draw_weapon(Weapons.GREATSWORD)
         longsword = TEST_SMITH.draw_weapon(Weapons.LONGSWORD)
         greatswordsman = Character(
-            TestData(fighting_style=Styles.TWO_HANDED,
-                     weapon=Weapons.GREATSWORD).data()
+            TestData(fighting_style=Styles.TWO_HANDED, weapon=Weapons.GREATSWORD).data()
         )
         two_handed_swordsman = Character(
             TestData(fighting_style=Styles.TWO_HANDED).data()
@@ -118,8 +121,7 @@ class CharacterTest(TestCase):
 
     def test_bonus_attack_damage(self):
         axe_wielder = Character(
-            TestData(fighting_style=Styles.TWO_WEAPON,
-                     weapon=Weapons.HANDAXE).data()
+            TestData(fighting_style=Styles.TWO_WEAPON, weapon=Weapons.HANDAXE).data()
         )
         assert TEST_CHARACTER.bonus_attack_damage() == 0
         assert axe_wielder.bonus_attack_damage() == 5.7
@@ -143,26 +145,29 @@ class FeatsTest(TestCase):
                 weapon=Weapons.GREATSWORD,
                 fighting_style=Styles.TWO_HANDED,
                 great_weapon_master=True,
-                great_weapon_master_swing=True
+                great_weapon_master_swing=True,
             ).data()
         )
         assert great_weapon_master.bonus_to_hit() == 4
         assert round(great_weapon_master.bonus_attack_damage(), 6) == 0.4875
-        assert round(great_weapon_master.attack_damage(),
-                     8) == round(70 / 3, 8)
+        assert round(great_weapon_master.attack_damage(), 8) == round(70 / 3, 8)
         assert sharpshooter.bonus_to_hit() == 6
         assert sharpshooter.attack_damage() == 19.5
 
     def test_dual_wielding_bonus(self):
         double_swordsman = Character(
-            TestData(fighting_style=Styles.TWO_WEAPON,
-                     dual_wielder=True).data()
+            TestData(fighting_style=Styles.TWO_WEAPON, dual_wielder=True).data()
         )
         assert round(double_swordsman.bonus_attack_damage(), 6) == 6.4
 
     def test_crossbow_expert(self):
         crossbowman = Character(
-            TestData(weapon=Weapons.HEAVY_CROSSBOW, crossbow_expert=True, fighting_style=Styles.ARCHERY).data())
+            TestData(
+                weapon=Weapons.HEAVY_CROSSBOW,
+                crossbow_expert=True,
+                fighting_style=Styles.ARCHERY,
+            ).data()
+        )
         assert crossbowman.number_of_attacks() == 3
         assert round(crossbowman.damage_output(), 6) == 24.45
 
@@ -201,7 +206,8 @@ class ClassTest(TestCase):
 
     def test_ranger_abilities(self):
         ranger = Character(
-            TestData(character_class=Classes.RANGER, hunters_mark=True).data())
+            TestData(character_class=Classes.RANGER, hunters_mark=True).data()
+        )
         assert ranger.ability_damage() == 4.9
         assert ranger.damage_output() == 17.7
         ranger.battle_class.colossus_slayer = True
@@ -216,11 +222,15 @@ class ClassTest(TestCase):
         assert bigger_wolf.number_of_attacks == 2
         assert bigger_wolf.bonus_to_hit == 8 and bigger_wolf.bite_damage == 11
         beast_master = Character(
-            TestData(character_class=Classes.RANGER, wolf_attack=True).data())
+            TestData(character_class=Classes.RANGER, wolf_attack=True).data()
+        )
         assert round(beast_master.damage_output(), 6) == 20.1
         beast_master.advantage = True
         flanking_beast_master = Character(
-            TestData(character_class=Classes.RANGER, wolf_attack=True, advantage=True).data())
+            TestData(
+                character_class=Classes.RANGER, wolf_attack=True, advantage=True
+            ).data()
+        )
         assert round(flanking_beast_master.damage_output(), 6) == 28.23
 
     def test_shadow_blade_damage(self):
@@ -232,27 +242,32 @@ class ClassTest(TestCase):
             assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 18
         for caster_level in range(13, 21):
             assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 22.5
-        assert Character(TestData(shadow_blade=True).data()
-                         ).damage_output() == 28.65
+        assert Character(TestData(shadow_blade=True).data()).damage_output() == 28.65
         two_hander = Character(
-            TestData(fighting_style=Styles.TWO_WEAPON,
-                     weapon=Weapons.HANDAXE, shadow_blade=True).data()
+            TestData(
+                fighting_style=Styles.TWO_WEAPON,
+                weapon=Weapons.HANDAXE,
+                shadow_blade=True,
+            ).data()
         )
         assert two_hander.bonus_attack_damage() == 5.7
         assert two_hander.damage_output() == 34.35
         dual_wielder = Character(
-            TestData(fighting_style=Styles.TWO_WEAPON,
-                     weapon=Weapons.HANDAXE, shadow_blade=True,
-                     dual_wielder=True).data()
+            TestData(
+                fighting_style=Styles.TWO_WEAPON,
+                weapon=Weapons.HANDAXE,
+                shadow_blade=True,
+                dual_wielder=True,
+            ).data()
         )
         assert round(dual_wielder.bonus_attack_damage(), 6) == 6.4
         assert dual_wielder.damage_output() == 35.05
 
     def test_booming_blade_damage(self):
         assert TEST_CHARACTER.battle_class.booming_blade_damage() == 9
-        assert Fighter(TestData(character_level=17).data()
-                       ).booming_blade_damage() == 13.5
-        assert Fighter(TestData(character_level=7).data()
-                       ).booming_blade_damage() == 4.5
-        assert Character(TestData(war_magic=True).data()
-                         ).damage_output() == 19.1
+        assert (
+            Fighter(TestData(character_level=17).data()).booming_blade_damage() == 13.5
+        )
+        assert Fighter(TestData(character_level=7).data()).booming_blade_damage() == 4.5
+        assert Character(TestData(war_magic=True).data()).damage_output() == 19.1
+
