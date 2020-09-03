@@ -26,7 +26,7 @@ SMITH = Blacksmith()
 class Character:
     weapon: Weapon
     bonus_weapon: Weapon
-    battle_class: Class
+    subclass: Class
     subclass: str
     attack_stat: int
     advantage: bool
@@ -46,15 +46,15 @@ class Character:
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
         self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
         if data["subclass"] == Subclasses.CHAMPION:
-            self.battle_class = Champion(data)
+            self.subclass = Champion(data)
         elif data["subclass"] == Subclasses.BATTLE_MASTER:
-            self.battle_class = BattleMaster(data)
+            self.subclass = BattleMaster(data)
         elif data["subclass"] == Subclasses.ELDRITCH_KNIGHT:
-            self.battle_class = EldritchKnight(data)
+            self.subclass = EldritchKnight(data)
         elif data["subclass"] == Subclasses.BEAST_MASTER:
-            self.battle_class = BeastMaster(data)
+            self.subclass = BeastMaster(data)
         elif data["subclass"] == Subclasses.HUNTER:
-            self.battle_class = Hunter(data)
+            self.subclass = Hunter(data)
         self.weapon = self.pick_weapon(data["weapon"])
         self.advantage = bonuses["advantage"]
         self.magic_weapon = bonuses["magicWeapon"]
@@ -73,7 +73,7 @@ class Character:
     def number_of_attacks(self):
         if self.weapon.loading and not self.crossbow_expert:
             return 1
-        return self.battle_class.number_of_attacks(self.level)
+        return self.subclass.number_of_attacks(self.level)
 
     def average_attack_damage(self):
         attack_damage = self.attack_damage() * self.chance_to_hit()
@@ -85,13 +85,13 @@ class Character:
         if self.attempting_bigger_hit():
             return base_damage + 10
         else:
-            return base_damage + self.battle_class.style_damage(self.weapon)
+            return base_damage + self.subclass.style_damage(self.weapon)
 
     def average_dice_damage(self):
-        return self.battle_class.average_dice_damage(self.weapon)
+        return self.subclass.average_dice_damage(self.weapon)
 
     def bonus_attack_damage(self):
-        if self.battle_class.two_weapons:
+        if self.subclass.two_weapons:
             return self.second_weapon_damage()
         elif self.great_weapon_master:
             return self.average_attack_damage() * self.chance_to_crit()
@@ -107,18 +107,16 @@ class Character:
         return 0
 
     def ability_damage(self):
-        damage_on_hit = self.battle_class.damage_on_a_hit() * (
+        damage_on_hit = self.subclass.damage_on_a_hit() * (
             self.chance_of_a_hit() + self.chance_of_a_crit()
         )
         per_hit_chance = self.chance_to_hit() + self.chance_to_crit()
         damage_per_hit = (
-            self.battle_class.damage_per_hit()
-            * self.number_of_attacks()
-            * (per_hit_chance)
+            self.subclass.damage_per_hit() * self.number_of_attacks() * (per_hit_chance)
         )
-        extra_damage = self.battle_class.other_damage() + (
-            self.battle_class.booming_blade_damage() * per_hit_chance
-            if self.battle_class.war_magic
+        extra_damage = self.subclass.other_damage() + (
+            self.subclass.booming_blade_damage() * per_hit_chance
+            if self.subclass.war_magic
             else 0
         )
         return damage_on_hit + damage_per_hit + extra_damage
@@ -129,12 +127,12 @@ class Character:
         )
 
     def chance_of_a_hit(self):
-        attacks = self.battle_class.number_of_attacks(self.level)
+        attacks = self.subclass.number_of_attacks(self.level)
         return chance_of_an_instance(self.chance_to_hit(), attacks)
 
     def chance_to_crit(self):
         return round(
-            chance_if_advantage(self.battle_class.crit_chance(), self.advantage), 8
+            chance_if_advantage(self.subclass.crit_chance(), self.advantage), 8
         )
 
     def chance_of_a_crit(self):
@@ -142,7 +140,7 @@ class Character:
 
     def bonus_to_hit(self):
         base_bonus = self.attack_stat + self.proficiency_bonus + self.magic_bonus()
-        style_bonus = self.battle_class.style_bonus(self.weapon)
+        style_bonus = self.subclass.style_bonus(self.weapon)
         ability_modifier = -5 if self.attempting_bigger_hit() else 0
         return base_bonus + style_bonus + ability_modifier
 
@@ -157,8 +155,8 @@ class Character:
         return 1 if self.magic_weapon else 0
 
     def pick_weapon(self, weapon):
-        if self.battle_class.shadow_blade:
-            return SMITH.conjure_shadow_blade(self.battle_class.caster_level())
+        if self.subclass.shadow_blade:
+            return SMITH.conjure_shadow_blade(self.subclass.caster_level())
         return SMITH.draw_weapon(weapon)
 
     def pick_bonus_weapon(self):

@@ -219,7 +219,7 @@ class ClassTest(TestCase):
         )
         assert hunter.ability_damage() == 4.9
         assert hunter.damage_output() == 17.7
-        hunter.battle_class.colossus_slayer = True
+        hunter.subclass.colossus_slayer = True
         assert round(hunter.ability_damage(), 6) == 9.2875
         assert hunter.damage_output() == 22.0875
 
@@ -273,7 +273,7 @@ class ClassTest(TestCase):
         assert dual_wielder.damage_output() == 35.05
 
     def test_booming_blade_damage(self):
-        assert TEST_CHARACTER.battle_class.booming_blade_damage() == 9
+        assert TEST_CHARACTER.subclass.booming_blade_damage() == 9
         assert (
             EldritchKnight(TestData(character_level=17).data()).booming_blade_damage()
             == 13.5
