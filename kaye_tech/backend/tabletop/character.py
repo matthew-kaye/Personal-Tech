@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from .weapon import Weapon, Weapons, Blacksmith
-from .classes import Classes, Subclasses, Class, Ranger, Fighter
+from .classes import Classes, Class, Ranger, Fighter
 from .utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,
@@ -117,11 +117,9 @@ class Character:
         return chance_of_an_instance(self.chance_to_hit(), attacks)
 
     def chance_to_crit(self):
-        if self.battle_class.subclass == Subclasses.CHAMPION and self.level >= 3:
-            crit_chance = 0.15 if self.level >= 15 else 0.1
-        else:
-            crit_chance = 0.05
-        return round(chance_if_advantage(crit_chance, self.advantage), 8)
+        return round(
+            chance_if_advantage(self.battle_class.crit_chance(), self.advantage), 8
+        )
 
     def chance_of_a_crit(self):
         return chance_of_an_instance(self.chance_to_crit(), self.number_of_attacks())

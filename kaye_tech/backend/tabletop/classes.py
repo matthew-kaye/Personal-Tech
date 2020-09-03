@@ -82,6 +82,11 @@ class Class(ABC):
     def style_bonus(self, weapon):
         return 2 if self.fighting_style == Styles.ARCHERY and weapon.ranged else 0
 
+    def crit_chance(self):
+        if self.subclass == Subclasses.CHAMPION and self.level >= 3:
+            return 0.15 if self.level >= 15 else 0.1
+        return 0.05
+
     @abstractmethod
     def number_of_attacks(self, level):
         pass
