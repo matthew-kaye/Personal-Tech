@@ -147,8 +147,6 @@ class Fighter(Class):
             return 4.5
 
     def caster_level(self):
-        if self.subclass == Subclasses.ELDRITCH_KNIGHT and self.level >= 3:
-            return math.ceil((self.level) / 3)
         return 0
 
     def booming_blade_damage(self):
@@ -171,7 +169,8 @@ class Champion(Fighter):
 
 
 class EldritchKnight(Fighter):
-    pass
+    def caster_level(self):
+        return math.ceil((self.level) / 3) if self.level >= 3 else 0
 
 
 class BattleMaster(Fighter):
