@@ -61,7 +61,7 @@ class Character:
         self.great_weapon_master_swing = feats["greatWeaponMasterSwing"]
         self.crossbow_expert = feats["crossbowExpert"]
         self.attack_stat = int(data["attackStat"])
-        self.bonus_weapon = self.pick_bonus_weapon()
+        self.bonus_weapon = self.pick_bonus_weapon(bonuses["magicWeapon"])
 
     def damage_output(self):
         bonus_damage = self.bonus_attack_damage() + self.ability_damage()
@@ -97,12 +97,21 @@ class Character:
         return 0
 
     def second_weapon_damage(self):
+        if self.weapon == Weapons.SHADOW_BLADE:
+            bonus_to_hit = self.bonus_to_hit() + self.bonus_weapon.magic_bonus()
+            hit_chance = chance_to_hit(
+                bonus_to_hit, self.enemy_armour_class, self.advantage
+            )
+        else:
+            hit_chance = self.chance_to_hit()
         if self.bonus_weapon.light or (
             self.dual_wielder and not self.bonus_weapon.heavy
         ):
             return (
-                self.bonus_weapon.damage + self.attack_stat + self.weapon.magic_bonus()
-            ) * self.chance_to_hit() + self.bonus_weapon.damage * self.chance_to_crit()
+                self.bonus_weapon.damage
+                + self.attack_stat
+                + self.bonus_weapon.magic_bonus()
+            ) * hit_chance + self.bonus_weapon.damage * self.chance_to_crit()
         return 0
 
     def ability_damage(self):
@@ -157,5 +166,6 @@ class Character:
             return SMITH.conjure_shadow_blade(self.subclass.caster_level())
         return SMITH.draw_weapon(weapon, magical)
 
-    def pick_bonus_weapon(self):
-        return SMITH.make_longsword() if self.dual_wielder else SMITH.make_handaxe()
+    def pick_bonus_weapon(self, magical):
+        weapon = Weapons.LONGSWORD if self.dual_wielder else Weapons.HANDAXE
+        return SMITH.draw_weapon(weapon, magical)

@@ -141,6 +141,13 @@ class CharacterTest(TestCase):
         assert SMITH.conjure_shadow_blade(10).magic_bonus() == 0
         assert magic_swordsman.attack_damage() == TEST_CHARACTER.attack_damage() + 1
         assert magic_swordsman.bonus_to_hit() == TEST_CHARACTER.bonus_to_hit() + 1
+        magic_dual_wielder = Character(
+            TestData(
+                fighting_style=Styles.TWO_WEAPON, shadow_blade=True, magic_weapon=True
+            ).data()
+        )
+        assert round(magic_dual_wielder.second_weapon_damage(), 1) == 6.8
+        assert round(magic_dual_wielder.damage_output(), 1) == 35.5
 
 
 class FeatsTest(TestCase):
