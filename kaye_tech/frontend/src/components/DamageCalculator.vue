@@ -219,23 +219,21 @@ export default {
       this.fightingStyleList.push(this.fightingStyles[value]);
     }
     this.weapons = {
-      greataxe: { damage: 6.5, name: "Greataxe", heavy: true },
-      greatsword: { damage: 7, name: "Greatsword", heavy: true },
+      greataxe: { name: "Greataxe", heavy: true },
+      greatsword: { name: "Greatsword", heavy: true },
       handaxe: {
-        damage: 3.5,
         name: "Handaxe",
         ranged: true,
         light: true
       },
       heavyCrossbow: {
-        damage: 5.5,
         name: "Heavy Crossbow",
         ranged: true,
         loading: true,
         heavy: true
       },
-      longbow: { damage: 4.5, name: "Longbow", ranged: true, heavy: true },
-      longsword: { damage: 4.5, name: "Longsword", versatile: true }
+      longbow: { name: "Longbow", ranged: true, heavy: true },
+      longsword: { name: "Longsword", versatile: true }
     };
     for (var value in this.weapons) {
       this.weaponList.push(this.weapons[value]);

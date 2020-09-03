@@ -35,7 +35,6 @@ class Character:
     dual_wielder: bool
     sharpshooter: bool
     great_weapon_master: bool
-    magic_weapon: bool
 
     def __init__(self, data):
         bonuses = json.loads(data["bonuses"])
@@ -54,9 +53,8 @@ class Character:
             self.subclass = BeastMaster(data)
         elif data["subclass"] == Subclasses.HUNTER:
             self.subclass = Hunter(data)
-        self.weapon = self.pick_weapon(data["weapon"])
+        self.weapon = self.pick_weapon(data["weapon"], bonuses["magicWeapon"])
         self.advantage = bonuses["advantage"]
-        self.magic_weapon = bonuses["magicWeapon"]
         self.dual_wielder = feats["dualWielder"]
         self.sharpshooter = feats["sharpshooter"]
         self.great_weapon_master = feats["greatWeaponMaster"]
@@ -80,7 +78,9 @@ class Character:
         return attack_damage + crit_damage
 
     def attack_damage(self):
-        base_damage = self.average_dice_damage() + self.attack_stat + self.magic_bonus()
+        base_damage = (
+            self.average_dice_damage() + self.attack_stat + self.weapon.magic_bonus()
+        )
         if self.attempting_bigger_hit():
             return base_damage + 10
         else:
@@ -101,7 +101,7 @@ class Character:
             self.dual_wielder and not self.bonus_weapon.heavy
         ):
             return (
-                self.bonus_weapon.damage + self.attack_stat + self.magic_bonus()
+                self.bonus_weapon.damage + self.attack_stat + self.weapon.magic_bonus()
             ) * self.chance_to_hit() + self.bonus_weapon.damage * self.chance_to_crit()
         return 0
 
@@ -138,7 +138,9 @@ class Character:
         return chance_of_an_instance(self.chance_to_crit(), self.number_of_attacks())
 
     def bonus_to_hit(self):
-        base_bonus = self.attack_stat + self.proficiency_bonus + self.magic_bonus()
+        base_bonus = (
+            self.attack_stat + self.proficiency_bonus + self.weapon.magic_bonus()
+        )
         style_bonus = self.subclass.style_bonus(self.weapon)
         ability_modifier = -5 if self.attempting_bigger_hit() else 0
         return base_bonus + style_bonus + ability_modifier
@@ -150,13 +152,10 @@ class Character:
         )
         return sharpshooting or heavy_swing
 
-    def magic_bonus(self):
-        return 1 if self.magic_weapon else 0
-
-    def pick_weapon(self, weapon):
+    def pick_weapon(self, weapon, magical):
         if self.subclass.shadow_blade:
             return SMITH.conjure_shadow_blade(self.subclass.caster_level())
-        return SMITH.draw_weapon(weapon)
+        return SMITH.draw_weapon(weapon, magical)
 
     def pick_bonus_weapon(self):
         return SMITH.make_longsword() if self.dual_wielder else SMITH.make_handaxe()

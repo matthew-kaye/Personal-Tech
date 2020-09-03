@@ -79,7 +79,7 @@ class TestData:
 
 
 TEST_CHARACTER = Character(TestData().data())
-TEST_SMITH = Blacksmith()
+SMITH = Blacksmith()
 
 
 class CharacterTest(TestCase):
@@ -115,8 +115,8 @@ class CharacterTest(TestCase):
         assert archer.bonus_to_hit() == 11
 
     def test_great_weapon_fighting_bonus(self):
-        greatsword = TEST_SMITH.draw_weapon(Weapons.GREATSWORD)
-        longsword = TEST_SMITH.draw_weapon(Weapons.LONGSWORD)
+        greatsword = SMITH.draw_weapon(Weapons.GREATSWORD, False)
+        longsword = SMITH.draw_weapon(Weapons.LONGSWORD, False)
         greatswordsman = Character(
             TestData(fighting_style=Styles.TWO_HANDED, weapon=Weapons.GREATSWORD).data()
         )
@@ -136,7 +136,9 @@ class CharacterTest(TestCase):
 
     def test_magic_weapon(self):
         magic_swordsman = Character(TestData(magic_weapon=True).data())
-        assert magic_swordsman.magic_bonus() == TEST_CHARACTER.magic_bonus() + 1
+        magic_sword = SMITH.draw_weapon(Weapons.LONGSWORD, True)
+        assert magic_sword.magic_bonus() == TEST_CHARACTER.weapon.magic_bonus() + 1
+        assert SMITH.conjure_shadow_blade(10).magic_bonus() == 0
         assert magic_swordsman.attack_damage() == TEST_CHARACTER.attack_damage() + 1
         assert magic_swordsman.bonus_to_hit() == TEST_CHARACTER.bonus_to_hit() + 1
 
@@ -245,13 +247,13 @@ class ClassTest(TestCase):
 
     def test_shadow_blade_damage(self):
         for caster_level in range(3, 5):
-            assert TEST_SMITH.conjure_shadow_blade(4).damage == 9
+            assert SMITH.conjure_shadow_blade(4).damage == 9
         for caster_level in range(5, 9):
-            assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 13.5
+            assert SMITH.conjure_shadow_blade(caster_level).damage == 13.5
         for caster_level in range(9, 13):
-            assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 18
+            assert SMITH.conjure_shadow_blade(caster_level).damage == 18
         for caster_level in range(13, 21):
-            assert TEST_SMITH.conjure_shadow_blade(caster_level).damage == 22.5
+            assert SMITH.conjure_shadow_blade(caster_level).damage == 22.5
         assert Character(TestData(shadow_blade=True).data()).damage_output() == 28.65
         two_hander = Character(
             TestData(

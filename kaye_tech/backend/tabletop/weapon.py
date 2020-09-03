@@ -22,9 +22,13 @@ class Weapon:
     light: bool = False
     loading: bool = False
     versatile: bool = False
+    magical: bool = False
 
     def __eq__(self, other):
         return self.name == other
+
+    def magic_bonus(self):
+        return 1 if self.magical and not self == Weapons.SHADOW_BLADE else 0
 
     def great_weapon_damage(self):
         weapon_damage = self.damage + 1 if self.versatile else self.damage
@@ -40,19 +44,22 @@ class Weapon:
 
 
 class Blacksmith:
-    def draw_weapon(self, weapon_name):
+    def draw_weapon(self, weapon_name, magic_weapon):
         if weapon_name == Weapons.LONGSWORD:
-            return self.make_longsword()
+            weapon = self.make_longsword()
         elif weapon_name == Weapons.GREATSWORD:
-            return self.make_greatsword()
+            weapon = self.make_greatsword()
         elif weapon_name == Weapons.GREATAXE:
-            return self.make_greataxe()
+            weapon = self.make_greataxe()
         elif weapon_name == Weapons.HANDAXE:
-            return self.make_handaxe()
+            weapon = self.make_handaxe()
         elif weapon_name == Weapons.HEAVY_CROSSBOW:
-            return self.make_heavy_crossbow()
+            weapon = self.make_heavy_crossbow()
         elif weapon_name == Weapons.LONGBOW:
-            return self.make_longbow()
+            weapon = self.make_longbow()
+        if magic_weapon:
+            weapon.magical = True
+        return weapon
 
     def make_longsword(self):
         return Weapon(Weapons.LONGSWORD, 4.5, versatile=True)
