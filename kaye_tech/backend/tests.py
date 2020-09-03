@@ -209,7 +209,9 @@ class ClassTest(TestCase):
         assert Hunter(TestData().data()).number_of_attacks(5) == 2
 
     def test_battle_master_abilities(self):
-        battle_master = Character(TestData(superiority=True).data())
+        battle_master = Character(
+            TestData(subclass=Subclasses.BATTLE_MASTER, superiority=True).data()
+        )
         assert round(battle_master.ability_damage(), 6) == 6.048625
         assert battle_master.damage_output() == 25.248625
 

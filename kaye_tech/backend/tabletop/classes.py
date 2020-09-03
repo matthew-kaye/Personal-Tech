@@ -110,15 +110,6 @@ class Ranger(Class):
     def damage_per_hit(self):
         return 3.5 if self.hunters_mark else 0
 
-    def damage_on_a_hit(self):
-        return 4.5 if self.colossus_slayer else 0
-
-    def other_damage(self):
-        if self.wolf_attack:
-            companion = Wolf(self.level, self.enemy_armour, self.advantage)
-            return companion.damage_output()
-        return 0
-
     def caster_level(self):
         return 0 if self.level == 1 else math.ceil((self.level) / 2)
 
@@ -136,26 +127,7 @@ class Fighter(Class):
         else:
             return 1
 
-    def damage_on_a_hit(self):
-        if not self.superiority_bonus or self.level < 3:
-            return 0
-        if self.level >= 18:
-            return 6.5
-        elif self.level >= 10:
-            return 5.5
-        elif self.level >= 3:
-            return 4.5
-
     def caster_level(self):
-        return 0
-
-    def booming_blade_damage(self):
-        if self.level >= 17:
-            return 13.5
-        elif self.level >= 11:
-            return 9
-        elif self.level >= 7:
-            return 4.5
         return 0
 
 
@@ -172,14 +144,36 @@ class EldritchKnight(Fighter):
     def caster_level(self):
         return math.ceil((self.level) / 3) if self.level >= 3 else 0
 
+    def booming_blade_damage(self):
+        if self.level >= 17:
+            return 13.5
+        elif self.level >= 11:
+            return 9
+        elif self.level >= 7:
+            return 4.5
+        return 0
+
 
 class BattleMaster(Fighter):
-    pass
+    def damage_on_a_hit(self):
+        if not self.superiority_bonus or self.level < 3:
+            return 0
+        if self.level >= 18:
+            return 6.5
+        elif self.level >= 10:
+            return 5.5
+        elif self.level >= 3:
+            return 4.5
 
 
 class BeastMaster(Ranger):
-    pass
+    def other_damage(self):
+        if self.wolf_attack:
+            companion = Wolf(self.level, self.enemy_armour, self.advantage)
+            return companion.damage_output()
+        return 0
 
 
 class Hunter(Ranger):
-    pass
+    def damage_on_a_hit(self):
+        return 4.5 if self.colossus_slayer else 0
