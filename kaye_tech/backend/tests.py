@@ -307,5 +307,5 @@ class ClassTest(TestCase):
     def test_multiclass_slots(self):
         multiclasser = EldritchKnight(
             TestData(character_level=7, caster_multiclasses=4).data())
-        assert multiclasser.caster_level() == 5
+        assert multiclasser.caster_level() == 6
         assert multiclasser.booming_blade_damage() == 9
