@@ -92,7 +92,8 @@ class SnakeViewSet(viewsets.ViewSet):
     def create(self, request):
         try:
             data = request.data["data"]
-            highScore, created = HighScore.objects.get_or_create(name=data["name"])
+            highScore, created = HighScore.objects.get_or_create(
+                name=data["name"])
             if data["score"] > highScore.score:
                 highScore.score = data["score"]
             highScore.save()
@@ -124,7 +125,7 @@ class SnakeViewSet(viewsets.ViewSet):
 class CalculatorViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
-            data = Character(request.query_params).damage_output()
+            data = Character(request.query_params).damage_data()
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(e)

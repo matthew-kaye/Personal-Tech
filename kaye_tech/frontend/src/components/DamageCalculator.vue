@@ -187,7 +187,7 @@
             <span
               v-if="abilities.warMagic"
               class="white--text"
-            >{{`Damage (moves): ${damageOutput} (Placeholder) `}}</span>
+            >{{`Damage (moves): ${damageOutput} (${boomingBladeDamage}) `}}</span>
             <span v-else class="white--text">{{"Damage: " + damageOutput }}</span>
           </v-card-title>
         </v-card>
@@ -289,6 +289,7 @@ export default {
       weapon: {},
       bonusWeapon: {},
       damageOutput: 0,
+      boomingBladeDamage: 0,
       casterMulticlasses: 0
     };
   },
@@ -441,8 +442,9 @@ export default {
       deep: true,
       handler() {
         calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
-          console.log("Calculator Estimate: " + data);
-          this.damageOutput = Math.round(data * 100) / 100;
+          console.log("Calculator Estimate: " + data.damage);
+          this.damageOutput = Math.round(data.damage * 100) / 100;
+          this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
         });
       }
     },
