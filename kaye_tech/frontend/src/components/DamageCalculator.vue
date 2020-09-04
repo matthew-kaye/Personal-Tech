@@ -92,6 +92,16 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
+      <v-col cols="6" md="1" v-if="subclass=='Eldritch Knight'">
+        <v-select
+          outlined
+          v-model="casterMulticlasses"
+          :items="getNumberArray(0, 10)"
+          attach
+          label="Caster Multiclasses"
+          :menu-props="{ transition: 'slide-y-transition' }"
+        ></v-select>
+      </v-col>
       <v-col md="auto">
         <v-switch v-model="bonuses.advantage" class="ma-2" label="Advantage"></v-switch>
       </v-col>
@@ -278,7 +288,8 @@ export default {
       weaponList: [],
       weapon: {},
       bonusWeapon: {},
-      damageOutput: 0
+      damageOutput: 0,
+      casterMulticlasses: 0
     };
   },
   computed: {
@@ -293,7 +304,8 @@ export default {
         attackStat: this.attackStat,
         abilities: this.abilities,
         bonuses: this.bonuses,
-        feats: this.feats
+        feats: this.feats,
+        casterMulticlasses: this.casterMulticlasses
       };
     }
   },
@@ -421,6 +433,7 @@ export default {
       for (var key in this.feats) {
         this.feats[key] = false;
       }
+      this.casterMulticlasses = 0;
     }
   },
   watch: {

@@ -21,14 +21,17 @@ class Champion(Fighter):
 
 class EldritchKnight(Fighter):
     def caster_level(self):
-        return math.ceil((self.level) / 3) if self.level >= 3 else 0
+        caster_level = math.ceil((self.level) / 3) if self.level >= 3 else 0
+        multiclass_level = math.floor(self.level/3) + self.caster_multiclasses
+        return max(caster_level, multiclass_level)
 
     def booming_blade_damage(self):
-        if self.level >= 17:
+        character_level = self.level + self.caster_multiclasses
+        if character_level >= 17:
             return 13.5
-        elif self.level >= 11:
+        elif character_level >= 11:
             return 9
-        elif self.level >= 7:
+        elif character_level >= 7:
             return 4.5
         return 0
 

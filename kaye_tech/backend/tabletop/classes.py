@@ -22,7 +22,8 @@ class Wolf:
         self.bonus_to_hit = 4 + proficiency_bonus_by_level(ranger_level)
         self.bite_damage = 7 + proficiency_bonus_by_level(ranger_level)
         self.number_of_attacks = 2 if ranger_level >= 11 else 1
-        self.chance_to_hit = chance_to_hit(self.bonus_to_hit, enemy_armour, advantage)
+        self.chance_to_hit = chance_to_hit(
+            self.bonus_to_hit, enemy_armour, advantage)
         self.chance_to_crit = chance_if_advantage(0.05, advantage)
 
     def damage_output(self):
@@ -43,6 +44,7 @@ class Class(ABC):
     shadow_blade: bool
     subclass: str
     two_weapons: bool
+    caster_multiclasses: int
 
     def __init__(self, data):
         abilities = json.loads(data["abilities"])
@@ -60,6 +62,7 @@ class Class(ABC):
         self.shadow_blade = abilities["shadowBlade"]
         self.subclass = data["subclass"]
         self.two_weapons = self.fighting_style == Styles.TWO_WEAPON
+        self.caster_multiclasses = int(data["casterMulticlasses"])
 
     def average_dice_damage(self, weapon):
         if self.fighting_style == Styles.TWO_HANDED:
