@@ -15,6 +15,7 @@
       <v-col cols="6" md="2">
         <v-select
           outlined
+          :append-icon="icons[characterClass]"
           v-model="characterClass"
           :items="classList"
           attach
@@ -28,7 +29,8 @@
           v-model="subclass"
           :items="subclasses[characterClass]"
           attach
-          label="Sublass"
+          :append-icon="icons[subclass]"
+          label="Subclass"
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
@@ -39,6 +41,7 @@
           :items="fightingStyleList"
           attach
           label="Style"
+          :append-icon="icons[fightingStyle]"
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
@@ -69,6 +72,7 @@
       <v-col cols="6" md="2">
         <v-select
           outlined
+          :append-icon="weapon.icon"
           v-model="weapon"
           :items="weaponList"
           item-text="name"
@@ -79,11 +83,19 @@
         ></v-select>
       </v-col>
       <v-col cols="6" md="1">
-        <v-text-field type="number" outlined v-model="averageAC" label="Enemy AC" required></v-text-field>
+        <v-text-field
+          append-icon="mdi-shield"
+          type="number"
+          outlined
+          v-model="averageAC"
+          label="Enemy AC"
+          required
+        ></v-text-field>
       </v-col>
       <v-col cols="6" md="1">
         <v-select
           outlined
+          append-icon="fas fa-crosshairs"
           v-model="numberOfAttacks"
           readonly
           :items="getNumberArray(1,5)"
@@ -229,21 +241,28 @@ export default {
       this.fightingStyleList.push(this.fightingStyles[value]);
     }
     this.weapons = {
-      greataxe: { name: "Greataxe", heavy: true },
-      greatsword: { name: "Greatsword", heavy: true },
+      greataxe: { name: "Greataxe", heavy: true, icon: "mdi-axe" },
+      greatsword: { name: "Greatsword", heavy: true, icon: "mdi-sword" },
       handaxe: {
         name: "Handaxe",
         ranged: true,
-        light: true
+        light: true,
+        icon: "mdi-axe"
       },
       heavyCrossbow: {
         name: "Heavy Crossbow",
         ranged: true,
         loading: true,
-        heavy: true
+        heavy: true,
+        icon: "mdi-arrow-decision"
       },
-      longbow: { name: "Longbow", ranged: true, heavy: true },
-      longsword: { name: "Longsword", versatile: true }
+      longbow: {
+        name: "Longbow",
+        ranged: true,
+        heavy: true,
+        icon: "mdi-bullseye-arrow"
+      },
+      longsword: { name: "Longsword", versatile: true, icon: "mdi-sword" }
     };
     for (var value in this.weapons) {
       this.weaponList.push(this.weapons[value]);
@@ -290,7 +309,22 @@ export default {
       bonusWeapon: {},
       damageOutput: 0,
       boomingBladeDamage: 0,
-      casterMulticlasses: 0
+      casterMulticlasses: 0,
+      icons: {
+        Fighter: "mdi-sword-cross",
+        Ranger: "mdi-grass",
+        "Beast Master": "fab fa-wolf-pack-battalion",
+        Hunter: "mdi-foot-print",
+        "Eldritch Knight": "mdi-auto-fix",
+        "Battle Master": "mdi-chess-queen",
+        Champion: "mdi-trophy",
+        Archery: "mdi-bullseye-arrow",
+        Duelling: "mdi-sword",
+        Defence: "mdi-chess-rook",
+        "Two-Handed": "fas fa-handshake",
+        "Two-Weapon": "fas fa-hands",
+        Protection: "mdi-shield"
+      }
     };
   },
   computed: {
@@ -442,7 +476,6 @@ export default {
       deep: true,
       handler() {
         calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
-          console.log("Calculator Estimate: " + data.damage);
           this.damageOutput = Math.round(data.damage * 100) / 100;
           this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
         });
