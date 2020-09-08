@@ -6,9 +6,9 @@ The project depends on three environment variables, ensure these are exported be
 
 Create a file called `app.env` with the following contents, run `source app.env` before setting up make.
 ```bash
-DJANGO_SECRET_KEY=secret_key
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=project_client_id
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=project_client_secret
+export DJANGO_SECRET_KEY=secret_key
+export SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=project_client_id
+export SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=project_client_secret
 ```
 
 * `SOCIAL_AUTH_GOOGLE_OAUTH2_KEY` - Used for Google Accounts authentication
