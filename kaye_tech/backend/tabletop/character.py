@@ -26,7 +26,6 @@ class Character:
     weapon: Weapon
     bonus_weapon: Weapon
     subclass: Class
-    subclass: str
     attack_stat: int
     advantage: bool
     level: int
@@ -42,7 +41,8 @@ class Character:
         feats = json.loads(data["feats"])
         self.level = int(data["characterLevel"])
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
-        self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
+        self.enemy_armour_class = int(
+            data["averageAC"]) if data["averageAC"] else 0
         if data["subclass"] == Subclasses.CHAMPION:
             self.subclass = Champion(data)
         elif data["subclass"] == Subclasses.BATTLE_MASTER:
@@ -62,6 +62,14 @@ class Character:
         self.crossbow_expert = feats["crossbowExpert"]
         self.attack_stat = int(data["attackStat"])
         self.bonus_weapon = self.pick_bonus_weapon(bonuses["magicWeapon"])
+
+    def damage_data(self):
+        extra_move_damage = self.booming_blade_damage_on_move(
+        ) if self.subclass.war_magic else 0
+        return {
+            "damage": self.damage_output(),
+            "damageIfMoves": self.damage_output() + extra_move_damage
+        }
 
     def damage_output(self):
         bonus_damage = self.bonus_attack_damage() + self.ability_damage()
@@ -128,6 +136,9 @@ class Character:
             else 0
         )
         return damage_on_hit + damage_per_hit + extra_damage
+
+    def booming_blade_damage_on_move(self):
+        return (self.subclass.booming_blade_damage() + 4.5) * self.chance_to_hit()
 
     def chance_to_hit(self):
         return chance_to_hit(

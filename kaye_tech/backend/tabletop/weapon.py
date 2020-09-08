@@ -44,7 +44,7 @@ class Weapon:
 
 
 class Blacksmith:
-    def draw_weapon(self, weapon_name, magic_weapon):
+    def draw_weapon(self, weapon_name, magical):
         if weapon_name == Weapons.LONGSWORD:
             weapon = self.make_longsword()
         elif weapon_name == Weapons.GREATSWORD:
@@ -57,8 +57,7 @@ class Blacksmith:
             weapon = self.make_heavy_crossbow()
         elif weapon_name == Weapons.LONGBOW:
             weapon = self.make_longbow()
-        if magic_weapon:
-            weapon.magical = True
+        weapon.magical = magical
         return weapon
 
     def make_longsword(self):
