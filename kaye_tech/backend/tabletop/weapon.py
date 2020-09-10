@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from .utilities import proficiency_bonus_by_level
 import math
 
 

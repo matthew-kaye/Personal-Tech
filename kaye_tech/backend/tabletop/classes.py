@@ -16,20 +16,19 @@ class Wolf:
     bite_damage: int
     attacks: int
     chance_to_hit: float
-    chance_to_crit: float
+    chance_to_critical: float
 
     def __init__(self, ranger_level: int, enemy_armour: int, advantage: bool):
         self.bonus_to_hit = 4 + proficiency_bonus_by_level(ranger_level)
         self.bite_damage = 7 + proficiency_bonus_by_level(ranger_level)
         self.number_of_attacks = 2 if ranger_level >= 11 else 1
-        self.chance_to_hit = chance_to_hit(
-            self.bonus_to_hit, enemy_armour, advantage)
-        self.chance_to_crit = chance_if_advantage(0.05, advantage)
+        self.chance_to_hit = chance_to_hit(self.bonus_to_hit, enemy_armour, advantage)
+        self.chance_to_critical = chance_if_advantage(0.05, advantage)
 
     def damage_output(self):
         base_damage = self.bite_damage * self.chance_to_hit
-        crit_damage = self.average_damage_die * self.chance_to_crit
-        return self.number_of_attacks * (base_damage + crit_damage)
+        critical_damage = self.average_damage_die * self.chance_to_critical
+        return self.number_of_attacks * (base_damage + critical_damage)
 
 
 class Class(ABC):
@@ -77,7 +76,7 @@ class Class(ABC):
     def style_bonus(self, weapon):
         return 2 if self.fighting_style == Styles.ARCHERY and weapon.ranged else 0
 
-    def crit_chance(self):
+    def critical_chance(self):
         return 0.05
 
     @abstractmethod
@@ -106,7 +105,7 @@ class Ranger(Class):
         return 3.5 if self.hunters_mark else 0
 
     def caster_level(self):
-        return 0 if self.level == 1 else math.ceil((self.level) / 2)
+        return 0 if self.level == 1 else math.ceil(self.level / 2)
 
 
 class Fighter(Class):

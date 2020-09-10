@@ -11,7 +11,7 @@ class Subclasses:
 
 
 class Champion(Fighter):
-    def crit_chance(self):
+    def critical_chance(self):
         if self.level >= 15:
             return 0.15
         elif self.level >= 3:
@@ -21,8 +21,8 @@ class Champion(Fighter):
 
 class EldritchKnight(Fighter):
     def caster_level(self):
-        caster_level = math.ceil((self.level) / 3) if self.level >= 3 else 0
-        multiclass_level = math.floor(self.level/3) + self.caster_multiclasses
+        caster_level = math.ceil(self.level / 3) if self.level >= 3 else 0
+        multiclass_level = math.floor(self.level / 3) + self.caster_multiclasses
         return max(caster_level, multiclass_level)
 
     def booming_blade_damage(self):
