@@ -227,9 +227,11 @@ class ClassTest(TestCase):
         assert Hunter(TestData().data()).number_of_attacks(5) == 2
 
     def test_battle_master_abilities(self):
-        battle_master = Character(
-            TestData(subclass=Subclasses.BATTLE_MASTER, superiority=True).data()
-        )
+        battle_master_data = TestData(
+            subclass=Subclasses.BATTLE_MASTER, superiority=True
+        ).data()
+        assert BattleMaster(battle_master_data).damage_on_a_hit() == 5.5
+        battle_master = Character(battle_master_data)
         assert battle_master.ability_damage() == 6.048625
         assert battle_master.damage_output() == 25.248625
 
@@ -250,10 +252,12 @@ class ClassTest(TestCase):
         assert wolf.number_of_attacks == 1
         assert bigger_wolf.number_of_attacks == 2
         assert bigger_wolf.bonus_to_hit == 8 and bigger_wolf.bite_damage == 11
-        beast_master = Character(
-            TestData(subclass=Subclasses.BEAST_MASTER, wolf_attack=True).data()
-        )
+        beast_master_data = TestData(
+            subclass=Subclasses.BEAST_MASTER, wolf_attack=True
+        ).data()
+        beast_master = Character(beast_master_data)
         assert beast_master.damage_output() == 20.1
+        assert BeastMaster(beast_master_data).other_damage() == 13.7
         beast_master.advantage = True
         flanking_beast_master = Character(
             TestData(

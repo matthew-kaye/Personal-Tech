@@ -61,12 +61,12 @@ class Character:
         self.bonus_weapon = self.pick_bonus_weapon(bonuses["magicWeapon"])
 
     def damage_data(self):
-        extra_move_damage = (
+        extra_damage_on_move = (
             self.booming_blade_damage_on_move() if self.subclass.war_magic else 0
         )
         return {
             "damage": self.damage_output(),
-            "damageIfMoves": self.damage_output() + extra_move_damage,
+            "damageIfMoves": self.damage_output() + extra_damage_on_move,
         }
 
     def damage_output(self):
