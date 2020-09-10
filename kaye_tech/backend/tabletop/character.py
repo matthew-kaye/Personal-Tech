@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from .weapon import Weapon, Weapons, Blacksmith
+from .weapon import Weapon, Blacksmith
 from .subclasses import (
     Champion,
     EldritchKnight,
@@ -58,7 +58,9 @@ class Character:
         self.great_weapon_master_swing = feats["greatWeaponMasterSwing"]
         self.crossbow_expert = feats["crossbowExpert"]
         self.attack_stat = int(data["attackStat"])
-        self.bonus_weapon = self.pick_bonus_weapon(bonuses["magicWeapon"])
+        self.bonus_weapon = SMITH.draw_bonus_weapon(
+            bonuses["magicWeapon"], self.dual_wielder
+        )
 
     def damage_data(self):
         extra_damage_on_move = (
@@ -105,7 +107,7 @@ class Character:
         return 0
 
     def second_weapon_damage(self):
-        if self.weapon == Weapons.SHADOW_BLADE:
+        if self.subclass.shadow_blade:
             bonus_to_hit = self.bonus_to_hit() + self.bonus_weapon.magic_bonus()
             hit_chance = chance_to_hit(
                 bonus_to_hit, self.enemy_armour_class, self.advantage
@@ -180,8 +182,4 @@ class Character:
     def pick_weapon(self, weapon, magical):
         if self.subclass.shadow_blade:
             return SMITH.conjure_shadow_blade(self.subclass.caster_level())
-        return SMITH.draw_weapon(weapon, magical)
-
-    def pick_bonus_weapon(self, magical):
-        weapon = Weapons.LONGSWORD if self.dual_wielder else Weapons.HANDAXE
         return SMITH.draw_weapon(weapon, magical)

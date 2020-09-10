@@ -61,6 +61,10 @@ class Blacksmith:
         weapon.magical = magical
         return weapon
 
+    def draw_bonus_weapon(self, magical, dual_wielder):
+        weapon = Weapons.LONGSWORD if dual_wielder else Weapons.HANDAXE
+        return self.draw_weapon(weapon, magical)
+
     def make_longsword(self):
         return Weapon(Weapons.LONGSWORD, 4.5, versatile=True)
 
