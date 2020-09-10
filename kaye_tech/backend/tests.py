@@ -106,7 +106,7 @@ class CharacterTest(TestCase):
 
     def test_flanking_hit_chance_calculation(self):
         flanker = Character(TestData(advantage=True).data())
-        assert round(flanker.chance_to_hit(), 6) == 0.8775
+        assert flanker.chance_to_hit() == 0.8775
         assert flanker.chance_to_critical() == 0.0975
 
     def test_archery_bonus_calculation(self):
@@ -120,7 +120,7 @@ class CharacterTest(TestCase):
         greatsword = SMITH.draw_weapon(Weapons.GREATSWORD, False)
         longsword = SMITH.draw_weapon(Weapons.LONGSWORD, False)
         assert greatsword.great_weapon_damage() == 25 / 3
-        assert round(longsword.great_weapon_damage(), 5) == 6.3
+        assert longsword.great_weapon_damage() == 6.3
         greatswordsman = Character(
             TestData(fighting_style=Styles.TWO_HANDED, weapon=Weapons.GREATSWORD).data()
         )
@@ -129,7 +129,7 @@ class CharacterTest(TestCase):
         )
         assert TEST_CHARACTER.average_dice_damage() == 4.5
         assert greatswordsman.average_dice_damage() == 25 / 3
-        assert round(two_handed_swordsman.average_dice_damage(), 1) == 6.3
+        assert two_handed_swordsman.average_dice_damage() == 6.3
 
     def test_bonus_attack_damage(self):
         axe_wielder = Character(
@@ -150,7 +150,7 @@ class CharacterTest(TestCase):
                 fighting_style=Styles.TWO_WEAPON, shadow_blade=True, magic_weapon=True
             ).data()
         )
-        assert round(magic_dual_wielder.second_weapon_damage(), 1) == 6.8
+        assert magic_dual_wielder.second_weapon_damage() == 6.825
         assert round(magic_dual_wielder.damage_output(), 1) == 35.5
 
 
@@ -170,7 +170,7 @@ class FeatsTest(TestCase):
             ).data()
         )
         assert great_weapon_master.bonus_to_hit() == 4
-        assert round(great_weapon_master.bonus_attack_damage(), 6) == 0.4875
+        assert great_weapon_master.bonus_attack_damage() == 0.4875
         assert round(great_weapon_master.attack_damage(), 8) == round(70 / 3, 8)
         assert sharpshooter.bonus_to_hit() == 6
         assert sharpshooter.attack_damage() == 19.5
@@ -179,7 +179,7 @@ class FeatsTest(TestCase):
         double_swordsman = Character(
             TestData(fighting_style=Styles.TWO_WEAPON, dual_wielder=True).data()
         )
-        assert round(double_swordsman.bonus_attack_damage(), 6) == 6.4
+        assert double_swordsman.bonus_attack_damage() == 6.4
 
     def test_crossbow_expert(self):
         crossbowman = Character(
@@ -190,7 +190,7 @@ class FeatsTest(TestCase):
             ).data()
         )
         assert crossbowman.number_of_attacks() == 3
-        assert round(crossbowman.damage_output(), 6) == 24.45
+        assert crossbowman.damage_output() == 24.45
 
 
 class UtilitiesTest(TestCase):
@@ -203,10 +203,16 @@ class UtilitiesTest(TestCase):
 
     def test_chance_to_hit_calculation(self):
         assert chance_to_hit(5, 1, False) == 0.95
-        assert round(chance_to_hit(5, 1, True), 6) == 0.9975
+        assert chance_to_hit(5, 1, True) == 0.9975
         assert chance_to_hit(9, 17, False) == 0.65
         assert chance_to_hit(0, 30, False) == 0.05
-        assert round(chance_to_hit(0, 30, True), 6) == 0.0975
+        assert chance_to_hit(0, 30, True) == 0.0975
+
+    def test_chance_of_an_instance(self):
+        assert chance_of_an_instance(0.5, 2) == 0.75
+
+    def test_chance_if_advantage(self):
+        assert chance_if_advantage(0.9, True) == 0.99
 
 
 class ClassTest(TestCase):
@@ -224,7 +230,7 @@ class ClassTest(TestCase):
         battle_master = Character(
             TestData(subclass=Subclasses.BATTLE_MASTER, superiority=True).data()
         )
-        assert round(battle_master.ability_damage(), 6) == 6.048625
+        assert battle_master.ability_damage() == 6.048625
         assert battle_master.damage_output() == 25.248625
 
     def test_ranger_abilities(self):
@@ -234,7 +240,7 @@ class ClassTest(TestCase):
         assert hunter.ability_damage() == 4.9
         assert hunter.damage_output() == 17.7
         hunter.subclass.colossus_slayer = True
-        assert round(hunter.ability_damage(), 6) == 9.2875
+        assert hunter.ability_damage() == 9.2875
         assert hunter.damage_output() == 22.0875
 
     def test_ranger_wolf_damage(self):
@@ -247,14 +253,14 @@ class ClassTest(TestCase):
         beast_master = Character(
             TestData(subclass=Subclasses.BEAST_MASTER, wolf_attack=True).data()
         )
-        assert round(beast_master.damage_output(), 6) == 20.1
+        assert beast_master.damage_output() == 20.1
         beast_master.advantage = True
         flanking_beast_master = Character(
             TestData(
                 subclass=Subclasses.BEAST_MASTER, wolf_attack=True, advantage=True
             ).data()
         )
-        assert round(flanking_beast_master.damage_output(), 6) == 28.23
+        assert flanking_beast_master.damage_output() == 28.23
 
     def test_shadow_blade_damage(self):
         for caster_level in range(3, 5):

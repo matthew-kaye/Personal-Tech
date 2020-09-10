@@ -71,7 +71,9 @@ class Character:
 
     def damage_output(self):
         bonus_damage = self.bonus_attack_damage() + self.ability_damage()
-        return self.average_attack_damage() * self.number_of_attacks() + bonus_damage
+        return round(
+            self.average_attack_damage() * self.number_of_attacks() + bonus_damage, 8
+        )
 
     def number_of_attacks(self):
         if self.weapon.loading and not self.crossbow_expert:
@@ -99,7 +101,7 @@ class Character:
         if self.subclass.two_weapons:
             return self.second_weapon_damage()
         elif self.great_weapon_master:
-            return self.average_attack_damage() * self.chance_to_critical()
+            return round(self.average_attack_damage() * self.chance_to_critical(), 8)
         return 0
 
     def second_weapon_damage(self):
@@ -113,11 +115,17 @@ class Character:
         if self.bonus_weapon.light or (
             self.dual_wielder and not self.bonus_weapon.heavy
         ):
-            return (
-                self.bonus_weapon.damage
-                + self.attack_stat
-                + self.bonus_weapon.magic_bonus()
-            ) * hit_chance + self.bonus_weapon.damage * self.chance_to_critical()
+            return round(
+                (
+                    self.bonus_weapon.damage
+                    + self.attack_stat
+                    + self.bonus_weapon.magic_bonus()
+                )
+                * hit_chance
+                + self.bonus_weapon.damage * self.chance_to_critical(),
+                8,
+            )
+
         return 0
 
     def ability_damage(self):
@@ -133,7 +141,7 @@ class Character:
             if self.subclass.war_magic
             else 0
         )
-        return damage_on_hit + damage_per_hit + extra_damage
+        return round(damage_on_hit + damage_per_hit + extra_damage, 8)
 
     def booming_blade_damage_on_move(self):
         return (self.subclass.booming_blade_damage() + 4.5) * self.chance_to_hit()
@@ -148,9 +156,7 @@ class Character:
         return chance_of_an_instance(self.chance_to_hit(), attacks)
 
     def chance_to_critical(self):
-        return round(
-            chance_if_advantage(self.subclass.critical_chance(), self.advantage), 8
-        )
+        return chance_if_advantage(self.subclass.critical_chance(), self.advantage)
 
     def chance_of_a_critical(self):
         return chance_of_an_instance(

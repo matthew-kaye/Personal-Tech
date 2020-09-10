@@ -36,8 +36,10 @@ class Weapon:
                 return weapon_damage + 4 / 3
             dice_max = weapon_damage * 2 - 1
             reroll_chance = 2 / dice_max
-            return reroll_chance * weapon_damage + (1 - reroll_chance) * (
-                weapon_damage + 1
+            return round(
+                reroll_chance * weapon_damage
+                + (1 - reroll_chance) * (weapon_damage + 1),
+                8,
             )
         return self.damage
 
