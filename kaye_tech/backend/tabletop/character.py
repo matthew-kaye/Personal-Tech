@@ -13,7 +13,7 @@ from .utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,
     chance_of_an_instance,
-    chance_if_advantage,
+    chance_to_critical,
 )
 import json
 
@@ -125,7 +125,6 @@ class Character:
                 + self.bonus_weapon.damage * self.chance_to_critical(),
                 8,
             )
-
         return 0
 
     def ability_damage(self):
@@ -156,7 +155,7 @@ class Character:
         return chance_of_an_instance(self.chance_to_hit(), attacks)
 
     def chance_to_critical(self):
-        return chance_if_advantage(self.subclass.critical_chance(), self.advantage)
+        return chance_to_critical(self.subclass.critical_chance(), self.advantage)
 
     def chance_of_a_critical(self):
         return chance_of_an_instance(

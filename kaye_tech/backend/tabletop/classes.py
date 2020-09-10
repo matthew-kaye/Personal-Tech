@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_if_advantage
+from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_to_critical
 from .fighting_styles import Styles
 import json
 import math
@@ -23,7 +23,7 @@ class Wolf:
         self.bite_damage = 7 + proficiency_bonus_by_level(ranger_level)
         self.number_of_attacks = 2 if ranger_level >= 11 else 1
         self.chance_to_hit = chance_to_hit(self.bonus_to_hit, enemy_armour, advantage)
-        self.chance_to_critical = chance_if_advantage(0.05, advantage)
+        self.chance_to_critical = chance_to_critical(0.05, advantage)
 
     def damage_output(self):
         base_damage = self.bite_damage * self.chance_to_hit

@@ -15,7 +15,7 @@ from .tabletop.utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,
     chance_of_an_instance,
-    chance_if_advantage,
+    chance_to_critical,
 )
 import json
 from dataclasses import dataclass
@@ -202,17 +202,22 @@ class UtilitiesTest(TestCase):
         assert proficiency_bonus_by_level(20) == 6
 
     def test_chance_to_hit_calculation(self):
-        assert chance_to_hit(5, 1, False) == 0.95
-        assert chance_to_hit(5, 1, True) == 0.9975
-        assert chance_to_hit(9, 17, False) == 0.65
-        assert chance_to_hit(0, 30, False) == 0.05
-        assert chance_to_hit(0, 30, True) == 0.0975
+        assert chance_to_hit(5, 1, advantage=False) == 0.95
+        assert chance_to_hit(5, 1, advantage=True) == 0.9975
+        assert chance_to_hit(5, 1, disadvantage=True) == 0.9025
+        assert chance_to_hit(9, 17, advantage=False) == 0.65
+        assert chance_to_hit(9, 17, True, True) == 0.65
+        assert chance_to_hit(0, 30, advantage=False) == 0.05
+        assert chance_to_hit(0, 30, advantage=True) == 0.0975
+        assert chance_to_hit(0, 30, disadvantage=True) == 0.0025
 
     def test_chance_of_an_instance(self):
         assert chance_of_an_instance(0.5, 2) == 0.75
 
-    def test_chance_if_advantage(self):
-        assert chance_if_advantage(0.9, True) == 0.99
+    def test_chance_to_critical(self):
+        assert chance_to_critical(0.9, advantage=True) == 0.99
+        assert chance_to_critical(0.9, disadvantage=True) == 0.81
+        assert chance_to_critical(0.9, True, True) == 0.9
 
 
 class ClassTest(TestCase):
