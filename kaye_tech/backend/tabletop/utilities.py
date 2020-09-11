@@ -13,16 +13,16 @@ def chance_to_hit(
 ):
     chance_to_hit = max(1 - (armour_class - 1 - bonus_to_hit) / 20, 0.05)
     chance_to_hit = min(chance_to_hit, 0.95)
-    return probability(chance_to_hit, advantage, disadvantage)
+    return calculate_chance(chance_to_hit, advantage, disadvantage)
 
 
 def chance_to_critical(
     chance: float, advantage: bool = False, disadvantage: bool = False
 ):
-    return probability(chance, advantage, disadvantage)
+    return calculate_chance(chance, advantage, disadvantage)
 
 
-def probability(chance: float, advantage: bool, disadvantage: bool):
+def calculate_chance(chance: float, advantage: bool, disadvantage: bool):
     if advantage and not disadvantage:
         return round(1 - (1 - chance) ** 2, 8)
     elif disadvantage and not advantage:
