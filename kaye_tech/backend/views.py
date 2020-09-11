@@ -3,6 +3,8 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Vendor, HighScore
+from .tabletop.character import Character
+import logging
 
 
 class BurritoViewSet(viewsets.ViewSet):
@@ -90,7 +92,8 @@ class SnakeViewSet(viewsets.ViewSet):
     def create(self, request):
         try:
             data = request.data["data"]
-            highScore, created = HighScore.objects.get_or_create(name=data["name"])
+            highScore, created = HighScore.objects.get_or_create(
+                name=data["name"])
             if data["score"] > highScore.score:
                 highScore.score = data["score"]
             highScore.save()
@@ -115,5 +118,18 @@ class SnakeViewSet(viewsets.ViewSet):
         except Exception as e:
             return Response(
                 {"responseType": "error", "status": f"Failed to get items: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class CalculatorViewSet(viewsets.ViewSet):
+    def list(self, request):
+        try:
+            data = Character(request.query_params).damage_data()
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(e)
+            return Response(
+                {"responseType": "error", "status": f"Failed to get damage score: {e}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )

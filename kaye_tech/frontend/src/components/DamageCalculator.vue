@@ -6,9 +6,7 @@
         <v-select
           outlined
           v-model="characterLevel"
-          :rules="requiredField"
           :items="getNumberArray(1, 20)"
-          required
           attach
           label="Level"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -17,10 +15,9 @@
       <v-col cols="6" md="2">
         <v-select
           outlined
+          :append-icon="icons[characterClass]"
           v-model="characterClass"
-          :rules="requiredField"
           :items="classList"
-          required
           attach
           label="Class"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -30,11 +27,10 @@
         <v-select
           outlined
           v-model="subclass"
-          :rules="requiredField"
           :items="subclasses[characterClass]"
-          required
           attach
-          label="Sublass"
+          :append-icon="icons[subclass]"
+          label="Subclass"
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
@@ -42,11 +38,10 @@
         <v-select
           outlined
           v-model="fightingStyle"
-          :rules="requiredField"
           :items="fightingStyleList"
-          required
           attach
           label="Style"
+          :append-icon="icons[fightingStyle]"
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
@@ -57,6 +52,7 @@
         <v-select
           outlined
           v-model="proficiencyBonus"
+          readonly
           :items="getNumberArray(2, 6)"
           attach
           label="Proficiency"
@@ -76,6 +72,7 @@
       <v-col cols="6" md="2">
         <v-select
           outlined
+          :append-icon="weapon.icon"
           v-model="weapon"
           :items="weaponList"
           item-text="name"
@@ -86,15 +83,34 @@
         ></v-select>
       </v-col>
       <v-col cols="6" md="1">
-        <v-text-field outlined v-model="averageAC" label="Enemy AC" required></v-text-field>
+        <v-text-field
+          append-icon="mdi-shield"
+          type="number"
+          outlined
+          v-model="averageAC"
+          label="Enemy AC"
+          required
+        ></v-text-field>
       </v-col>
       <v-col cols="6" md="1">
         <v-select
           outlined
+          append-icon="fas fa-crosshairs"
           v-model="numberOfAttacks"
+          readonly
           :items="getNumberArray(1,5)"
           attach
           label="Attacks"
+          :menu-props="{ transition: 'slide-y-transition' }"
+        ></v-select>
+      </v-col>
+      <v-col cols="6" md="1" v-if="subclass=='Eldritch Knight'">
+        <v-select
+          outlined
+          v-model="casterMulticlasses"
+          :items="getNumberArray(0, 10)"
+          attach
+          label="Caster Multiclasses"
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
@@ -102,7 +118,7 @@
         <v-switch v-model="bonuses.advantage" class="ma-2" label="Advantage"></v-switch>
       </v-col>
       <v-col md="auto">
-        <v-switch v-model="bonuses.magic" class="ma-2" label="+1 Weapon"></v-switch>
+        <v-switch v-model="bonuses.magicWeapon" class="ma-2" label="+1 Weapon"></v-switch>
       </v-col>
     </v-row>
     <v-row>
@@ -112,9 +128,9 @@
           <v-col md="auto" v-if="subclass=='Battle Master'">
             <v-switch
               :disabled="characterLevel<3"
-              v-model="bonuses.superiorityDie"
+              v-model="abilities.superiority"
               class="ma-2"
-              label="Superiority Dmg"
+              label="Superiority Damage"
             ></v-switch>
           </v-col>
           <v-col md="auto" v-if="subclass=='Eldritch Knight'">
@@ -122,7 +138,7 @@
               :disabled="characterLevel<7"
               v-model="abilities.warMagic"
               class="ma-2"
-              label="War Magic"
+              label="War Magic (Booming Blade)"
             ></v-switch>
           </v-col>
           <v-col
@@ -161,31 +177,30 @@
             ></v-switch>
           </v-col>
           <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
-            <v-switch v-model="abilities.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
+            <v-switch v-model="feats.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
           </v-col>
           <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
-            <v-switch v-model="abilities.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
+            <v-switch v-model="feats.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
           </v-col>
-          <v-col
-            md="auto"
-            v-if="fightingStyle==fightingStyles.twoHanded || fightingStyle==fightingStyles.defence"
-          >
-            <v-switch v-model="abilities.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
+          <v-col md="auto" v-if="(weapon.versatile ||weapon.heavy) && !weapon.ranged">
+            <v-switch v-model="feats.greatWeaponMaster" class="ma-2" label="GW Master"></v-switch>
+          </v-col>
+          <v-col md="auto" v-if="feats.greatWeaponMaster">
+            <v-switch v-model="feats.greatWeaponMasterSwing" class="ma-2" label="GW Swing"></v-switch>
           </v-col>
           <v-col md="auto" v-if="fightingStyle==fightingStyles.twoWeapon">
-            <v-switch v-model="abilities.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
+            <v-switch v-model="feats.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
           </v-col>
         </v-row>
       </v-col>
       <v-col cols="11" md="auto" class="ml-4">
-        <v-card elevation="10" v-if="!abilities.warMagic">
+        <v-card elevation="10">
           <v-card-title class="primary headline">
-            <span class="white--text">{{"Damage: " + totalDamage }}</span>
-          </v-card-title>
-        </v-card>
-        <v-card elevation="10" v-if="abilities.warMagic">
-          <v-card-title class="primary headline">
-            <span class="white--text">{{`Damage (moves): ${totalDamage} (${boomingBladeDamage}) `}}</span>
+            <span
+              v-if="abilities.warMagic"
+              class="white--text"
+            >{{`Damage (moves): ${damageOutput} (${boomingBladeDamage}) `}}</span>
+            <span v-else class="white--text">{{"Damage: " + damageOutput }}</span>
           </v-card-title>
         </v-card>
       </v-col>
@@ -194,6 +209,8 @@
 </template>
 
 <script>
+import CalculatorApi from "@/apis/CalculatorApi";
+const calculatorApi = new CalculatorApi();
 export default {
   components: {},
   mounted() {},
@@ -224,28 +241,32 @@ export default {
       this.fightingStyleList.push(this.fightingStyles[value]);
     }
     this.weapons = {
-      greataxe: { damage: 6.5, name: "Greataxe", heavy: true },
-      greatsword: { damage: 7, name: "Greatsword", heavy: true },
+      greataxe: { name: "Greataxe", heavy: true, icon: "mdi-axe" },
+      greatsword: { name: "Greatsword", heavy: true, icon: "mdi-sword" },
       handaxe: {
-        damage: 3.5,
         name: "Handaxe",
         ranged: true,
-        light: true
+        light: true,
+        icon: "mdi-axe"
       },
       heavyCrossbow: {
-        damage: 5.5,
         name: "Heavy Crossbow",
         ranged: true,
         loading: true,
-        heavy: true
+        heavy: true,
+        icon: "mdi-arrow-decision"
       },
-      longbow: { damage: 4.5, name: "Longbow", ranged: true, heavy: true },
-      longsword: { damage: 4.5, name: "Longsword", versatile: true }
+      longbow: {
+        name: "Longbow",
+        ranged: true,
+        heavy: true,
+        icon: "mdi-bullseye-arrow"
+      },
+      longsword: { name: "Longsword", versatile: true, icon: "mdi-sword" }
     };
     for (var value in this.weapons) {
       this.weaponList.push(this.weapons[value]);
     }
-    this.weapons.shadowBlade = { damage: 9, name: "Shadow Blade", light: true };
     this.calculateFields();
   },
   data() {
@@ -256,21 +277,23 @@ export default {
       fightingStyle: "Duelling",
       bonuses: {
         advantage: false,
-        superiorityDie: false,
-        magic: false
+        magicWeapon: false
+      },
+      feats: {
+        sharpshooter: false,
+        crossbowExpert: false,
+        greatWeaponMaster: false,
+        greatWeaponMasterSwing: false,
+        dualWielder: false
       },
       abilities: {
         warMagic: false,
         huntersMark: false,
         colossusSlayer: false,
         wolfAttack: false,
-        sharpshooter: false,
-        crossbowExpert: false,
-        greatWeaponMaster: false,
-        dualWielder: false,
-        shadowBlade: false
+        shadowBlade: false,
+        superiority: false
       },
-      requiredField: [v => !!v],
       classes: {},
       classList: [],
       subclasses: {},
@@ -284,198 +307,41 @@ export default {
       weaponList: [],
       weapon: {},
       bonusWeapon: {},
-      wolf: {
-        bonusToHit: 4,
-        averageDamageDie: 5,
-        damagePerHit: 7
+      damageOutput: 0,
+      boomingBladeDamage: 0,
+      casterMulticlasses: 0,
+      icons: {
+        Fighter: "mdi-sword-cross",
+        Ranger: "mdi-grass",
+        "Beast Master": "fab fa-wolf-pack-battalion",
+        Hunter: "mdi-paw",
+        "Eldritch Knight": "mdi-wizard-hat",
+        "Battle Master": "mdi-chess-queen",
+        Champion: "mdi-trophy",
+        Archery: "mdi-bullseye-arrow",
+        Duelling: "mdi-sword",
+        Defence: "mdi-chess-rook",
+        "Two-Handed": "fas fa-handshake",
+        "Two-Weapon": "fas fa-hands",
+        Protection: "mdi-shield"
       }
     };
   },
   computed: {
-    totalDamage() {
-      var baseDamage =
-        this.numberOfAttacks * this.attackDamage * this.chanceToHit;
-      var critDamage =
-        this.numberOfAttacks * this.chanceToCrit * this.averageDamageDie;
-      var extraDamage = this.abilityDamage + this.bonusAttackDamage;
-      return parseFloat(baseDamage + critDamage + extraDamage).toFixed(1);
-    },
-    attackDamage() {
-      var extraDamage =
-        this.fightingStyle == this.fightingStyles.duelling && !this.weapon.heavy
-          ? 2
-          : 0;
-      var attackDamage =
-        this.averageDamageDie + extraDamage + this.attackStat + this.magicBonus;
-      return (this.abilities.sharpshooter && this.weapon.ranged) ||
-        (this.abilities.greatWeaponMaster &&
-          (this.weapon.heavy || this.weapon.versatile))
-        ? attackDamage + 10
-        : attackDamage;
-    },
-    bonusAttackDamage() {
-      if (this.allowedToDualWield) {
-        var magicBonus = this.bonuses.magic ? 1 : 0;
-        var toHit = this.proficiencyBonus + this.attackBonus + magicBonus;
-        var chanceToHit = this.getChanceToHitFromBonusToHit(toHit);
-        return (
-          (this.bonusWeapon.damage + this.attackStat + magicBonus) *
-            chanceToHit +
-          this.chanceToCrit * this.bonusWeapon.damage
-        );
-      }
-      return 0;
-    },
-    allowedToDualWield() {
-      if (this.fightingStyle == this.fightingStyles.twoWeapon) {
-        return this.abilities.dualWielder
-          ? !this.weapon.heavy
-          : this.weapon.light;
-      }
-      return false;
-    },
-    attackBonus() {
-      var attackBonus = this.attackStat + this.magicBonus;
-      if (
-        this.fightingStyle == this.fightingStyles.archery &&
-        this.weapon.ranged
-      ) {
-        attackBonus =
-          this.abilities.sharpshooter && this.weapon.ranged
-            ? attackBonus - 3
-            : attackBonus + 2;
-      }
-      return this.abilities.greatWeaponMaster &&
-        (this.weapon.heavy || this.weapon.versatile)
-        ? attackBonus - 5
-        : attackBonus;
-    },
-    magicBonus() {
-      return !this.abilities.shadowBlade && this.bonuses.magic ? 1 : 0;
-    },
-    chanceToHit() {
-      var toHit = this.proficiencyBonus + this.attackBonus;
-      return this.getChanceToHitFromBonusToHit(toHit);
-    },
-    chanceOfAHit() {
-      return 1 - Math.pow(1 - this.chanceToHit, this.numberOfAttacks);
-    },
-    chanceToCrit() {
-      var critChance = 0.05;
-      if (this.subclass == "Champion") {
-        if (this.characterLevel >= 15) {
-          critChance = 0.15;
-        } else if (this.characterLevel >= 3) {
-          critChance = 0.1;
-        }
-      }
-      return this.bonuses.advantage
-        ? 1 - Math.pow(1 - critChance, 2)
-        : critChance;
-    },
-    chanceOfACrit() {
-      return 1 - Math.pow(1 - this.chanceToCrit, this.numberOfAttacks);
-    },
-    averageDamageDie() {
-      if (
-        this.fightingStyle == this.fightingStyles.twoHanded &&
-        (this.weapon.heavy || this.weapon.versatile)
-      ) {
-        return this.greatWeaponFightingBonus;
-      }
-      return this.weapon.damage;
-    },
-    abilityDamage() {
-      var damageChance = this.chanceToHit + this.chanceToCrit;
-      if (this.superiorityDieDamage > 0) {
-        return (
-          (this.chanceOfAHit + this.chanceOfACrit) * this.superiorityDieDamage
-        );
-      } else if (this.warMagicDamage > 0) {
-        return damageChance * this.warMagicDamage;
-      }
-      this.bonuses.superiorityDie = false;
-      this.abilities.warMagic = false;
-      if (this.characterClass == this.classes.ranger) {
-        var huntersMarkDamage = this.abilities.huntersMark
-          ? 3.5 * this.numberOfAttacks * damageChance
-          : 0;
-        var colossusSlayerDamage = this.abilities.colossusSlayer
-          ? 4.5 * (this.chanceOfAHit + this.chanceOfACrit)
-          : 0;
-        return huntersMarkDamage + colossusSlayerDamage + this.wolfDamage;
-      }
-      return 0;
-    },
-    superiorityDieDamage() {
-      if (this.subclass == "Battle Master" && this.bonuses.superiorityDie) {
-        if (this.characterLevel >= 18) {
-          return 6.5;
-        } else if (this.characterLevel >= 10) {
-          return 5.5;
-        } else if (this.characterLevel >= 3) {
-          return 4.5;
-        }
-      }
-      return 0;
-    },
-    warMagicDamage() {
-      if (this.subclass == "Eldritch Knight" && this.abilities.warMagic) {
-        if (this.characterLevel >= 17) {
-          return 13.5;
-        } else if (this.characterLevel >= 11) {
-          return 9;
-        } else if (this.characterLevel >= 7) {
-          return 4.5;
-        }
-      }
-      return 0;
-    },
-    wolfDamage() {
-      if (this.abilities.wolfAttack) {
-        var companionBonusToHit = this.wolf.bonusToHit + this.proficiencyBonus;
-        var wolfBiteDamage = this.wolf.damagePerHit + this.proficiencyBonus;
-        var wolfChanceToHit = this.getChanceToHitFromBonusToHit(
-          companionBonusToHit
-        );
-        return (
-          this.wolfAttacks *
-          (wolfChanceToHit * wolfBiteDamage +
-            this.chanceToCrit * this.wolf.averageDamageDie)
-        );
-      }
-      return 0;
-    },
-    wolfAttacks() {
-      if (this.subclass == "Beast Master" && this.abilities.wolfAttack) {
-        if (this.characterLevel >= 11) {
-          return 2;
-        } else if (this.characterLevel >= 3) {
-          return 1;
-        }
-      }
-      this.abilities.wolfAttack = false;
-      return 0;
-    },
-    boomingBladeDamage() {
-      var moveDamage = this.warMagicDamage + 4.5;
-      return (
-        parseFloat(this.totalDamage) +
-        this.chanceToHit * moveDamage
-      ).toFixed(1);
-    },
-    greatWeaponFightingBonus() {
-      if (this.weapon == this.weapons.greatsword) {
-        return this.weapon.damage + 4 / 3;
-      }
-      var weaponDamage = this.weapon.versatile
-        ? this.weapon.damage + 1
-        : this.weapon.damage;
-      var diceMax = weaponDamage * 2 - 1;
-      var rerollChance = 2 / diceMax;
-      return (
-        rerollChance * weaponDamage + (1 - rerollChance) * (weaponDamage + 1)
-      );
+    playerDataToProcess() {
+      return {
+        characterLevel: this.characterLevel,
+        characterClass: this.characterClass,
+        subclass: this.subclass,
+        fightingStyle: this.fightingStyle,
+        weapon: this.weapon.name,
+        averageAC: this.averageAC,
+        attackStat: this.attackStat,
+        abilities: this.abilities,
+        bonuses: this.bonuses,
+        feats: this.feats,
+        casterMulticlasses: this.casterMulticlasses
+      };
     }
   },
   methods: {
@@ -514,12 +380,12 @@ export default {
           break;
         case this.fightingStyles.archery:
           this.weapon =
-            this.characterLevel < 5 || this.abilities.crossbowExpert
+            this.characterLevel < 5 || this.feats.crossbowExpert
               ? this.weapons.heavyCrossbow
               : this.weapons.longbow;
           break;
         case this.fightingStyles.twoWeapon:
-          this.weapon = this.abilities.dualWielder
+          this.weapon = this.feats.dualWielder
             ? this.weapons.longsword
             : this.weapons.handaxe;
           this.bonusWeapon = this.weapon;
@@ -530,9 +396,6 @@ export default {
         case this.fightingStyles.defence:
           this.weapon = this.weapons.greatsword;
       }
-      this.weapon = this.abilities.shadowBlade
-        ? this.weapons.shadowBlade
-        : this.weapon;
     },
     calculateAverageAC() {
       this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
@@ -557,14 +420,14 @@ export default {
             this.numberOfAttacks = 1;
           }
       }
-      if (this.weapon.loading && !this.abilities.crossbowExpert) {
+      if (this.weapon.loading && !this.feats.crossbowExpert) {
         this.numberOfAttacks = 1;
       }
     },
     disableImpossibleAbilities() {
       if (this.fightingStyle != this.fightingStyles.archery) {
-        this.abilities.sharpshooter = false;
-        this.abilities.crossbowExpert = false;
+        this.feats.sharpshooter = false;
+        this.feats.crossbowExpert = false;
       }
       this.abilities.huntersMark =
         this.characterLevel > 1 ? this.abilities.huntersMark : false;
@@ -576,13 +439,17 @@ export default {
         this.characterLevel > 2 && this.subclass == "Beast Master"
           ? this.abilities.wolfAttack
           : false;
-      this.abilities.greatWeaponMaster =
-        this.weapon.heavy || this.weapon.versatile
-          ? this.abilities.greatWeaponMaster
+      this.feats.greatWeaponMaster = !this.weapon.ranged
+        ? this.feats.greatWeaponMaster
+        : false;
+      this.feats.greatWeaponMasterSwing =
+        (this.weapon.heavy || this.weapon.versatile) &&
+        this.feats.greatWeaponMaster
+          ? this.feats.greatWeaponMasterSwing
           : false;
-      this.abilities.dualWielder =
+      this.feats.dualWielder =
         this.fightingStyle == this.fightingStyles.twoWeapon
-          ? this.abilities.dualWielder
+          ? this.feats.dualWielder
           : false;
       this.abilities.shadowBlade =
         this.subclass == "Eldritch Knight" &&
@@ -590,19 +457,30 @@ export default {
         this.fightingStyle != this.fightingStyles.archery
           ? this.abilities.shadowBlade
           : false;
+      this.bonuses.magicWeapon = this.abilities.shadowBlade
+        ? false
+        : this.bonuses.magicWeapon;
     },
-    getChanceToHitFromBonusToHit(bonusToHit) {
-      var chanceToHit = Math.max(
-        1 - (this.averageAC - 1 - bonusToHit) / 20,
-        0.05
-      );
-      chanceToHit = Math.min(chanceToHit, 0.95);
-      return this.bonuses.advantage
-        ? 1 - Math.pow(1 - chanceToHit, 2)
-        : chanceToHit;
+    resetAbilities() {
+      for (var key in this.abilities) {
+        this.abilities[key] = false;
+      }
+      for (var key in this.feats) {
+        this.feats[key] = false;
+      }
+      this.casterMulticlasses = 0;
     }
   },
   watch: {
+    playerDataToProcess: {
+      deep: true,
+      handler() {
+        calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
+          this.damageOutput = Math.round(data.damage * 100) / 100;
+          this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
+        });
+      }
+    },
     characterLevel: {
       deep: true,
       handler() {
@@ -616,7 +494,14 @@ export default {
         this.calculateAttackStat();
         this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
+        this.resetAbilities();
         this.subclass = this.subclasses[this.characterClass][0];
+      }
+    },
+    subclass: {
+      deep: true,
+      handler() {
+        this.resetAbilities();
       }
     },
     weapon: {
@@ -636,8 +521,15 @@ export default {
     abilities: {
       deep: true,
       handler() {
+        this.chooseWeaponFromStyle();
         this.disableImpossibleAbilities();
         this.calculateNumberOfAttacks();
+      }
+    },
+    feats: {
+      deep: true,
+      handler() {
+        this.disableImpossibleAbilities();
       }
     }
   }
