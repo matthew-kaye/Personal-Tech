@@ -6,9 +6,9 @@ from .subclasses import (
     BattleMaster,
     BeastMaster,
     Hunter,
-    Subclasses,
 )
 from .classes import Class
+from .constants import Subclasses
 from .utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,

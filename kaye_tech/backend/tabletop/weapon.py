@@ -1,15 +1,6 @@
 from dataclasses import dataclass
+from .constants import Weapons
 import math
-
-
-class Weapons:
-    HANDAXE = "Handaxe"
-    HEAVY_CROSSBOW = "Heavy Crossbow"
-    LONGBOW = "Longbow"
-    LONGSWORD = "Longsword"
-    GREATAXE = "Greataxe"
-    GREATSWORD = "Greatsword"
-    SHADOW_BLADE = "Shadow Blade"
 
 
 @dataclass

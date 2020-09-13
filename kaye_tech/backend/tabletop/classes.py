@@ -1,13 +1,8 @@
 from abc import ABC, abstractmethod
 from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_to_critical
-from .fighting_styles import Styles
+from .constants import Styles
 import json
 import math
-
-
-class Classes:
-    RANGER = "Ranger"
-    FIGHTER = "Fighter"
 
 
 class Wolf:

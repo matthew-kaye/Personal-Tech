@@ -6,11 +6,10 @@ from .tabletop.subclasses import (
     BattleMaster,
     BeastMaster,
     Hunter,
-    Subclasses,
 )
-from .tabletop.classes import Classes, Wolf
-from .tabletop.weapon import Weapons, Blacksmith
-from .tabletop.fighting_styles import Styles
+from .tabletop.constants import Classes, Subclasses, Weapons, Styles
+from .tabletop.classes import Wolf
+from .tabletop.weapon import Blacksmith
 from .tabletop.utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,
