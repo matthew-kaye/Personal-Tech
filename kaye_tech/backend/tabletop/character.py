@@ -70,6 +70,8 @@ class Character:
         return {
             "damage": self.damage_output(),
             "damageIfMoves": self.damage_output() + extra_damage_on_move,
+            "numberOfAttacks": self.number_of_attacks(),
+            "proficiencyBonus": self.proficiency_bonus,
         }
 
     def damage_output(self):

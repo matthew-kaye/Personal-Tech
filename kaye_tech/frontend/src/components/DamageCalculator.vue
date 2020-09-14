@@ -49,15 +49,13 @@
     <v-card-title>Stats</v-card-title>
     <v-row class="mx-2">
       <v-col cols="6" md="1">
-        <v-select
+        <v-text-field
           outlined
           v-model="proficiencyBonus"
           readonly
-          :items="getNumberArray(2, 6)"
-          attach
           label="Proficiency"
           :menu-props="{ transition: 'slide-y-transition' }"
-        ></v-select>
+        ></v-text-field>
       </v-col>
       <v-col cols="6" md="1">
         <v-select
@@ -82,7 +80,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="6" md="1">
+      <v-col cols="6" md="auto">
         <v-text-field
           append-icon="mdi-shield"
           type="number"
@@ -93,16 +91,14 @@
         ></v-text-field>
       </v-col>
       <v-col cols="6" md="1">
-        <v-select
+        <v-text-field
           outlined
           append-icon="fas fa-crosshairs"
           v-model="numberOfAttacks"
           readonly
-          :items="getNumberArray(1,5)"
-          attach
           label="Attacks"
           :menu-props="{ transition: 'slide-y-transition' }"
-        ></v-select>
+        ></v-text-field>
       </v-col>
       <v-col cols="6" md="1" v-if="subclass=='Eldritch Knight'">
         <v-select
@@ -316,14 +312,9 @@ export default {
       return filteredList.length > 0 ? filteredList[0] : {};
     },
     calculateFields() {
-      this.calculateProficiencyBonus();
       this.calculateAttackStat();
       this.chooseWeaponFromStyle();
       this.calculateAverageAC();
-      this.calculateNumberOfAttacks();
-    },
-    calculateProficiencyBonus() {
-      this.proficiencyBonus = Math.ceil(this.characterLevel / 4) + 1;
     },
     calculateAttackStat() {
       var baseStat = Math.min(Math.floor(this.characterLevel / 4) + 3, 5);
@@ -362,30 +353,6 @@ export default {
     },
     calculateAverageAC() {
       this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
-    },
-    calculateNumberOfAttacks() {
-      switch (this.characterClass) {
-        case "Fighter":
-          if (this.characterLevel == 20) {
-            this.numberOfAttacks = this.abilities.warMagic ? 2 : 4;
-          } else if (this.characterLevel > 10) {
-            this.numberOfAttacks = this.abilities.warMagic ? 2 : 3;
-          } else if (this.characterLevel > 4) {
-            this.numberOfAttacks = 2;
-          } else {
-            this.numberOfAttacks = 1;
-          }
-          break;
-        case "Ranger":
-          if (this.characterLevel > 4) {
-            this.numberOfAttacks = this.abilities.wolfAttack ? 1 : 2;
-          } else {
-            this.numberOfAttacks = 1;
-          }
-      }
-      if (this.weapon.loading && !this.feats.crossbowExpert) {
-        this.numberOfAttacks = 1;
-      }
     },
     disableImpossibleAbilities() {
       if (this.fightingStyle != this.fightingStyles.archery) {
@@ -444,6 +411,8 @@ export default {
             this.weapons = data.weapons;
             this.weapon = this.weapons[0];
           }
+          this.numberOfAttacks = data.numberOfAttacks;
+          this.proficiencyBonus = data.proficiencyBonus;
           this.classes = data.classes;
           this.subclasses = data.subclasses;
           this.damageOutput = Math.round(data.damage * 100) / 100;
@@ -462,7 +431,6 @@ export default {
       deep: true,
       handler() {
         this.calculateAttackStat();
-        this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
         this.resetAbilities();
         this.subclass = this.subclassOptions[0];
@@ -474,17 +442,10 @@ export default {
         this.resetAbilities();
       }
     },
-    weapon: {
-      deep: true,
-      handler() {
-        this.calculateNumberOfAttacks();
-      }
-    },
     fightingStyle: {
       deep: true,
       handler() {
         this.chooseWeaponFromStyle();
-        this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
       }
     },
@@ -493,7 +454,6 @@ export default {
       handler() {
         this.chooseWeaponFromStyle();
         this.disableImpossibleAbilities();
-        this.calculateNumberOfAttacks();
       }
     },
     feats: {
