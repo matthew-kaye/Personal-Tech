@@ -1,15 +1,19 @@
+from dataclasses import dataclass
+
+
+@dataclass
+class Styles:
+    ARCHERY: str = "Archery"
+    DEFENCE: str = "Defence"
+    DUELLING: str = "Duelling"
+    TWO_HANDED: str = "Two-Handed"
+    TWO_WEAPON: str = "Two-Weapon"
+    PROTECTION: str = "Protection"
+
+
 class Classes:
     RANGER = "Ranger"
     FIGHTER = "Fighter"
-
-
-class Styles:
-    ARCHERY = "Archery"
-    DEFENCE = "Defence"
-    DUELLING = "Duelling"
-    TWO_HANDED = "Two-Handed"
-    TWO_WEAPON = "Two-Weapon"
-    PROTECTION = "Protection"
 
 
 class Subclasses:

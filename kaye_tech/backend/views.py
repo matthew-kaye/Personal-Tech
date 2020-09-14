@@ -1,9 +1,11 @@
 import json
+from dataclasses import asdict
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Vendor, HighScore
 from .tabletop.character import Character
+from .tabletop.constants import Styles
 from .models import Weapon
 import logging
 
@@ -127,6 +129,7 @@ class CalculatorViewSet(viewsets.ViewSet):
         try:
             data = Character(request.query_params).damage_data()
             data["weapons"] = list(Weapon.objects.values())
+            data["fightingStyles"] = asdict(Styles())
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(e)

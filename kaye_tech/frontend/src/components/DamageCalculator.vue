@@ -38,7 +38,7 @@
         <v-select
           outlined
           v-model="fightingStyle"
-          :items="fightingStyleList"
+          :items="Object.values(fightingStyles)"
           attach
           label="Style"
           :append-icon="icons[fightingStyle]"
@@ -229,17 +229,7 @@ export default {
       "Eldritch Knight"
     ];
     this.subclasses[this.classes.ranger] = ["Beast Master", "Hunter"];
-    this.fightingStyles = {
-      archery: "Archery",
-      defence: "Defence",
-      duelling: "Duelling",
-      twoHanded: "Two-Handed",
-      twoWeapon: "Two-Weapon",
-      protection: "Protection"
-    };
-    for (var value in this.fightingStyles) {
-      this.fightingStyleList.push(this.fightingStyles[value]);
-    }
+    this.weapon = this.weapon.name ? this.weapon : { name: "Longsword" };
     this.calculateFields();
   },
   data() {
@@ -271,7 +261,6 @@ export default {
       classList: [],
       subclasses: {},
       fightingStyles: {},
-      fightingStyleList: [],
       averageAC: 14,
       attackStat: 3,
       proficiencyBonus: 2,
@@ -356,28 +345,28 @@ export default {
     },
     chooseWeaponFromStyle() {
       switch (this.fightingStyle) {
-        case this.fightingStyles.duelling:
+        case this.fightingStyles.DUELLING:
           this.weapon = this.getWeaponByName("Longsword");
           break;
-        case this.fightingStyles.twoHanded:
+        case this.fightingStyles.TWO_HANDED:
           this.weapon = this.getWeaponByName("Greatsword");
           break;
-        case this.fightingStyles.archery:
+        case this.fightingStyles.ARCHERY:
           this.weapon =
             this.characterLevel < 5 || this.feats.crossbowExpert
               ? this.getWeaponByName("Heavy Crossbow")
               : this.getWeaponByName("Longbow");
           break;
-        case this.fightingStyles.twoWeapon:
+        case this.fightingStyles.TWO_WEAPON:
           this.weapon = this.feats.dualWielder
             ? this.getWeaponByName("Longsword")
             : this.getWeaponByName("Handaxe");
           this.bonusWeapon = this.weapon;
           break;
-        case this.fightingStyles.protection:
+        case this.fightingStyles.PROTECTION:
           this.weapon = this.getWeaponByName("Longsword");
           break;
-        case this.fightingStyles.defence:
+        case this.fightingStyles.DEFENCE:
           this.weapon = this.getWeaponByName("Greatsword");
       }
     },
@@ -460,6 +449,7 @@ export default {
       deep: true,
       handler() {
         calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
+          this.fightingStyles = data.fightingStyles;
           if (this.weapons.length == 0) {
             this.weapons = data.weapons;
             this.weapon = this.weapons[0];
