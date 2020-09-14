@@ -58,7 +58,7 @@ class Character:
         self.great_weapon_master_swing = feats["greatWeaponMasterSwing"]
         self.crossbow_expert = feats["crossbowExpert"]
         self.attack_stat = int(data["attackStat"])
-        self.bonus_weapon = SMITH.draw_bonus_weapon(
+        self.bonus_weapon = SMITH.make_bonus_weapon(
             bonuses["magicWeapon"], self.dual_wielder
         )
 

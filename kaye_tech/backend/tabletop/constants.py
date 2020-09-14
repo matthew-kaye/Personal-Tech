@@ -34,4 +34,3 @@ class RangerSubclasses:
 class Subclasses:
     FIGHTER: FighterSubclasses = FighterSubclasses()
     RANGER: RangerSubclasses = RangerSubclasses()
-
