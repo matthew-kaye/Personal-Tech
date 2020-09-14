@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from .weapon import Weapon, Blacksmith
+from backend.models import Weapon
+from .weapon import Blacksmith
 from .subclasses import (
     Champion,
     EldritchKnight,
@@ -88,9 +89,8 @@ class Character:
         return attack_damage + critical_damage
 
     def attack_damage(self):
-        base_damage = (
-            self.average_dice_damage() + self.attack_stat + self.weapon.magic_bonus()
-        )
+        magic_bonus = 1 if self.weapon.magical else 0
+        base_damage = self.average_dice_damage() + self.attack_stat + magic_bonus
         if self.attempting_bigger_hit():
             return base_damage + 10
         else:
@@ -107,8 +107,9 @@ class Character:
         return 0
 
     def second_weapon_damage(self):
+        magic_bonus = 1 if self.bonus_weapon.magical else 0
         if self.subclass.shadow_blade:
-            bonus_to_hit = self.bonus_to_hit() + self.bonus_weapon.magic_bonus()
+            bonus_to_hit = self.bonus_to_hit() + magic_bonus
             hit_chance = chance_to_hit(
                 bonus_to_hit, self.enemy_armour_class, self.advantage
             )
@@ -118,12 +119,7 @@ class Character:
             self.dual_wielder and not self.bonus_weapon.heavy
         ):
             return round(
-                (
-                    self.bonus_weapon.damage
-                    + self.attack_stat
-                    + self.bonus_weapon.magic_bonus()
-                )
-                * hit_chance
+                (self.bonus_weapon.damage + self.attack_stat + magic_bonus) * hit_chance
                 + self.bonus_weapon.damage * self.chance_to_critical(),
                 8,
             )
@@ -165,9 +161,8 @@ class Character:
         )
 
     def bonus_to_hit(self):
-        base_bonus = (
-            self.attack_stat + self.proficiency_bonus + self.weapon.magic_bonus()
-        )
+        magic_bonus = 1 if self.weapon.magical else 0
+        base_bonus = self.attack_stat + self.proficiency_bonus + magic_bonus
         style_bonus = self.subclass.style_bonus(self.weapon)
         ability_modifier = -5 if self.attempting_bigger_hit() else 0
         return base_bonus + style_bonus + ability_modifier
@@ -179,7 +174,7 @@ class Character:
         )
         return sharpshooting or heavy_swing
 
-    def pick_weapon(self, weapon, magical):
+    def pick_weapon(self, weapon_name, magical):
         if self.subclass.shadow_blade:
             return SMITH.conjure_shadow_blade(self.subclass.caster_level())
-        return SMITH.draw_weapon(weapon, magical)
+        return SMITH.draw_weapon(weapon_name, magical)

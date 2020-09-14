@@ -264,9 +264,6 @@ export default {
       },
       longsword: { name: "Longsword", versatile: true, icon: "mdi-sword" }
     };
-    for (var value in this.weapons) {
-      this.weaponList.push(this.weapons[value]);
-    }
     this.calculateFields();
   },
   data() {
@@ -476,6 +473,7 @@ export default {
       deep: true,
       handler() {
         calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
+          this.weaponList = data.weapons;
           this.damageOutput = Math.round(data.damage * 100) / 100;
           this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
         });

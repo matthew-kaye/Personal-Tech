@@ -84,6 +84,8 @@ SMITH = Blacksmith()
 
 
 class CharacterTest(TestCase):
+    fixtures = ["dump.json"]
+
     def test_damage_output_returns_number(self):
         result = TEST_CHARACTER.damage_output()
         assert isinstance(result, float)
@@ -116,10 +118,6 @@ class CharacterTest(TestCase):
         assert archer.bonus_to_hit() == 11
 
     def test_great_weapon_fighting_bonus(self):
-        greatsword = SMITH.draw_weapon(Weapons.GREATSWORD, False)
-        longsword = SMITH.draw_weapon(Weapons.LONGSWORD, False)
-        assert greatsword.great_weapon_damage() == 25 / 3
-        assert longsword.great_weapon_damage() == 6.3
         greatswordsman = Character(
             TestData(fighting_style=Styles.TWO_HANDED, weapon=Weapons.GREATSWORD).data()
         )
@@ -139,9 +137,7 @@ class CharacterTest(TestCase):
 
     def test_magic_weapon(self):
         magic_swordsman = Character(TestData(magic_weapon=True).data())
-        magic_sword = SMITH.draw_weapon(Weapons.LONGSWORD, True)
-        assert magic_sword.magic_bonus() == TEST_CHARACTER.weapon.magic_bonus() + 1
-        assert SMITH.conjure_shadow_blade(10).magic_bonus() == 0
+        assert SMITH.conjure_shadow_blade(10).magical is False
         assert magic_swordsman.attack_damage() == TEST_CHARACTER.attack_damage() + 1
         assert magic_swordsman.bonus_to_hit() == TEST_CHARACTER.bonus_to_hit() + 1
         magic_dual_wielder = Character(
@@ -154,6 +150,8 @@ class CharacterTest(TestCase):
 
 
 class FeatsTest(TestCase):
+    fixtures = ["dump.json"]
+
     def test_big_hit_abilities(self):
         sharpshooter = Character(
             TestData(
@@ -220,6 +218,8 @@ class UtilitiesTest(TestCase):
 
 
 class ClassTest(TestCase):
+    fixtures = ["dump.json"]
+
     def test_fighter_attack_calculation(self):
         assert Champion(TestData().data()).number_of_attacks(1) == 1
         assert Champion(TestData().data()).number_of_attacks(5) == 2

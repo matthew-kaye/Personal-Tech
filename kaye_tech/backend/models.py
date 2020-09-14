@@ -26,4 +26,16 @@ class HighScore(models.Model):
         return f"{self.name} - {str(self.score)}"
 
     class Meta:
-        ordering = ('-score',)
+        ordering = ("-score",)
+
+
+class Weapon(models.Model):
+    name = models.CharField(max_length=256, unique=True)
+    damage = models.FloatField()
+    heavy = models.BooleanField(default=False)
+    ranged = models.BooleanField(default=False)
+    light = models.BooleanField(default=False)
+    versatile = models.BooleanField(default=False)
+    loading = models.BooleanField(default=False)
+    magical = models.BooleanField(default=False)
+

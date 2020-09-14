@@ -28,4 +28,3 @@ class Weapons:
     GREATAXE = "Greataxe"
     GREATSWORD = "Greatsword"
     SHADOW_BLADE = "Shadow Blade"
-
