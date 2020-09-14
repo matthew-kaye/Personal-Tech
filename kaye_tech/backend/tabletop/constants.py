@@ -35,12 +35,3 @@ class Subclasses:
     FIGHTER: FighterSubclasses = FighterSubclasses()
     RANGER: RangerSubclasses = RangerSubclasses()
 
-
-class Weapons:
-    HANDAXE = "Handaxe"
-    HEAVY_CROSSBOW = "Heavy Crossbow"
-    LONGBOW = "Longbow"
-    LONGSWORD = "Longsword"
-    GREATAXE = "Greataxe"
-    GREATSWORD = "Greatsword"
-    SHADOW_BLADE = "Shadow Blade"

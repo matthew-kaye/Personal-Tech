@@ -27,9 +27,8 @@ To set up locally, run the following:
 1. `make build`
 2. `make up`
 3. `make migrate`
-4. `make data-setup`
-5. `make npm-install`
-6. `make frontend-dev`
+4. `make npm-install`
+5. `make frontend-dev`
 
 If you want to log in to the django admin page (will be at `127.0.0.1:8000/admin`) create a superuser using `make superuser`.
 
@@ -38,8 +37,6 @@ If you want to log in to the django admin page (will be at `127.0.0.1:8000/admin
 - Run `make build && make up` after making changes to the `Pipfile`/`Pipfile.lock`
 - If you make changes to `app-env`/update the django settings/etc run `make restart-django`
 - Kill the webpack process then run `make npm-install` after updating `package.json`
-
-For testing: Run `make data-dump` to provide data for the test db.
 
 ### After:
 

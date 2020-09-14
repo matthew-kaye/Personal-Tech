@@ -72,7 +72,7 @@
           outlined
           :append-icon="icons[weapon.name]"
           v-model="weapon"
-          :items="weapons"
+          :items="Object.values(weapons)"
           item-text="name"
           attach
           label="Weapons"
@@ -305,12 +305,6 @@ export default {
       }
       return levels;
     },
-    getWeaponByName(name) {
-      var filteredList = this.weapons.filter(function (weapon) {
-        return weapon.name == name;
-      });
-      return filteredList.length > 0 ? filteredList[0] : {};
-    },
     calculateFields() {
       this.calculateAttackStat();
       this.chooseWeaponFromStyle();
@@ -327,28 +321,28 @@ export default {
     chooseWeaponFromStyle() {
       switch (this.fightingStyle) {
         case this.fightingStyles.DUELLING:
-          this.weapon = this.getWeaponByName("Longsword");
+          this.weapon = this.weapons.LONGSWORD;
           break;
         case this.fightingStyles.TWO_HANDED:
-          this.weapon = this.getWeaponByName("Greatsword");
+          this.weapon = this.weapons.GREATSWORD;
           break;
         case this.fightingStyles.ARCHERY:
           this.weapon =
             this.characterLevel < 5 || this.feats.crossbowExpert
-              ? this.getWeaponByName("Heavy Crossbow")
-              : this.getWeaponByName("Longbow");
+              ? this.weapons.HEAVY_CROSSBOW
+              : this.weapons.LONGBOW;
           break;
         case this.fightingStyles.TWO_WEAPON:
           this.weapon = this.feats.dualWielder
-            ? this.getWeaponByName("Longsword")
-            : this.getWeaponByName("Handaxe");
+            ? this.weapons.LONGSWORD
+            : this.weapons.HANDAXE;
           this.bonusWeapon = this.weapon;
           break;
         case this.fightingStyles.PROTECTION:
-          this.weapon = this.getWeaponByName("Longsword");
+          this.weapon = this.weapons.LONGSWORD;
           break;
         case this.fightingStyles.DEFENCE:
-          this.weapon = this.getWeaponByName("Greatsword");
+          this.weapon = this.weapons.GREATSWORD;
       }
     },
     calculateAverageAC() {
@@ -409,7 +403,7 @@ export default {
           this.fightingStyles = data.fightingStyles;
           if (this.weapons.length == 0) {
             this.weapons = data.weapons;
-            this.weapon = this.weapons[0];
+            this.weapon = this.weapons.LONGSWORD;
           }
           this.numberOfAttacks = data.numberOfAttacks;
           this.proficiencyBonus = data.proficiencyBonus;

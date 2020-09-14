@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_to_critical
-from .constants import Styles, Weapons
+from .constants import Styles
+from .weapon import Weapons
 import json
 import math
 
@@ -63,7 +64,7 @@ class Class(ABC):
             weapon.heavy or weapon.versatile
         ):
             weapon_damage = weapon.damage + 1 if weapon.versatile else weapon.damage
-            if weapon.name == Weapons.GREATSWORD:
+            if weapon == Weapons.GREATSWORD:
                 return weapon_damage + 4 / 3
             dice_max = weapon_damage * 2 - 1
             reroll_chance = 2 / dice_max

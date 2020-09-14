@@ -6,7 +6,7 @@ from django.core import serializers
 from .models import Vendor, HighScore
 from .tabletop.character import Character
 from .tabletop.constants import Styles, Classes, Subclasses
-from .models import Weapon
+from .tabletop.weapon import Weapons
 import logging
 
 
@@ -128,7 +128,7 @@ class CalculatorViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
             data = Character(request.query_params).damage_data()
-            data["weapons"] = list(Weapon.objects.values())
+            data["weapons"] = asdict(Weapons())
             data["fightingStyles"] = asdict(Styles())
             data["subclasses"] = asdict(Subclasses())
             data["classes"] = asdict(Classes())
