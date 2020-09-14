@@ -29,18 +29,6 @@ class Weapons:
     GREATSWORD: Weapon = Weapon(name="Greatsword", damage=7, heavy=True)
 
 
-@dataclass
-class ShadowBlade:
-    damage: float
-    name: str = "Shadow Blade"
-    heavy: bool = False
-    ranged: bool = False
-    light: bool = False
-    loading: bool = False
-    versatile: bool = False
-    magical: bool = False
-
-
 class Blacksmith:
     def make_weapon(self, weapon_name, magical):
         if weapon_name == Weapons.LONGSWORD.name:
