@@ -2,14 +2,6 @@ from .classes import Fighter, Ranger, Wolf
 import math
 
 
-class Subclasses:
-    BATTLE_MASTER = "Battle Master"
-    BEAST_MASTER = "Beast Master"
-    CHAMPION = "Champion"
-    ELDRITCH_KNIGHT = "Eldritch Knight"
-    HUNTER = "Hunter"
-
-
 class Champion(Fighter):
     def critical_chance(self):
         if self.level >= 15:

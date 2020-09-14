@@ -1,14 +1,14 @@
 from dataclasses import dataclass
-from .weapon import Weapon, Blacksmith
+from .weapon import Blacksmith, Weapon
 from .subclasses import (
     Champion,
     EldritchKnight,
     BattleMaster,
     BeastMaster,
     Hunter,
-    Subclasses,
 )
 from .classes import Class
+from .constants import Subclasses
 from .utilities import (
     proficiency_bonus_by_level,
     chance_to_hit,
@@ -40,15 +40,15 @@ class Character:
         self.level = int(data["characterLevel"])
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
         self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
-        if data["subclass"] == Subclasses.CHAMPION:
+        if data["subclass"] == Subclasses.FIGHTER.CHAMPION:
             self.subclass = Champion(data)
-        elif data["subclass"] == Subclasses.BATTLE_MASTER:
+        elif data["subclass"] == Subclasses.FIGHTER.BATTLE_MASTER:
             self.subclass = BattleMaster(data)
-        elif data["subclass"] == Subclasses.ELDRITCH_KNIGHT:
+        elif data["subclass"] == Subclasses.FIGHTER.ELDRITCH_KNIGHT:
             self.subclass = EldritchKnight(data)
-        elif data["subclass"] == Subclasses.BEAST_MASTER:
+        elif data["subclass"] == Subclasses.RANGER.BEAST_MASTER:
             self.subclass = BeastMaster(data)
-        elif data["subclass"] == Subclasses.HUNTER:
+        elif data["subclass"] == Subclasses.RANGER.HUNTER:
             self.subclass = Hunter(data)
         self.weapon = self.pick_weapon(data["weapon"], bonuses["magicWeapon"])
         self.advantage = bonuses["advantage"]
@@ -69,6 +69,8 @@ class Character:
         return {
             "damage": self.damage_output(),
             "damageIfMoves": self.damage_output() + extra_damage_on_move,
+            "numberOfAttacks": self.number_of_attacks(),
+            "proficiencyBonus": self.proficiency_bonus,
         }
 
     def damage_output(self):
@@ -179,7 +181,7 @@ class Character:
         )
         return sharpshooting or heavy_swing
 
-    def pick_weapon(self, weapon, magical):
+    def pick_weapon(self, weapon_name, magical):
         if self.subclass.shadow_blade:
             return SMITH.conjure_shadow_blade(self.subclass.caster_level())
-        return SMITH.draw_weapon(weapon, magical)
+        return SMITH.make_weapon(weapon_name, magical)

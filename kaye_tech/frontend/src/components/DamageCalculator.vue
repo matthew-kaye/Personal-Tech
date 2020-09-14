@@ -17,7 +17,7 @@
           outlined
           :append-icon="icons[characterClass]"
           v-model="characterClass"
-          :items="classList"
+          :items="Object.values(classes)"
           attach
           label="Class"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -27,7 +27,7 @@
         <v-select
           outlined
           v-model="subclass"
-          :items="subclasses[characterClass]"
+          :items="subclassOptions"
           attach
           :append-icon="icons[subclass]"
           label="Subclass"
@@ -38,7 +38,7 @@
         <v-select
           outlined
           v-model="fightingStyle"
-          :items="fightingStyleList"
+          :items="Object.values(fightingStyles)"
           attach
           label="Style"
           :append-icon="icons[fightingStyle]"
@@ -49,15 +49,13 @@
     <v-card-title>Stats</v-card-title>
     <v-row class="mx-2">
       <v-col cols="6" md="1">
-        <v-select
+        <v-text-field
           outlined
           v-model="proficiencyBonus"
           readonly
-          :items="getNumberArray(2, 6)"
-          attach
           label="Proficiency"
           :menu-props="{ transition: 'slide-y-transition' }"
-        ></v-select>
+        ></v-text-field>
       </v-col>
       <v-col cols="6" md="1">
         <v-select
@@ -72,9 +70,9 @@
       <v-col cols="6" md="2">
         <v-select
           outlined
-          :append-icon="weapon.icon"
+          :append-icon="icons[weapon.name]"
           v-model="weapon"
-          :items="weaponList"
+          :items="Object.values(weapons)"
           item-text="name"
           attach
           label="Weapons"
@@ -82,7 +80,7 @@
           :menu-props="{ transition: 'slide-y-transition' }"
         ></v-select>
       </v-col>
-      <v-col cols="6" md="1">
+      <v-col cols="6" md="auto">
         <v-text-field
           append-icon="mdi-shield"
           type="number"
@@ -93,16 +91,14 @@
         ></v-text-field>
       </v-col>
       <v-col cols="6" md="1">
-        <v-select
+        <v-text-field
           outlined
           append-icon="fas fa-crosshairs"
           v-model="numberOfAttacks"
           readonly
-          :items="getNumberArray(1,5)"
-          attach
           label="Attacks"
           :menu-props="{ transition: 'slide-y-transition' }"
-        ></v-select>
+        ></v-text-field>
       </v-col>
       <v-col cols="6" md="1" v-if="subclass=='Eldritch Knight'">
         <v-select
@@ -212,61 +208,8 @@
 import CalculatorApi from "@/apis/CalculatorApi";
 const calculatorApi = new CalculatorApi();
 export default {
-  components: {},
-  mounted() {},
   created() {
-    this.calculateFields();
-    this.classes = {
-      fighter: "Fighter",
-      ranger: "Ranger"
-    };
-    for (var value in this.classes) {
-      this.classList.push(this.classes[value]);
-    }
-    this.subclasses[this.classes.fighter] = [
-      "Battle Master",
-      "Champion",
-      "Eldritch Knight"
-    ];
-    this.subclasses[this.classes.ranger] = ["Beast Master", "Hunter"];
-    this.fightingStyles = {
-      archery: "Archery",
-      defence: "Defence",
-      duelling: "Duelling",
-      twoHanded: "Two-Handed",
-      twoWeapon: "Two-Weapon",
-      protection: "Protection"
-    };
-    for (var value in this.fightingStyles) {
-      this.fightingStyleList.push(this.fightingStyles[value]);
-    }
-    this.weapons = {
-      greataxe: { name: "Greataxe", heavy: true, icon: "mdi-axe" },
-      greatsword: { name: "Greatsword", heavy: true, icon: "mdi-sword" },
-      handaxe: {
-        name: "Handaxe",
-        ranged: true,
-        light: true,
-        icon: "mdi-axe"
-      },
-      heavyCrossbow: {
-        name: "Heavy Crossbow",
-        ranged: true,
-        loading: true,
-        heavy: true,
-        icon: "mdi-arrow-decision"
-      },
-      longbow: {
-        name: "Longbow",
-        ranged: true,
-        heavy: true,
-        icon: "mdi-bullseye-arrow"
-      },
-      longsword: { name: "Longsword", versatile: true, icon: "mdi-sword" }
-    };
-    for (var value in this.weapons) {
-      this.weaponList.push(this.weapons[value]);
-    }
+    this.weapon = this.weapon.name ? this.weapon : { name: "Longsword" };
     this.calculateFields();
   },
   data() {
@@ -295,21 +238,19 @@ export default {
         superiority: false
       },
       classes: {},
-      classList: [],
-      subclasses: {},
+      subclasses: [],
       fightingStyles: {},
-      fightingStyleList: [],
       averageAC: 14,
       attackStat: 3,
       proficiencyBonus: 2,
       numberOfAttacks: 1,
-      weapons: {},
-      weaponList: [],
+      weapons: [],
       weapon: {},
       bonusWeapon: {},
       damageOutput: 0,
       boomingBladeDamage: 0,
       casterMulticlasses: 0,
+      requestInProgress: false,
       icons: {
         Fighter: "mdi-sword-cross",
         Ranger: "mdi-grass",
@@ -323,7 +264,13 @@ export default {
         Defence: "mdi-chess-rook",
         "Two-Handed": "fas fa-handshake",
         "Two-Weapon": "fas fa-hands",
-        Protection: "mdi-shield"
+        Protection: "mdi-shield",
+        Greatsword: "mdi-sword",
+        Longbow: "mdi-bullseye-arrow",
+        Handaxe: "mdi-axe",
+        Greataxe: "mdi-axe",
+        "Heavy Crossbow": "mdi-arrow-decision",
+        Longsword: "mdi-sword"
       }
     };
   },
@@ -342,6 +289,13 @@ export default {
         feats: this.feats,
         casterMulticlasses: this.casterMulticlasses
       };
+    },
+    subclassOptions() {
+      for (var classKey of Object.keys(this.classes)) {
+        if (this.characterClass == this.classes[classKey]) {
+          return Object.values(this.subclasses[classKey]);
+        }
+      }
     }
   },
   methods: {
@@ -353,14 +307,9 @@ export default {
       return levels;
     },
     calculateFields() {
-      this.calculateProficiencyBonus();
       this.calculateAttackStat();
       this.chooseWeaponFromStyle();
       this.calculateAverageAC();
-      this.calculateNumberOfAttacks();
-    },
-    calculateProficiencyBonus() {
-      this.proficiencyBonus = Math.ceil(this.characterLevel / 4) + 1;
     },
     calculateAttackStat() {
       var baseStat = Math.min(Math.floor(this.characterLevel / 4) + 3, 5);
@@ -372,57 +321,33 @@ export default {
     },
     chooseWeaponFromStyle() {
       switch (this.fightingStyle) {
-        case this.fightingStyles.duelling:
-          this.weapon = this.weapons.longsword;
+        case this.fightingStyles.DUELLING:
+          this.weapon = this.weapons.LONGSWORD;
           break;
-        case this.fightingStyles.twoHanded:
-          this.weapon = this.weapons.greatsword;
+        case this.fightingStyles.TWO_HANDED:
+          this.weapon = this.weapons.GREATSWORD;
           break;
-        case this.fightingStyles.archery:
+        case this.fightingStyles.ARCHERY:
           this.weapon =
             this.characterLevel < 5 || this.feats.crossbowExpert
-              ? this.weapons.heavyCrossbow
-              : this.weapons.longbow;
+              ? this.weapons.HEAVY_CROSSBOW
+              : this.weapons.LONGBOW;
           break;
-        case this.fightingStyles.twoWeapon:
+        case this.fightingStyles.TWO_WEAPON:
           this.weapon = this.feats.dualWielder
-            ? this.weapons.longsword
-            : this.weapons.handaxe;
+            ? this.weapons.LONGSWORD
+            : this.weapons.HANDAXE;
           this.bonusWeapon = this.weapon;
           break;
-        case this.fightingStyles.protection:
-          this.weapon = this.weapons.longsword;
+        case this.fightingStyles.PROTECTION:
+          this.weapon = this.weapons.LONGSWORD;
           break;
-        case this.fightingStyles.defence:
-          this.weapon = this.weapons.greatsword;
+        case this.fightingStyles.DEFENCE:
+          this.weapon = this.weapons.GREATSWORD;
       }
     },
     calculateAverageAC() {
       this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
-    },
-    calculateNumberOfAttacks() {
-      switch (this.characterClass) {
-        case "Fighter":
-          if (this.characterLevel == 20) {
-            this.numberOfAttacks = this.abilities.warMagic ? 2 : 4;
-          } else if (this.characterLevel > 10) {
-            this.numberOfAttacks = this.abilities.warMagic ? 2 : 3;
-          } else if (this.characterLevel > 4) {
-            this.numberOfAttacks = 2;
-          } else {
-            this.numberOfAttacks = 1;
-          }
-          break;
-        case "Ranger":
-          if (this.characterLevel > 4) {
-            this.numberOfAttacks = this.abilities.wolfAttack ? 1 : 2;
-          } else {
-            this.numberOfAttacks = 1;
-          }
-      }
-      if (this.weapon.loading && !this.feats.crossbowExpert) {
-        this.numberOfAttacks = 1;
-      }
     },
     disableImpossibleAbilities() {
       if (this.fightingStyle != this.fightingStyles.archery) {
@@ -475,10 +400,27 @@ export default {
     playerDataToProcess: {
       deep: true,
       handler() {
-        calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
-          this.damageOutput = Math.round(data.damage * 100) / 100;
-          this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
-        });
+        if (!this.requestInProgress) {
+          this.requestInProgress = true;
+          this.$nextTick(() => {
+            calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
+              console.log(data);
+              this.fightingStyles = data.fightingStyles;
+              if (this.weapons.length == 0) {
+                this.weapons = data.weapons;
+                this.weapon = this.weapons.LONGSWORD;
+              }
+              this.numberOfAttacks = data.numberOfAttacks;
+              this.proficiencyBonus = data.proficiencyBonus;
+              this.classes = data.classes;
+              this.subclasses = data.subclasses;
+              this.damageOutput = Math.round(data.damage * 100) / 100;
+              this.boomingBladeDamage =
+                Math.round(data.damageIfMoves * 100) / 100;
+              this.requestInProgress = false;
+            });
+          });
+        }
       }
     },
     characterLevel: {
@@ -492,10 +434,9 @@ export default {
       deep: true,
       handler() {
         this.calculateAttackStat();
-        this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
         this.resetAbilities();
-        this.subclass = this.subclasses[this.characterClass][0];
+        this.subclass = this.subclassOptions[0];
       }
     },
     subclass: {
@@ -504,17 +445,10 @@ export default {
         this.resetAbilities();
       }
     },
-    weapon: {
-      deep: true,
-      handler() {
-        this.calculateNumberOfAttacks();
-      }
-    },
     fightingStyle: {
       deep: true,
       handler() {
         this.chooseWeaponFromStyle();
-        this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
       }
     },
@@ -523,7 +457,6 @@ export default {
       handler() {
         this.chooseWeaponFromStyle();
         this.disableImpossibleAbilities();
-        this.calculateNumberOfAttacks();
       }
     },
     feats: {

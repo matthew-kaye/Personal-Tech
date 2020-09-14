@@ -26,4 +26,4 @@ class HighScore(models.Model):
         return f"{self.name} - {str(self.score)}"
 
     class Meta:
-        ordering = ('-score',)
+        ordering = ("-score",)

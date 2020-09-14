@@ -1,13 +1,9 @@
 from abc import ABC, abstractmethod
 from .utilities import proficiency_bonus_by_level, chance_to_hit, chance_to_critical
-from .fighting_styles import Styles
+from .constants import Styles
+from .weapon import Weapons
 import json
 import math
-
-
-class Classes:
-    RANGER = "Ranger"
-    FIGHTER = "Fighter"
 
 
 class Wolf:
@@ -64,8 +60,19 @@ class Class(ABC):
         self.caster_multiclasses = int(data["casterMulticlasses"])
 
     def average_dice_damage(self, weapon):
-        if self.fighting_style == Styles.TWO_HANDED:
-            return weapon.great_weapon_damage()
+        if self.fighting_style == Styles.TWO_HANDED and (
+            weapon.heavy or weapon.versatile
+        ):
+            weapon_damage = weapon.damage + 1 if weapon.versatile else weapon.damage
+            if weapon == Weapons.GREATSWORD:
+                return weapon_damage + 4 / 3
+            dice_max = weapon_damage * 2 - 1
+            reroll_chance = 2 / dice_max
+            return round(
+                reroll_chance * weapon_damage
+                + (1 - reroll_chance) * (weapon_damage + 1),
+                8,
+            )
         return weapon.damage
 
     def style_damage(self, weapon):
