@@ -250,6 +250,7 @@ export default {
       damageOutput: 0,
       boomingBladeDamage: 0,
       casterMulticlasses: 0,
+      requestInProgress: false,
       icons: {
         Fighter: "mdi-sword-cross",
         Ranger: "mdi-grass",
@@ -399,19 +400,27 @@ export default {
     playerDataToProcess: {
       deep: true,
       handler() {
-        calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
-          this.fightingStyles = data.fightingStyles;
-          if (this.weapons.length == 0) {
-            this.weapons = data.weapons;
-            this.weapon = this.weapons.LONGSWORD;
-          }
-          this.numberOfAttacks = data.numberOfAttacks;
-          this.proficiencyBonus = data.proficiencyBonus;
-          this.classes = data.classes;
-          this.subclasses = data.subclasses;
-          this.damageOutput = Math.round(data.damage * 100) / 100;
-          this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
-        });
+        if (!this.requestInProgress) {
+          this.requestInProgress = true;
+          this.$nextTick(() => {
+            calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
+              console.log(data);
+              this.fightingStyles = data.fightingStyles;
+              if (this.weapons.length == 0) {
+                this.weapons = data.weapons;
+                this.weapon = this.weapons.LONGSWORD;
+              }
+              this.numberOfAttacks = data.numberOfAttacks;
+              this.proficiencyBonus = data.proficiencyBonus;
+              this.classes = data.classes;
+              this.subclasses = data.subclasses;
+              this.damageOutput = Math.round(data.damage * 100) / 100;
+              this.boomingBladeDamage =
+                Math.round(data.damageIfMoves * 100) / 100;
+              this.requestInProgress = false;
+            });
+          });
+        }
       }
     },
     characterLevel: {

@@ -12,9 +12,6 @@ down:
 migrate:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py migrate
 
-data-setup:
-	cd kaye_tech && pipenv run python manage.py runscript data_setup
-
 local:
 	cd kaye_tech && pipenv run py manage.py runserver 0.0.0.0:8000
 
