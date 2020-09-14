@@ -12,11 +12,14 @@ down:
 migrate:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py migrate
 
+data_setup:
+	cd kaye_tech && pipenv run python manage.py runscript data_setup
+
 local:
 	cd kaye_tech && pipenv run py manage.py runserver 0.0.0.0:8000
 
 test:
-	cd kaye_tech && pipenv run python manage.py test
+	cd kaye_tech && pipenv run python manage.py test --keepdb
 
 check-migrations:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py makemigrations --check
@@ -41,6 +44,9 @@ rollback-backend:
 
 lint:
 	cd kaye_tech/frontend; npm run format
+
+dump_data:
+	cd kaye_tech && pipenv run python manage.py dumpdata --exclude=contenttypes --all --output backend/fixtures/dump.json
 
 db-backup:
 	cd kaye_tech/backend/fixtures/ && scp mattalexkaye:/home/projects/kaye-tech/kaye_tech/backend/fixtures/db.sqlite3 db-copy
