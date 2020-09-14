@@ -74,7 +74,7 @@
           outlined
           :append-icon="icons[weapon.name]"
           v-model="weapon"
-          :items="weaponList"
+          :items="weapons"
           item-text="name"
           attach
           label="Weapons"
@@ -276,7 +276,7 @@ export default {
       attackStat: 3,
       proficiencyBonus: 2,
       numberOfAttacks: 1,
-      weaponList: [],
+      weapons: [],
       weapon: {},
       bonusWeapon: {},
       damageOutput: 0,
@@ -320,16 +320,6 @@ export default {
         feats: this.feats,
         casterMulticlasses: this.casterMulticlasses
       };
-    },
-    weapons() {
-      return {
-        greataxe: { ...this.getWeaponByName("Greataxe") },
-        greatsword: { ...this.getWeaponByName("Greatsword") },
-        handaxe: { ...this.getWeaponByName("Handaxe") },
-        heavyCrossbow: { ...this.getWeaponByName("Heavy Crossbow") },
-        longsword: { ...this.getWeaponByName("Longsword") },
-        longbow: { ...this.getWeaponByName("Longbow") }
-      };
     }
   },
   methods: {
@@ -341,9 +331,10 @@ export default {
       return levels;
     },
     getWeaponByName(name) {
-      return this.weaponList.filter(function (weapon) {
+      var filteredList = this.weapons.filter(function (weapon) {
         return weapon.name == name;
       });
+      return filteredList.length > 0 ? filteredList[0] : {};
     },
     calculateFields() {
       this.calculateProficiencyBonus();
@@ -366,28 +357,28 @@ export default {
     chooseWeaponFromStyle() {
       switch (this.fightingStyle) {
         case this.fightingStyles.duelling:
-          this.weapon = this.weapons.longsword;
+          this.weapon = this.getWeaponByName("Longsword");
           break;
         case this.fightingStyles.twoHanded:
-          this.weapon = this.weapons.greatsword;
+          this.weapon = this.getWeaponByName("Greatsword");
           break;
         case this.fightingStyles.archery:
           this.weapon =
             this.characterLevel < 5 || this.feats.crossbowExpert
-              ? this.weapons.heavyCrossbow
-              : this.weapons.longbow;
+              ? this.getWeaponByName("Heavy Crossbow")
+              : this.getWeaponByName("Longbow");
           break;
         case this.fightingStyles.twoWeapon:
           this.weapon = this.feats.dualWielder
-            ? this.weapons.longsword
-            : this.weapons.handaxe;
+            ? this.getWeaponByName("Longsword")
+            : this.getWeaponByName("Handaxe");
           this.bonusWeapon = this.weapon;
           break;
         case this.fightingStyles.protection:
-          this.weapon = this.weapons.longsword;
+          this.weapon = this.getWeaponByName("Longsword");
           break;
         case this.fightingStyles.defence:
-          this.weapon = this.weapons.greatsword;
+          this.weapon = this.getWeaponByName("Greatsword");
       }
     },
     calculateAverageAC() {
@@ -469,9 +460,10 @@ export default {
       deep: true,
       handler() {
         calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
-          this.weaponList = data.weapons;
-          this.weapon =
-            this.weapon.name == null ? this.weaponList[0] : this.weapon;
+          if (this.weapons.length == 0) {
+            this.weapons = data.weapons;
+            this.weapon = this.weapons[0];
+          }
           this.damageOutput = Math.round(data.damage * 100) / 100;
           this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
         });
