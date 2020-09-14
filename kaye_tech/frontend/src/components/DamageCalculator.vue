@@ -72,7 +72,7 @@
       <v-col cols="6" md="2">
         <v-select
           outlined
-          :append-icon="weapon.icon"
+          :append-icon="icons[weapon.name]"
           v-model="weapon"
           :items="weaponList"
           item-text="name"
@@ -240,30 +240,6 @@ export default {
     for (var value in this.fightingStyles) {
       this.fightingStyleList.push(this.fightingStyles[value]);
     }
-    this.weapons = {
-      greataxe: { name: "Greataxe", heavy: true, icon: "mdi-axe" },
-      greatsword: { name: "Greatsword", heavy: true, icon: "mdi-sword" },
-      handaxe: {
-        name: "Handaxe",
-        ranged: true,
-        light: true,
-        icon: "mdi-axe"
-      },
-      heavyCrossbow: {
-        name: "Heavy Crossbow",
-        ranged: true,
-        loading: true,
-        heavy: true,
-        icon: "mdi-arrow-decision"
-      },
-      longbow: {
-        name: "Longbow",
-        ranged: true,
-        heavy: true,
-        icon: "mdi-bullseye-arrow"
-      },
-      longsword: { name: "Longsword", versatile: true, icon: "mdi-sword" }
-    };
     this.calculateFields();
   },
   data() {
@@ -300,7 +276,6 @@ export default {
       attackStat: 3,
       proficiencyBonus: 2,
       numberOfAttacks: 1,
-      weapons: {},
       weaponList: [],
       weapon: {},
       bonusWeapon: {},
@@ -320,7 +295,13 @@ export default {
         Defence: "mdi-chess-rook",
         "Two-Handed": "fas fa-handshake",
         "Two-Weapon": "fas fa-hands",
-        Protection: "mdi-shield"
+        Protection: "mdi-shield",
+        Greatsword: "mdi-sword",
+        Longbow: "mdi-bullseye-arrow",
+        Handaxe: "mdi-axe",
+        Greataxe: "mdi-axe",
+        "Heavy Crossbow": "mdi-arrow-decision",
+        Longsword: "mdi-sword"
       }
     };
   },
@@ -331,13 +312,23 @@ export default {
         characterClass: this.characterClass,
         subclass: this.subclass,
         fightingStyle: this.fightingStyle,
-        weapon: this.weapon.name,
+        weapon: this.weapon.name ? this.weapon.name : "Longsword",
         averageAC: this.averageAC,
         attackStat: this.attackStat,
         abilities: this.abilities,
         bonuses: this.bonuses,
         feats: this.feats,
         casterMulticlasses: this.casterMulticlasses
+      };
+    },
+    weapons() {
+      return {
+        greataxe: { ...this.getWeaponByName("Greataxe") },
+        greatsword: { ...this.getWeaponByName("Greatsword") },
+        handaxe: { ...this.getWeaponByName("Handaxe") },
+        heavyCrossbow: { ...this.getWeaponByName("Heavy Crossbow") },
+        longsword: { ...this.getWeaponByName("Longsword") },
+        longbow: { ...this.getWeaponByName("Longbow") }
       };
     }
   },
@@ -348,6 +339,11 @@ export default {
         levels.shift();
       }
       return levels;
+    },
+    getWeaponByName(name) {
+      return this.weaponList.filter(function (weapon) {
+        return weapon.name == name;
+      });
     },
     calculateFields() {
       this.calculateProficiencyBonus();
@@ -474,6 +470,8 @@ export default {
       handler() {
         calculatorApi.getDamage(this.playerDataToProcess).then((data) => {
           this.weaponList = data.weapons;
+          this.weapon =
+            this.weapon.name == null ? this.weaponList[0] : this.weapon;
           this.damageOutput = Math.round(data.damage * 100) / 100;
           this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
         });
