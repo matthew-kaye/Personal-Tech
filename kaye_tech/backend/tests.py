@@ -26,7 +26,7 @@ class TestData:
     character_class: str = Classes.FIGHTER
     weapon: str = Weapons.LONGSWORD
     fighting_style: str = Styles.DEFENCE
-    subclass: str = Subclasses.ELDRITCH_KNIGHT
+    subclass: str = Subclasses.FIGHTER.ELDRITCH_KNIGHT
     average_AC: int = 17
     attack_stat: int = 5
     sharpshooter: bool = False
@@ -232,7 +232,7 @@ class ClassTest(TestCase):
 
     def test_battle_master_abilities(self):
         battle_master_data = TestData(
-            subclass=Subclasses.BATTLE_MASTER, superiority=True
+            subclass=Subclasses.FIGHTER.BATTLE_MASTER, superiority=True
         ).data()
         assert BattleMaster(battle_master_data).damage_on_a_hit() == 5.5
         battle_master = Character(battle_master_data)
@@ -241,7 +241,7 @@ class ClassTest(TestCase):
 
     def test_ranger_abilities(self):
         hunter = Character(
-            TestData(subclass=Subclasses.HUNTER, hunters_mark=True).data()
+            TestData(subclass=Subclasses.RANGER.HUNTER, hunters_mark=True).data()
         )
         assert hunter.ability_damage() == 4.9
         assert hunter.damage_output() == 17.7
@@ -257,7 +257,7 @@ class ClassTest(TestCase):
         assert bigger_wolf.number_of_attacks == 2
         assert bigger_wolf.bonus_to_hit == 8 and bigger_wolf.bite_damage == 11
         beast_master_data = TestData(
-            subclass=Subclasses.BEAST_MASTER, wolf_attack=True
+            subclass=Subclasses.RANGER.BEAST_MASTER, wolf_attack=True
         ).data()
         beast_master = Character(beast_master_data)
         assert beast_master.damage_output() == 20.1
@@ -265,7 +265,9 @@ class ClassTest(TestCase):
         beast_master.advantage = True
         flanking_beast_master = Character(
             TestData(
-                subclass=Subclasses.BEAST_MASTER, wolf_attack=True, advantage=True
+                subclass=Subclasses.RANGER.BEAST_MASTER,
+                wolf_attack=True,
+                advantage=True,
             ).data()
         )
         assert flanking_beast_master.damage_output() == 28.23

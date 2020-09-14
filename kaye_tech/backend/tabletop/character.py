@@ -41,15 +41,15 @@ class Character:
         self.level = int(data["characterLevel"])
         self.proficiency_bonus = proficiency_bonus_by_level(self.level)
         self.enemy_armour_class = int(data["averageAC"]) if data["averageAC"] else 0
-        if data["subclass"] == Subclasses.CHAMPION:
+        if data["subclass"] == Subclasses.FIGHTER.CHAMPION:
             self.subclass = Champion(data)
-        elif data["subclass"] == Subclasses.BATTLE_MASTER:
+        elif data["subclass"] == Subclasses.FIGHTER.BATTLE_MASTER:
             self.subclass = BattleMaster(data)
-        elif data["subclass"] == Subclasses.ELDRITCH_KNIGHT:
+        elif data["subclass"] == Subclasses.FIGHTER.ELDRITCH_KNIGHT:
             self.subclass = EldritchKnight(data)
-        elif data["subclass"] == Subclasses.BEAST_MASTER:
+        elif data["subclass"] == Subclasses.RANGER.BEAST_MASTER:
             self.subclass = BeastMaster(data)
-        elif data["subclass"] == Subclasses.HUNTER:
+        elif data["subclass"] == Subclasses.RANGER.HUNTER:
             self.subclass = Hunter(data)
         self.weapon = self.pick_weapon(data["weapon"], bonuses["magicWeapon"])
         self.advantage = bonuses["advantage"]

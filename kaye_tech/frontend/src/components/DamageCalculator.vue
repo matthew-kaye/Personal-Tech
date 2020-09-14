@@ -17,7 +17,7 @@
           outlined
           :append-icon="icons[characterClass]"
           v-model="characterClass"
-          :items="classList"
+          :items="Object.values(classes)"
           attach
           label="Class"
           :menu-props="{ transition: 'slide-y-transition' }"
@@ -27,7 +27,7 @@
         <v-select
           outlined
           v-model="subclass"
-          :items="subclasses[characterClass]"
+          :items="subclassOptions"
           attach
           :append-icon="icons[subclass]"
           label="Subclass"
@@ -212,23 +212,7 @@
 import CalculatorApi from "@/apis/CalculatorApi";
 const calculatorApi = new CalculatorApi();
 export default {
-  components: {},
-  mounted() {},
   created() {
-    this.calculateFields();
-    this.classes = {
-      fighter: "Fighter",
-      ranger: "Ranger"
-    };
-    for (var value in this.classes) {
-      this.classList.push(this.classes[value]);
-    }
-    this.subclasses[this.classes.fighter] = [
-      "Battle Master",
-      "Champion",
-      "Eldritch Knight"
-    ];
-    this.subclasses[this.classes.ranger] = ["Beast Master", "Hunter"];
     this.weapon = this.weapon.name ? this.weapon : { name: "Longsword" };
     this.calculateFields();
   },
@@ -258,8 +242,7 @@ export default {
         superiority: false
       },
       classes: {},
-      classList: [],
-      subclasses: {},
+      subclasses: [],
       fightingStyles: {},
       averageAC: 14,
       attackStat: 3,
@@ -301,7 +284,7 @@ export default {
         characterClass: this.characterClass,
         subclass: this.subclass,
         fightingStyle: this.fightingStyle,
-        weapon: this.weapon.name ? this.weapon.name : "Longsword",
+        weapon: this.weapon.name,
         averageAC: this.averageAC,
         attackStat: this.attackStat,
         abilities: this.abilities,
@@ -309,6 +292,13 @@ export default {
         feats: this.feats,
         casterMulticlasses: this.casterMulticlasses
       };
+    },
+    subclassOptions() {
+      for (var classKey of Object.keys(this.classes)) {
+        if (this.characterClass == this.classes[classKey]) {
+          return Object.values(this.subclasses[classKey]);
+        }
+      }
     }
   },
   methods: {
@@ -454,6 +444,8 @@ export default {
             this.weapons = data.weapons;
             this.weapon = this.weapons[0];
           }
+          this.classes = data.classes;
+          this.subclasses = data.subclasses;
           this.damageOutput = Math.round(data.damage * 100) / 100;
           this.boomingBladeDamage = Math.round(data.damageIfMoves * 100) / 100;
         });
@@ -473,7 +465,7 @@ export default {
         this.calculateNumberOfAttacks();
         this.disableImpossibleAbilities();
         this.resetAbilities();
-        this.subclass = this.subclasses[this.characterClass][0];
+        this.subclass = this.subclassOptions[0];
       }
     },
     subclass: {

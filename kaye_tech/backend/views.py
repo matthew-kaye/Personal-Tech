@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.core import serializers
 from .models import Vendor, HighScore
 from .tabletop.character import Character
-from .tabletop.constants import Styles
+from .tabletop.constants import Styles, Classes, Subclasses
 from .models import Weapon
 import logging
 
@@ -130,6 +130,8 @@ class CalculatorViewSet(viewsets.ViewSet):
             data = Character(request.query_params).damage_data()
             data["weapons"] = list(Weapon.objects.values())
             data["fightingStyles"] = asdict(Styles())
+            data["subclasses"] = asdict(Subclasses())
+            data["classes"] = asdict(Classes())
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(e)

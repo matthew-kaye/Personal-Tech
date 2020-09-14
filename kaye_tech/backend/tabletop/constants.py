@@ -11,17 +11,29 @@ class Styles:
     PROTECTION: str = "Protection"
 
 
+@dataclass
 class Classes:
-    RANGER = "Ranger"
-    FIGHTER = "Fighter"
+    RANGER: str = "Ranger"
+    FIGHTER: str = "Fighter"
 
 
+@dataclass
+class FighterSubclasses:
+    BATTLE_MASTER: str = "Battle Master"
+    CHAMPION: str = "Champion"
+    ELDRITCH_KNIGHT: str = "Eldritch Knight"
+
+
+@dataclass
+class RangerSubclasses:
+    BEAST_MASTER: str = "Beast Master"
+    HUNTER: str = "Hunter"
+
+
+@dataclass
 class Subclasses:
-    BATTLE_MASTER = "Battle Master"
-    BEAST_MASTER = "Beast Master"
-    CHAMPION = "Champion"
-    ELDRITCH_KNIGHT = "Eldritch Knight"
-    HUNTER = "Hunter"
+    FIGHTER: FighterSubclasses = FighterSubclasses()
+    RANGER: RangerSubclasses = RangerSubclasses()
 
 
 class Weapons:
