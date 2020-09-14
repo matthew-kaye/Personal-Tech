@@ -12,7 +12,7 @@ down:
 migrate:
 	docker-compose -f docker-compose.yaml -f docker-compose.development.yaml exec django python manage.py migrate
 
-data_setup:
+data-setup:
 	cd kaye_tech && pipenv run python manage.py runscript data_setup
 
 local:
@@ -45,7 +45,7 @@ rollback-backend:
 lint:
 	cd kaye_tech/frontend; npm run format
 
-dump_data:
+data-dump:
 	cd kaye_tech && pipenv run python manage.py dumpdata --exclude=contenttypes --all --output backend/fixtures/dump.json
 
 db-backup:
