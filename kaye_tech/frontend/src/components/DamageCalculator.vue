@@ -139,7 +139,7 @@
           </v-col>
           <v-col
             md="auto"
-            v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.archery"
+            v-if="subclass=='Eldritch Knight' && fightingStyle!=fightingStyles.ARCHERY"
           >
             <v-switch
               :disabled="characterLevel<7"
@@ -172,10 +172,10 @@
               label="Wolf"
             ></v-switch>
           </v-col>
-          <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
+          <v-col md="auto" v-if="fightingStyle==fightingStyles.ARCHERY">
             <v-switch v-model="feats.crossbowExpert" class="ma-2" label="Crossbow Expert"></v-switch>
           </v-col>
-          <v-col md="auto" v-if="fightingStyle==fightingStyles.archery">
+          <v-col md="auto" v-if="weapon.ranged">
             <v-switch v-model="feats.sharpshooter" class="ma-2" label="Sharpshooter"></v-switch>
           </v-col>
           <v-col md="auto" v-if="(weapon.versatile ||weapon.heavy) && !weapon.ranged">
@@ -184,7 +184,7 @@
           <v-col md="auto" v-if="feats.greatWeaponMaster">
             <v-switch v-model="feats.greatWeaponMasterSwing" class="ma-2" label="GW Swing"></v-switch>
           </v-col>
-          <v-col md="auto" v-if="fightingStyle==fightingStyles.twoWeapon">
+          <v-col md="auto" v-if="fightingStyle==fightingStyles.TWO_WEAPON">
             <v-switch v-model="feats.dualWielder" class="ma-2" label="Dual Wielder"></v-switch>
           </v-col>
         </v-row>
@@ -344,13 +344,14 @@ export default {
           break;
         case this.fightingStyles.DEFENCE:
           this.weapon = this.weapons.GREATSWORD;
+          break;
       }
     },
     calculateAverageAC() {
       this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
     },
     disableImpossibleAbilities() {
-      if (this.fightingStyle != this.fightingStyles.archery) {
+      if (this.fightingStyle != this.fightingStyles.ARCHERY) {
         this.feats.sharpshooter = false;
         this.feats.crossbowExpert = false;
       }
@@ -373,13 +374,13 @@ export default {
           ? this.feats.greatWeaponMasterSwing
           : false;
       this.feats.dualWielder =
-        this.fightingStyle == this.fightingStyles.twoWeapon
+        this.fightingStyle == this.fightingStyles.TWO_WEAPON
           ? this.feats.dualWielder
           : false;
       this.abilities.shadowBlade =
         this.subclass == "Eldritch Knight" &&
         this.characterLevel > 6 &&
-        this.fightingStyle != this.fightingStyles.archery
+        this.fightingStyle != this.fightingStyles.ARCHERY
           ? this.abilities.shadowBlade
           : false;
       this.bonuses.magicWeapon = this.abilities.shadowBlade
