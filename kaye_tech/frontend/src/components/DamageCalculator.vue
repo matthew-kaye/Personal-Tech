@@ -296,7 +296,10 @@ export default {
           return Object.values(this.subclasses[classKey]);
         }
       }
-    }
+    },
+    featsNeedingAWeaponCheck() {
+      return [this.feats.dualWielder];
+    },
   },
   methods: {
     getNumberArray(start, end) {
@@ -334,10 +337,7 @@ export default {
               : this.weapons.LONGBOW;
           break;
         case this.fightingStyles.TWO_WEAPON:
-          this.weapon = this.feats.dualWielder
-            ? this.weapons.LONGSWORD
-            : this.weapons.HANDAXE;
-          this.bonusWeapon = this.weapon;
+          this.pickDualWieldWeapons();
           break;
         case this.fightingStyles.PROTECTION:
           this.weapon = this.weapons.LONGSWORD;
@@ -346,6 +346,12 @@ export default {
           this.weapon = this.weapons.GREATSWORD;
           break;
       }
+    },
+    pickDualWieldWeapons() {
+      this.weapon = this.feats.dualWielder
+        ? this.weapons.LONGSWORD
+        : this.weapons.HANDAXE;
+      this.bonusWeapon = this.weapon;
     },
     calculateAverageAC() {
       this.averageAC = Math.ceil(this.characterLevel / 3) + 13;
@@ -456,7 +462,6 @@ export default {
     abilities: {
       deep: true,
       handler() {
-        this.chooseWeaponFromStyle();
         this.disableImpossibleAbilities();
       }
     },
@@ -465,6 +470,9 @@ export default {
       handler() {
         this.disableImpossibleAbilities();
       }
+    },
+    featsNeedingAWeaponCheck() {
+      this.pickDualWieldWeapons();
     }
   }
 };
