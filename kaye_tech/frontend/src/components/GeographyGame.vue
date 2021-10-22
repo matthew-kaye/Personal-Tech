@@ -4,7 +4,9 @@
       <v-row align="center" class="my-n3">
         <v-col cols="12" md="auto" align="center" class="ml-md-0 ml-n4">
           <v-icon large color="white" class="mr-2">mdi-earth</v-icon>
-          <span class="white--text mr-4">{{`Guess the ${gameMode.headerText}!`}}</span>
+          <span class="white--text mr-4">{{
+            `Guess the ${gameMode.headerText}!`
+          }}</span>
         </v-col>
         <v-col cols="8" class="mb-n8" md="auto">
           <v-select
@@ -29,13 +31,20 @@
     </v-card-title>
     <v-row v-if="country" align="center" class="mt-2">
       <v-col cols="8" md="auto" v-if="gameMode.capitalGame">
-        <v-card-text style="font-size:1.4em">{{"Country: " + country.name}}</v-card-text>
+        <v-card-text style="font-size: 1.4em">{{
+          "Country: " + country.name.common
+        }}</v-card-text>
       </v-col>
       <v-col cols="4" md="auto" v-if="!gameMode.capitalGame">
-        <v-card-title>{{"Flag: "}}</v-card-title>
+        <v-card-title>{{ "Flag: " }}</v-card-title>
       </v-col>
       <v-col cols="4" md="auto">
-        <v-img class="elevation-5" contain max-width="60" :src="country.flag"></v-img>
+        <v-img
+          class="elevation-5"
+          contain
+          max-width="60"
+          :src="country.flags.png"
+        ></v-img>
       </v-col>
     </v-row>
     <v-card-text>
@@ -58,7 +67,8 @@
               color="primary"
               v-if="userGuess"
               @click="validateGuess()"
-            >{{"Pass" }}</v-btn>
+              >{{ "Pass" }}</v-btn
+            >
           </v-fab-transition>
         </v-col>
       </v-row>
@@ -70,11 +80,13 @@
             class="elevation-5 mb-1 ml-5 mr-n2"
             contain
             max-width="50"
-            :src="previousCountry.flag"
+            :src="previousCountry.flags.png"
           ></v-img>
         </v-col>
         <v-col cols="10" md="auto">
-          <v-card-text style="font-size:1.4em">{{result + " - score: " + score + "/" + guesses}}</v-card-text>
+          <v-card-text style="font-size: 1.4em">{{
+            result + " - score: " + score + "/" + guesses
+          }}</v-card-text>
         </v-col>
       </v-row>
     </v-fab-transition>
@@ -97,7 +109,7 @@ export default {
       country: null,
       previousCountry: null,
       userGuess: null,
-      countryCapitalUrl: "https://restcountries.eu/rest/v2/all",
+      countryCapitalUrl: "https://restcountries.com/v3.1/all",
       fullCountrylist: [],
       unusedCountryList: [],
       result: null,
@@ -122,12 +134,13 @@ export default {
   },
   computed: {
     capitalMatch() {
-      return this.country
-        ? [
-            this.country.capital.toLowerCase(),
-            this.getDeaccentedWord(this.country.capital).toLowerCase()
-          ].includes(this.userGuess.toLowerCase().trim())
-        : false;
+      if (this.country) {
+        var capitals = this.country.capital.map((capital) =>
+          this.getDeaccentedWord(capital).toLowerCase()
+        );
+        return capitals.includes(this.userGuess.toLowerCase().trim());
+      }
+      return false;
     },
     countryMatch() {
       for (var country of this.possibleCountrySpellings) {
@@ -138,7 +151,7 @@ export default {
       return false;
     },
     easiestCountryName() {
-      var name = this.country.name;
+      var name = this.country.name.common;
       name = name
         .replace("n Arab Republic", "")
         .replace("Republic of ", "")
@@ -157,7 +170,7 @@ export default {
       if (this.easiestCountryName) {
         possibleSpellings.push(this.easiestCountryName);
       }
-      possibleSpellings.push(this.country.name);
+      possibleSpellings.push(this.country.name.common);
       return possibleSpellings;
     }
   },
@@ -165,86 +178,26 @@ export default {
     getDeaccentedWord(word) {
       return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     },
-    getCountryCapitals() {
-      var countryApiResponse = axios
-        .get(this.countryCapitalUrl, {
-          headers: { Accept: "application/json" }
-        })
-        .then(response => response.data)
-        .catch(error => console.log(error));
-      countryApiResponse.then(data => {
-        this.fullCountrylist = data.filter(function(country) {
-          var alpha2CodesToExclude = [
-            "AX",
-            "AS",
-            "AI",
-            "AQ",
-            "AW",
-            "BM",
-            "BQ",
-            "BV",
-            "IO",
-            "UM",
-            "VG",
-            "VI",
-            "KY",
-            "CX",
-            "CC",
-            "CK",
-            "CW",
-            "FK",
-            "FA",
-            "FO",
-            "GF",
-            "PF",
-            "TF",
-            "GI",
-            "GL",
-            "GP",
-            "GU",
-            "GG",
-            "HM",
-            "HK",
-            "IM",
-            "JE",
-            "MO",
-            "MQ",
-            "YT",
-            "MS",
-            "NC",
-            "NU",
-            "NF",
-            "MP",
-            "PN",
-            "PR",
-            "BL",
-            "SH",
-            "MF",
-            "PM",
-            "SX",
-            "GS",
-            "SJ",
-            "TK",
-            "TC",
-            "WF",
-            "EH",
-            "RE"
-          ];
-          return !alpha2CodesToExclude.includes(country.alpha2Code);
-        });
-        this.unusedCountryList = this.fullCountrylist;
-        this.country = this.pickNewCountry();
+    async getCountryCapitals() {
+      var countryApiResponse = await axios.get(this.countryCapitalUrl, {
+        headers: { Accept: "application/json" }
       });
+      this.fullCountrylist = countryApiResponse.data.filter(function (country) {
+        return country.unMember;
+      });
+      this.unusedCountryList = this.fullCountrylist;
+      this.country = this.pickNewCountry();
     },
     pickNewCountry() {
       this.userGuess = "";
-      var country = this.unusedCountryList[
-        Math.floor(Math.random() * this.unusedCountryList.length)
-      ];
+      var country =
+        this.unusedCountryList[
+          Math.floor(Math.random() * this.unusedCountryList.length)
+        ];
       this.unusedCountryList =
         this.unusedCountryList.length == 1
           ? this.fullCountrylist
-          : this.unusedCountryList.filter(x => x !== country);
+          : this.unusedCountryList.filter((x) => x !== country);
       return country;
     },
     validateGuess() {
@@ -257,16 +210,17 @@ export default {
         } else {
           this.result =
             "Bad luck, the capital of " +
-            this.country.name +
+            this.country.name.common +
             " is: " +
-            this.country.capital;
+            this.country.capital[0];
         }
       } else {
         if (this.countryMatch) {
           this.score += 1;
           this.result = "You guessed correctly!";
         } else {
-          this.result = "Bad luck, that flag belonged to " + this.country.name;
+          this.result =
+            "Bad luck, that flag belonged to " + this.country.name.common;
         }
       }
       this.country = this.pickNewCountry();
@@ -280,12 +234,12 @@ export default {
     }
   },
   watch: {
-    userGuess: function() {
+    userGuess: function () {
       if (this.gameMode.capitalGame ? this.capitalMatch : this.countryMatch) {
         this.validateGuess();
       }
     },
-    gameMode: function() {
+    gameMode: function () {
       this.resetScores();
     }
   }
