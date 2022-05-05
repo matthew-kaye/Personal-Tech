@@ -154,6 +154,7 @@ export default {
       var name = this.country.name.common;
       name = name
         .replace("n Arab Republic", "")
+        .replace("City of ", "")
         .replace("Republic of ", "")
         .replace("Nation of ", "")
         .replace("Kingdom of ", "")
@@ -212,7 +213,7 @@ export default {
             "Bad luck, the capital of " +
             this.country.name.common +
             " is: " +
-            this.country.capital[0];
+            this.country.capital.join(", ");
         }
       } else {
         if (this.countryMatch) {
