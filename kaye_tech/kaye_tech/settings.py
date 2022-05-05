@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from .secret import get_secret
 
-SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+django_secrets = get_secret("django_secrets")
+
+SECRET_KEY = django_secrets["DJANGO_SECRET_KEY"]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +33,7 @@ if os.getenv("DJANGO_ENV") == "prod":
         "tech.mattalexkaye.com",
         "www.tech.mattalexkaye.com",
         "mattalexkaye.com",
-        "www.mattalexkaye.com"
+        "www.mattalexkaye.com",
     ]
 else:
     DEBUG = True
@@ -52,7 +55,7 @@ INSTALLED_APPS = [
     "backend",
     "accounts",
     "kaye_tech",
-    "channels"
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -88,10 +91,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "kaye_tech.wsgi.application"
 ASGI_APPLICATION = "kaye_tech.routing.application"
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('localhost', 6379)],
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
         },
     },
 }
@@ -111,7 +114,8 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+        "NAME": "django.contrib.auth.password_validation"
+        ".UserAttributeSimilarityValidator"
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
@@ -166,8 +170,8 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = django_secrets["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = django_secrets["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
 SOCIAL_AUTH_URL_NAMESPACE = "social"
 SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = [
     "googlemail.com",
