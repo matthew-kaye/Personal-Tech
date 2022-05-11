@@ -1,53 +1,36 @@
 # Personal Tech Website
 
-## Environment variables
+## Secrets
 
-The project depends on three environment variables, ensure these are exported before beginning either Local Development or Server Deployment.
-
-Create a file called `app.env` with the following contents:
-
-```
-DJANGO_SECRET_KEY=secret_key
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=project_client_id
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=project_client_secret
-```
-
-- `SOCIAL_AUTH_GOOGLE_OAUTH2_KEY` - Used for Google Accounts authentication
-- `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET` - Used for Google Accounts authentication
-- `DJANGO_SECRET_KEY` - A secret for a particular Django build
+The project depends on several secrets, stored in AWS Secret Manager. Ensure your AWS environment credentials are set up in order to access.
 
 ## Local Development
 
 ### Before:
 
 Install npm.
-On Mac: `brew install npm`
+On Mac: `brew install npm` - check using appropriate version
 On Windows: https://nodejs.org/en/
 
 To set up locally, run the following:
 
-1. `make build`
-2. `make up`
-3. `make migrate`
-4. `make npm-install` (using node v10.9)
-5. `make frontend-dev`
+1. `make local`
+2. `make migrate`
+3. `make npm-install` (using node v10.9)
+4. `make frontend-dev`
 
 If you want to log in to the django admin page (will be at `127.0.0.1:8000/admin`) create a superuser using `make superuser`.
 
 ### During:
 
-- Run `make build && make up` after making changes to the `Pipfile`/`Pipfile.lock`
-- If you make changes to `app-env`/update the django settings/etc run `make restart-django`
+- Run `pipenv install` after making changes to the `Pipfile`/`Pipfile.lock`
 - Kill the webpack process then run `make npm-install` after updating `package.json`
 
-### After:
+## Deployment
 
-Run `make down`
+The website is hosted on AWS Elastic Beanstalk, with an RDS database.
 
-## Server deployment
+To deploy an update, run:
 
-The nginx config to be used in `/etc/nginx/sites-available` is available [here](nginx-sites-available.conf). Rename this file to the site name when actually deploying (e.g. mattalexkaye.com).
-
-When on the server, run the `deploy.sh` script to deploy.
-
-If docker starts taking up too much memory, run either `docker volume prune` or `docker system prune` to resolve.
+1. `make npm-build` and `make collect-static` (for a frontend update).
+2. `make deploy`
