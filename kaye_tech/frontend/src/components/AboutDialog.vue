@@ -43,9 +43,9 @@
             <br />
             <b>Package Management:</b> Node.js, Webpack
             <br />
-            <b>Container:</b> Docker
+            <b>Database:</b> AWS RDS
             <br />
-            <b>Hosting:</b> DigitalOcean
+            <b>Hosting:</b> AWS Elastic Beanstalk
             <br />
             <b>Domain routing:</b> GoDaddy, Nginx
             <br />
