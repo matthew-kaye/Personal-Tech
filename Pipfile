@@ -22,6 +22,7 @@ channels-redis = "*"
 black = "*"
 boto3 = "==1.21.44"
 botocore = "==1.24.44"
+mysqlclient = "==2.1.0"
 
 [requires]
 python_version = "3.9"
