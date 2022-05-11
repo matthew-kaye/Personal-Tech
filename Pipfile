@@ -4,21 +4,28 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+black = "*"
+flake8 = "*"
+mypy = "*"
+isort = "*"
 
 [packages]
-django = "*"
-django-webpack-loader = "*"
+django = "==3.2.13"
+django-webpack-loader = "==0.7.0"
 djangorestframework = "*"
 social-auth-app-django = "*"
 pyyaml = "*"
 django-extensions = "*"
-uwsgi = "*"
+uwsgi = "==2.0.19.1"
 channels = "*"
 channels-redis = "*"
 black = "*"
+boto3 = "==1.21.44"
+botocore = "==1.24.44"
+mysqlclient = "==2.1.0"
 
 [requires]
-python_version = "3.7"
+python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true

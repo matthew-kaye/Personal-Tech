@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from .secret import get_secret
 
-SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+django_secrets = get_secret("django_secrets")
+
+SECRET_KEY = django_secrets["DJANGO_SECRET_KEY"]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,17 +27,18 @@ FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-if os.getenv("DJANGO_ENV") == "prod":
+if os.getenv("DJANGO_ENV") == "development":
+    DEBUG = True
+    ALLOWED_HOSTS = ["*"]
+else:
     DEBUG = False
     ALLOWED_HOSTS = [
         "tech.mattalexkaye.com",
         "www.tech.mattalexkaye.com",
         "mattalexkaye.com",
-        "www.mattalexkaye.com"
+        "www.mattalexkaye.com",
+        "matt-website.eba-jimzwpfp.eu-west-2.elasticbeanstalk.com",
     ]
-else:
-    DEBUG = True
-    ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -52,7 +56,7 @@ INSTALLED_APPS = [
     "backend",
     "accounts",
     "kaye_tech",
-    "channels"
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -88,10 +92,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "kaye_tech.wsgi.application"
 ASGI_APPLICATION = "kaye_tech.routing.application"
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('localhost', 6379)],
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
         },
     },
 }
@@ -99,19 +103,33 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "backend/fixtures/db.sqlite3"),
+if "RDS_HOSTNAME" in os.environ:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ["RDS_DB_NAME"],
+            "USER": os.environ["RDS_USERNAME"],
+            "PASSWORD": os.environ["RDS_PASSWORD"],
+            "HOST": os.environ["RDS_HOSTNAME"],
+            "PORT": os.environ["RDS_PORT"],
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "backend/fixtures/db.sqlite3"),
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+        "NAME": "django.contrib.auth.password_validation"
+        ".UserAttributeSimilarityValidator"
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
@@ -137,8 +155,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (os.path.join(FRONTEND_DIR, "static"),)
-STATIC_ROOT = "kaye_tech/static_root/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static_root/")
+STATICFILES_DIRS = [os.path.join(FRONTEND_DIR, "static/")]
 
 WEBPACK_LOADER = {
     "DEFAULT": {
@@ -166,8 +184,8 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = django_secrets["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = django_secrets["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
 SOCIAL_AUTH_URL_NAMESPACE = "social"
 SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = [
     "googlemail.com",
