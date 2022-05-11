@@ -37,6 +37,7 @@ else:
         "www.tech.mattalexkaye.com",
         "mattalexkaye.com",
         "www.mattalexkaye.com",
+        "matt-website.eba-jimzwpfp.eu-west-2.elasticbeanstalk.com",
     ]
 
 
