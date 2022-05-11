@@ -47,7 +47,7 @@
             <br />
             <b>Hosting:</b> AWS Elastic Beanstalk
             <br />
-            <b>Domain routing:</b> GoDaddy, Nginx
+            <b>Domain routing:</b> GoDaddy, Route 53
             <br />
           </v-card-text>
         </v-col>
