@@ -195,3 +195,5 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = [
     "hotmail.co.uk",
     "mac.com",
 ]
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
